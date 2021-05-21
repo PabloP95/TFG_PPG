@@ -1,0 +1,42 @@
+import React, { Component } from 'react'
+import { Row, Col } from 'reactstrap'
+import NavRest from './NavRest'
+import RestInicio from './RestInicio'
+import RestConfig from './RestConfig'
+import RestMenu from './ConfigMenu/RestMenu'
+import RestOpiniones from './RestOpiniones'
+import RestEstadisticas from './RestEstadisticas'
+export class RestaurantPage extends Component {
+    render() {
+        return (
+            <div className="container">
+                <Row className="p-3">
+                    <Col md="3" className="p-3">
+                        <NavRest />
+                    </Col>
+                    <Col md="9" className="p-3">
+                        <div className="tab-content bg-light" id="pills-tabContentRest">
+                            <div className="tab-pane fade show active" id="pills-inicioRest" role="tabpanel" aria-labelledby="pills-inicioRest-tab">
+                                <RestInicio />
+                            </div>
+                            <div className="tab-pane fade" id="pills-configRest" role="tabpanel" aria-labelledby="pills-configRest-tab">
+                                <RestConfig />
+                            </div>
+                            <div className="tab-pane fade" id="pills-menuRest" role="tabpanel" aria-labelledby="pills-menuRest-tab">
+                                <RestMenu />
+                            </div>
+                            <div className="tab-pane fade" id="pills-opinionesRest" role="tabpanel" aria-labelledby="pills-opinionesRest-tab">
+                                <RestOpiniones />
+                            </div>
+                            <div className="tab-pane fade" id="pills-estadisticasRest" role="tabpanel" aria-labelledby="pills-estadisticasRest-tab">
+                                <RestEstadisticas />
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        )
+    }
+}
+
+export default RestaurantPage

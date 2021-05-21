@@ -1,0 +1,84 @@
+@media only screen and (max-width: 600px) {
+  body{
+    display:flex; 
+    flex-direction:column;
+    min-height: 100vh;
+    
+  }
+  
+  .App {
+    text-align: center;
+    margin-top: 3.5rem;
+    margin-bottom: 3rem;
+    max-width: 600px;
+    font-family: 'Lato',
+    sans-serif;
+  
+  }
+
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+}
+
+.App {
+  text-align: center;
+  margin-top: 3.5rem;
+  margin-bottom: 3rem;
+  font-family: 'Lato',
+    sans-serif;
+
+}
+
+.scrollTop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  cursor: pointer;
+  animation: fadeIn 0.3s;
+  transition: opacity 0.4s;
+  opacity: 0.5;
+}
+
+.scrollTop:hover {
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+fieldset {
+  text-align: left;
+}
+
+
+.poppins-font{
+  font-family: 'Poppins',
+  sans-serif !important;
+}
+
+.jumbotron {
+  background-color: transparent !important;
+}
+.roboto-font{
+  font-family: 'Roboto',
+  sans-serif;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+

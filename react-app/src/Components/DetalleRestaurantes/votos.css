@@ -1,0 +1,19 @@
+.stars {
+    display: table;
+    width: 200px;
+    margin: 0 auto;
+    padding-left: 0px !important;
+    position: relative;
+    overflow: hidden;
+    height: 20px;
+}
+
+.stars li {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(../../img/iconos.png) 0 -24px no-repeat;
+    
+    overflow: hidden;
+    text-indent: -999em;
+}
