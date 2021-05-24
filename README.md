@@ -12,4 +12,8 @@ Luego de haber instalado nodeJS, y por consiguiente, npm, podrá:
 
 - Después de haber realizado esto, podrá utilizar el comando ***php artisan migrate*** para migrar todos los datos a la base de datos y tener ya la API en funcionamiento
 
-2. Iniciar el servidor del frontend con ***npm start***
+2. Instalar todos los paquetes utilizados para la realización del proyecto con ***npm install*** y, luego, poner en funcionamiento la aplicación frontend con ***npm start***
+
+##Nota
+
+En estos momentos, la aplicación ha sufrido un refactoring y no se encuentra funcionando correctamente. En cuanto la aplicación se encuentre funcionando, este mensaje se borrará
