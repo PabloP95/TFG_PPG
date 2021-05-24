@@ -14,6 +14,6 @@ Luego de haber instalado nodeJS, y por consiguiente, npm, podrá:
 
 2. Instalar todos los paquetes utilizados para la realización del proyecto con ***npm install*** y, luego, poner en funcionamiento la aplicación frontend con ***npm start***
 
-##Nota
+## Nota
 
 En estos momentos, la aplicación ha sufrido un refactoring y no se encuentra funcionando correctamente. En cuanto la aplicación se encuentre funcionando, este mensaje se borrará
