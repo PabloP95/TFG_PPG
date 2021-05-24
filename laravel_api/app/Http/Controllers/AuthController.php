@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+
 use App\Models\User;
+use App\Models\Client;
+use App\Models\Restaurant;
 
 use Validator;
 
@@ -43,7 +46,6 @@ class AuthController extends Controller
         return $this->createNewToken($token);
     }
 
-
     /**
      * 
      * Register a user
@@ -52,7 +54,9 @@ class AuthController extends Controller
     public function register(Request $request){
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6'
+            'password' => 'required|string|confirmed|min:6',
+            'name' => 'required|string',
+            'rol' => 'required|string',
         ]);
 
         if($validator->fails()){
