@@ -7,6 +7,10 @@ export class DetallePlato extends Component {
     render() {
         let moneda = localStorage.getItem('moneda');
         let dinero = localStorage.getItem('dinero');
+        if (moneda === null && dinero === null) {
+            moneda = '€';
+            dinero = 1;
+        }
         let precio = this.props.location.state.precio;
 
         return (

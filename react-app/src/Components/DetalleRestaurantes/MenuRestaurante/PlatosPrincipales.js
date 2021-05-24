@@ -5,6 +5,10 @@ export class PlatosPrincipales extends Component {
     render() {
         let moneda = localStorage.getItem('moneda');
         let dinero = localStorage.getItem('dinero');
+        if (moneda === null && dinero === null) {
+            moneda = '€';
+            dinero = 1;
+        }
         return (
             <Col md="12" className="p-4">
                 <Row>

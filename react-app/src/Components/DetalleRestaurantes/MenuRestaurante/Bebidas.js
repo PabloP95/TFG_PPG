@@ -5,6 +5,12 @@ export class Bebidas extends Component {
     render() {
         let moneda = localStorage.getItem('moneda');
         let dinero = localStorage.getItem('dinero');
+        if (moneda === null && dinero === null) {
+            moneda = '€';
+            dinero = 1;
+        }
+
+        console.log(dinero);
         return (
             <Col md="12" className="p-4">
                 <Row>

@@ -40,8 +40,11 @@ export default class Footer extends Component {
         this.setState({
             value: e.target.value,
         });
+
+
         localStorage.setItem('moneda', this.state.paises[e.target.value]);
         localStorage.setItem('dinero', this.state.moneda[e.target.value]);
+
     }
     render() {
         let monedaActual = localStorage.getItem('moneda');
