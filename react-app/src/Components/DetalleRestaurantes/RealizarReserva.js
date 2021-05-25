@@ -61,13 +61,13 @@ export class RealizarReserva extends Component {
     reservaOK = () => {
         Swal.fire({
             icon: 'success',
-            title: this.props.location.state.mesaReserva != '' ? 'Reserva modificada' : 'Reserva creada',
-            text: this.props.location.state.mesaReserva != '' ? 'Reserva modificada satisfactoriamente' : 'Reserva creada satisfactoriamente.\nPodrá modificarla o cancelarla en su panel de usuario',
+            title: this.props.location.state.mesaReserva !== undefined ? 'Reserva modificada' : 'Reserva creada',
+            text: this.props.location.state.mesaReserva !== undefined ? 'Reserva modificada satisfactoriamente' : 'Reserva creada satisfactoriamente.\nPodrá modificarla o cancelarla en su panel de usuario',
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Volver a la página del restaurante'
+            confirmButtonText: this.props.location.state.mesaReserva !== undefined ? 'Volver a la página del usuario' : 'Volver a la página del restaurante'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location = this.props.location.state.mesaReserva != '' ? '/user/sonicblazer' : '.'
+                window.location = this.props.location.state.mesaReserva !== undefined ? '/user/sonicblazer' : '.'
             }
         });
     }
@@ -82,11 +82,11 @@ export class RealizarReserva extends Component {
 
 
     render() {
-
+        console.log(this.props.location.state.mesaReserva);
         return (
             <div className="container-fluid">
                 <div className="container p-4">
-                    <h3>{this.props.location.state.mesaReserva != '' ? 'Modificando' : 'Realizando'} reserva en {this.props.location.state.nomRestaurante}</h3>
+                    <h3>{this.props.location.state.mesaReserva !== undefined ? 'Modificando' : 'Realizando'} reserva en {this.props.location.state.nomRestaurante}</h3>
                 </div>
 
                 <div className="container p-2">
@@ -146,7 +146,7 @@ export class RealizarReserva extends Component {
                             </Input>
                         </FormGroup>
                         <Button color="success" lg>
-                            {this.props.location.state.mesaReserva != '' ? 'Modificar reserva' : 'Realizar reserva'}
+                            {this.props.location.state.mesaReserva !== undefined ? 'Modificar reserva' : 'Realizar reserva'}
                         </Button>
                     </Form>
                 </div>

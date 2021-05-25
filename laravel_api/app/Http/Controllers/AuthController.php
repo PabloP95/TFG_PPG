@@ -56,17 +56,39 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
             'name' => 'required|string',
-            'rol' => 'required|string',
+            'userable_type' => 'required|string',
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)]
-        ));
+        if($request->input('rol') === 'App\Models\Client'){
+            $client = Client::create();
+        
+
+            $user = User::create(array_merge(
+                $validator->validated(),
+                [
+                    'password' => bcrypt($request->password),
+                    'userable_id' => $client->id,
+                ]
+            ));
+        }
+
+        if($request->input('rol') === 'App\Models\Restaurant'){
+            $restaurant = Restaurant::create();
+        
+
+            $user = User::create(array_merge(
+                $validator->validated(),
+                [
+                    'password' => bcrypt($request->password),
+                    'userable_id' => $restaurant->id,
+                ]
+            ));
+        }
+        
 
         return response()->json([
             'message' => 'User register OK',

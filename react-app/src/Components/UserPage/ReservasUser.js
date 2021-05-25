@@ -34,6 +34,7 @@ export class ReservasUser extends Component {
                         <Link className="btn btn-info mr-3 mb-1" to={{
                             pathname: "/restaurantes/restaurante/1/reserva",
                             state: {
+                                mesaReserva: "2",
                                 idRestaurante: "0",
                                 nomRestaurante: "Restaurante A",
                                 diaReserva: "2021-05-14",
@@ -68,6 +69,7 @@ export class ReservasUser extends Component {
                         <Link className="btn btn-info mr-3 mb-1" to={{
                             pathname: "/restaurantes/restaurante/1/reserva",
                             state: {
+                                mesaReserva: "2",
                                 idRestaurante: "0",
                                 nomRestaurante: "Restaurante A",
                                 diaReserva: "2021-05-12",

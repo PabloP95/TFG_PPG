@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Form, FormGroup, Label, Input, Button, NavItem } from 'reactstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Form, FormGroup, Input, Button, NavItem } from 'reactstrap'
+import { FaSearch } from 'react-icons/fa'
 export class SearchBar extends Component {
     constructor(props) {
         super(props);
@@ -48,25 +47,18 @@ export class SearchBar extends Component {
             <NavItem className="mt-sm-auto mr-sm-auto">
                 <Form inline onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Label for="textSearch" hidden>textSearch</Label>
                         <Input
                             type="text"
                             style={{ 'border': this.state.errors.textSearch ? '1px solid red' : '' }}
                             value={this.state.textSearch}
                             name="textSearch" id="textSearch"
                             placeholder="Buscar"
-                            onChange={this.handleChange} />
+                            onChange={this.handleChange}
+                            className="mr-2" />
                     </FormGroup>
-                    {this.props.isOpen ?
-                        (
-                            <Button>
-                                <FontAwesomeIcon icon={faSearch} size={20} className="mt-1" />
-                            </Button>
-                        ) : (
-                            <Button>
-                                <FontAwesomeIcon icon={faSearch}
-                                />
-                            </Button>)}
+                    {
+                        this.props.isOpen ? (<Button className="mr-2" ><FaSearch /></Button>) : (<Button><FaSearch /></Button>)
+                    }
                     <div className="pl-3 text-right text-danger">{this.state.errors.textSearch}</div>
                 </Form>
             </NavItem>

@@ -25,12 +25,27 @@ export class Login extends Component {
         });
     }
 
-    handleLogin() {
+    handleLoginClient() {
+
         Swal.fire({
             icon: 'success',
-            title: 'Bienvenido'
+            title: 'Bienvenido',
+            timer: 3000,
         }).then(
-            window.location = '/paginaprueba'
+
+            window.location = '/user/sonicblazer'
+        );
+    }
+
+    handleLoginRestaurant() {
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Bienvenido',
+            timer: 3000,
+        }).then(
+
+            window.location = '/restaurant/a'
         );
     }
 
@@ -43,7 +58,13 @@ export class Login extends Component {
             }).then(res => {
                 if (res.data.access_token) {
                     localStorage.setItem("user", JSON.stringify(res.data));
-                    this.handleLogin();
+                    if (res.data.user.userable_type === 'App\\Models\\Client') {
+                        this.handleLoginClient();
+                    }
+
+                    if (res.data.user.userable_type === 'App\\Models\\Restaurant') {
+                        this.handleLoginRestaurant();
+                    }
                 }
             }).catch(error => {
                 if (error.response) {

@@ -1,22 +1,3 @@
-@media only screen and (max-width: 600px) {
-  body{
-    display:flex; 
-    flex-direction:column;
-    min-height: 100vh;
-    
-  }
-  
-  .App {
-    text-align: center;
-    margin-top: 3.5rem;
-    margin-bottom: 3rem;
-    max-width: 600px;
-    font-family: 'Lato',
-    sans-serif;
-  
-  }
-
-}
 
 body {
   display: flex;

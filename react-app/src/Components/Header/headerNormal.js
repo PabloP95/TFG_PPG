@@ -8,7 +8,6 @@ const HeaderNormal = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
 
-
     const user = JSON.parse(localStorage.getItem('user'));
     return (
         <div>
@@ -27,9 +26,16 @@ const HeaderNormal = () => {
                             <NavItem className="mr-sm-auto mr-md-3">
                                 <NavLink href="/" onClick={Logout}>Logout</NavLink>
                             </NavItem>
-                            <NavItem className="mr-sm-auto">
-                                <Button className="mr-md-2 my-md-0" color="secondary"><a href="/signup" style={{ textDecoration: 'none', color: 'white' }}>{user.user.name}</a></Button>
-                            </NavItem>
+
+                            {user.user.userable_type === "App\\Models\\Client" ? (
+                                <NavItem className="mr-sm-auto">
+                                    <Button className="mr-md-2 my-md-0" color="secondary"><a href="/user/sonicblazer" style={{ textDecoration: 'none', color: 'white' }}>{user.user.name}</a></Button>
+                                </NavItem>
+                            ) : user.user.userable_type === 'App\\Models\\Restaurant' ? (
+                                <NavItem className="mr-sm-auto">
+                                    <Button className="mr-md-2 my-md-0" color="secondary"><a href="/restaurant/a" style={{ textDecoration: 'none', color: 'white' }}>{user.user.name}</a></Button>
+                                </NavItem>
+                            ) : ('')}
                         </Nav>
                     ) : (
                         <Nav className="ml-sm-auto" navbar>
