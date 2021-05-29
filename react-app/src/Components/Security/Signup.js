@@ -40,7 +40,6 @@ class Signup extends Component {
             title: 'Bienvenido',
             timer: 3000,
         }).then(
-
             window.location = '/user/' + user.user.name
         );
     }
@@ -65,15 +64,16 @@ class Signup extends Component {
                 name: this.state.signUpData.name,
                 userable_type: this.state.signUpData.userable_type
             }).then(res => {
+                console.log("Restaurante dice hola");
                 if (res.data.access_token) {
                     localStorage.setItem("user", JSON.stringify(res.data));
-
-                    if (res.data.user.userable_type === "App\\Models\\Client") {
-                        this.signedUpClient();
+                    if (this.state.signUpData.userable_type === "App\\Models\\Restaurant") {
+                        console.log("Hola :D");
+                        this.signedUpRestaurant();
                     }
 
-                    if (res.data.user.userable_type === 'App\\Models\\Restaurant') {
-                        this.signedUpRestaurant();
+                    if (this.state.signUpData.userable_type === "App\\Models\\Client") {
+                        this.signedUpClient();
                     }
                 }
             }).catch(error => {

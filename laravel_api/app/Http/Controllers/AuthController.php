@@ -76,11 +76,7 @@ class AuthController extends Controller
             ]);
             $token = auth()->login($user);
             return $this->createNewToken($token);
-            return response()->json([
-            'message' => 'User register OK',
-            'user' => $user,
-            'token' => $token,
-        ], 201);
+            
         }
 
         if($request->input('userable_type') === 'App\\Models\\Restaurant'){
@@ -95,13 +91,7 @@ class AuthController extends Controller
                 'userable_type' => $request->input('userable_type')
             ]);
             $token = auth()->login($user);
-
-            return response()->json(
-            [
-                'message' => 'User register OK',
-                'user' => $user,
-                'token' => $token,
-            ], 201);
+            return $this->createNewToken($token);
         }
     }
     
