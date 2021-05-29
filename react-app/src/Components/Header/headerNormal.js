@@ -29,11 +29,11 @@ const HeaderNormal = () => {
 
                             {user.user.userable_type === "App\\Models\\Client" ? (
                                 <NavItem className="mr-sm-auto">
-                                    <Button className="mr-md-2 my-md-0" color="secondary"><a href="/user/sonicblazer" style={{ textDecoration: 'none', color: 'white' }}>{user.user.name}</a></Button>
+                                    <Button className="mr-md-2 my-md-0" color="secondary"><a href={"/user/" + user.user.name} style={{ textDecoration: 'none', color: 'white' }}>{user.user.name}</a></Button>
                                 </NavItem>
                             ) : user.user.userable_type === 'App\\Models\\Restaurant' ? (
                                 <NavItem className="mr-sm-auto">
-                                    <Button className="mr-md-2 my-md-0" color="secondary"><a href="/restaurant/a" style={{ textDecoration: 'none', color: 'white' }}>{user.user.name}</a></Button>
+                                    <Button className="mr-md-2 my-md-0" color="secondary"><a href={"/restaurante/" + user.user.name} style={{ textDecoration: 'none', color: 'white' }}>{user.user.name}</a></Button>
                                 </NavItem>
                             ) : ('')}
                         </Nav>
@@ -51,7 +51,7 @@ const HeaderNormal = () => {
                     }
                 </Collapse>
             </Navbar>
-        </div>
+        </div >
     );
 }
 

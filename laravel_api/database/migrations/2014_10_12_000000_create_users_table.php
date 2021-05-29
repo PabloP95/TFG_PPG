@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('name'); //name = nombre_completo para usuario o nombre_restaurante para restaurante
+            $table->string('name')->unique(); //name = nickname para usuario o nombre_restaurante para restaurante
             $table->integer('userable_id');
             $table->string('userable_type');
             $table->rememberToken();

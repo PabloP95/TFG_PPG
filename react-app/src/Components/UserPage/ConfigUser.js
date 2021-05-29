@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import { Form, FormGroup, Input, Label, Button, Row, Col } from 'reactstrap';
 import Swal from "sweetalert2";
+import axios from 'axios'
+import authHeader from '../Security/auth/auth-header';
 export class ConfigUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            emailUser: 'pablo95piedad@gmail.com',
-            nameSurname: 'Pablo Piedad Garrido',
-            newPassword: 'contraseña1',
-            repeatNewPassword: 'contraseña1',
-            nickname: 'Sonicblazer',
+            emailUser: '',
+            nameSurname: '',
+            newPassword: '',
+            repeatNewPassword: '',
+            nickname: '',
             errorsConfig: {
                 errorEmail: '',
                 errorName: '',
@@ -19,6 +21,16 @@ export class ConfigUser extends Component {
         };
     }
 
+    componentDidMount = () => {
+        axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
+            headers: authHeader()
+        }).then(res => {
+            this.setState({
+                nickname: res.data.name,
+                emailUser: res.data.email
+            });
+        })
+    }
     handleChange = (e) => {
         this.setState({
             ...this.state,

@@ -55,7 +55,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
-            'name' => 'required|string',
+            'name' => 'required|string|unique:users',
             'userable_type' => 'required|string',
         ]);
 
@@ -63,37 +63,46 @@ class AuthController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        if($request->input('rol') === 'App\Models\Client'){
-            $client = Client::create();
-        
-
-            $user = User::create(array_merge(
-                $validator->validated(),
-                [
-                    'password' => bcrypt($request->password),
-                    'userable_id' => $client->id,
-                ]
-            ));
-        }
-
-        if($request->input('rol') === 'App\Models\Restaurant'){
-            $restaurant = Restaurant::create();
-        
-
-            $user = User::create(array_merge(
-                $validator->validated(),
-                [
-                    'password' => bcrypt($request->password),
-                    'userable_id' => $restaurant->id,
-                ]
-            ));
-        }
-        
-
-        return response()->json([
+        if($request->input('userable_type') === 'App\\Models\\Client'){
+            $client = new Client();
+            $client->save();
+            $idClient = $client->id;
+            $user = User::create([
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password')),
+                'name' => $request->input('name'),
+                'userable_id' => $idClient,
+                'userable_type' => $request->input('userable_type')
+            ]);
+            $token = auth()->login($user);
+            return $this->createNewToken($token);
+            return response()->json([
             'message' => 'User register OK',
-            'user' => $user
+            'user' => $user,
+            'token' => $token,
         ], 201);
+        }
+
+        if($request->input('userable_type') === 'App\\Models\\Restaurant'){
+            $restaurant = new Restaurant();
+            $restaurant->save();
+            $idRestaurant = $restaurant->id;
+            $user = User::create([
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password')),
+                'name' => $request->input('name'),
+                'userable_id' => $idRestaurant,
+                'userable_type' => $request->input('userable_type')
+            ]);
+            $token = auth()->login($user);
+
+            return response()->json(
+            [
+                'message' => 'User register OK',
+                'user' => $user,
+                'token' => $token,
+            ], 201);
+        }
     }
     
     /**

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, FormGroup, Input, Label, Button } from 'reactstrap';
+import axios from 'axios';
+import authHeader from '../Security/auth/auth-header';
 import Swal from 'sweetalert2';
 export class ConfigBasicaRest extends Component {
     constructor(props) {
@@ -18,7 +20,16 @@ export class ConfigBasicaRest extends Component {
             }
         }
     }
-
+    componentDidMount = () => {
+        axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
+            headers: authHeader()
+        }).then(res => {
+            this.setState({
+                nameRest: res.data.name,
+                emailRest: res.data.email
+            });
+        })
+    }
     handleChange = (e) => {
         this.setState({
             ...this.state,

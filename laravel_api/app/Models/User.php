@@ -21,7 +21,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'rol'
+        'userable_type',
+        'userable_id',
     ];
 
     public function userable(){

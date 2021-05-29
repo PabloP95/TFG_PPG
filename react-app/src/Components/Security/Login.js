@@ -26,26 +26,25 @@ export class Login extends Component {
     }
 
     handleLoginClient() {
-
+        let user = JSON.parse(localStorage.getItem('user'));
         Swal.fire({
             icon: 'success',
             title: 'Bienvenido',
             timer: 3000,
         }).then(
 
-            window.location = '/user/sonicblazer'
+            window.location = '/user/' + user.user.name
         );
     }
 
     handleLoginRestaurant() {
-
+        let user = JSON.parse(localStorage.getItem('user'));
         Swal.fire({
             icon: 'success',
             title: 'Bienvenido',
             timer: 3000,
         }).then(
-
-            window.location = '/restaurant/a'
+            window.location = '/restaurante/' + user.user.name
         );
     }
 
@@ -58,6 +57,7 @@ export class Login extends Component {
             }).then(res => {
                 if (res.data.access_token) {
                     localStorage.setItem("user", JSON.stringify(res.data));
+
                     if (res.data.user.userable_type === 'App\\Models\\Client') {
                         this.handleLoginClient();
                     }

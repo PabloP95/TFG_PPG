@@ -1,10 +1,29 @@
 import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap'
+import axios from 'axios'
+import authHeader from '../Security/auth/auth-header';
 export class UserInicio extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            nickname: ''
+        }
+    }
+
+    componentDidMount = () => {
+        axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
+            headers: authHeader()
+        }).then(res => {
+            this.setState({
+                nickname: res.data.name
+            });
+        })
+
+    }
     render() {
         return (
             <div>
-                <h3>Bienvenido sonicblazer</h3> { /*sonicblazer === nickname*/}
+                <h3>Bienvenido {this.state.nickname}</h3>
                 <h3>Ha visitado los siguientes restaurantes</h3>
                 <Row className="p-4">
                     <Col sm="6" md="4" xs="6">

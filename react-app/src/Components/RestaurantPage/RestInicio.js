@@ -1,14 +1,34 @@
 import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap'
+import axios from 'axios'
+import authHeader from '../Security/auth/auth-header';
 
 export class RestInicio extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            nomRestaurante: '',
+            email: '',
+        }
+    }
+
+    componentDidMount = () => {
+        axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
+            headers: authHeader()
+        }).then(res => {
+            this.setState({
+                nomRestaurante: res.data.name,
+                email: res.data.email
+            });
+        })
+    }
     render() {
         return (
             <div>
                 <Row className="p-4">
                     <Col md="12" sm="12" className="bg-dark text-light rounded text-center">
                         <h5>
-                            Bienvenido Restaurante A
+                            Bienvenido Restaurante {this.state.nomRestaurante}
                         </h5>
                     </Col>
                 </Row>
@@ -22,7 +42,7 @@ export class RestInicio extends Component {
                                 <h6>Teléfono</h6><p>123 96 52 36</p>
                             </Col>
                             <Col md={{ size: 6 }} sm="12">
-                                <h6>Correo electrónico</h6><p>restaurantea@info.com</p>
+                                <h6>Correo electrónico</h6><p>{this.state.email}</p>
                             </Col>
                         </Row>
                         <h5>Tipos de cocina</h5><p>Italiano</p>

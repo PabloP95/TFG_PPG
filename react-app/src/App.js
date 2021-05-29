@@ -38,8 +38,8 @@ function App() {
           <Route path="/restaurantes/restaurante/1/reserva" component={RealizarReserva}></Route>
           <Route path="/restaurantes/restaurante/1" component={PaginaRestaurante}></Route>
           <Route path="/restaurantes" component={Restaurantes}></Route>
-          <Route path="/user/sonicblazer" component={UserPage}></Route>
-          <Route path="/restaurante/a" component={RestaurantPage}></Route>
+          <Route path="/user/:nickname" component={UserPage}></Route>
+          <Route path="/restaurante/:nomRestaurante" component={RestaurantPage}></Route>
           <Route path="/" component={Home}></Route>
         </Switch>
       </Router>
