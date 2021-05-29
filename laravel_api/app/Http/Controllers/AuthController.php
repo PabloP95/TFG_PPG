@@ -62,37 +62,31 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
-
+        $id; 
         if($request->input('userable_type') === 'App\\Models\\Client'){
             $client = new Client();
             $client->save();
-            $idClient = $client->id;
+            $id = $client->id;
+        }
+        
+        if($request->input('userable_type') === 'App\\Models\\Restaurant'){
+            $restaurant = new Restaurant();
+            $restaurant->save();
+            $id = $restaurant->id;       
+    
+        }
             $user = User::create([
                 'email' => $request->input('email'),
                 'password' => bcrypt($request->input('password')),
                 'name' => $request->input('name'),
-                'userable_id' => $idClient,
+                'userable_id' => $id,
                 'userable_type' => $request->input('userable_type')
             ]);
             $token = auth()->login($user);
             return $this->createNewToken($token);
             
-        }
+        
 
-        if($request->input('userable_type') === 'App\\Models\\Restaurant'){
-            $restaurant = new Restaurant();
-            $restaurant->save();
-            $idRestaurant = $restaurant->id;
-            $user = User::create([
-                'email' => $request->input('email'),
-                'password' => bcrypt($request->input('password')),
-                'name' => $request->input('name'),
-                'userable_id' => $idRestaurant,
-                'userable_type' => $request->input('userable_type')
-            ]);
-            $token = auth()->login($user);
-            return $this->createNewToken($token);
-        }
     }
     
     /**
