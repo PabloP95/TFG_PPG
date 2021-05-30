@@ -9,6 +9,7 @@ export class RestInicio extends Component {
         this.state = {
             nomRestaurante: '',
             email: '',
+            telefono: ''
         }
     }
 
@@ -20,6 +21,11 @@ export class RestInicio extends Component {
                 nomRestaurante: res.data.name,
                 email: res.data.email
             });
+            axios.get('http://127.0.0.1:8000/api/restaurant/' + res.data.userable_id)
+                .then(res => {
+                    console.log(res.data);
+                    this.setState({ telefono: res.data.numTelefono });
+                })
         })
     }
     render() {
@@ -39,7 +45,7 @@ export class RestInicio extends Component {
                         <h5>Métodos de contacto</h5>
                         <Row>
                             <Col md={{ size: 6 }} sm="12">
-                                <h6>Teléfono</h6><p>123 96 52 36</p>
+                                <h6>Teléfono</h6><p>{this.state.telefono}</p>
                             </Col>
                             <Col md={{ size: 6 }} sm="12">
                                 <h6>Correo electrónico</h6><p>{this.state.email}</p>

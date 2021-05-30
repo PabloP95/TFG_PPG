@@ -15,7 +15,7 @@ class CreateRestaurantsTable extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('numTelefono')->default('123456789');
+            $table->string('numTelefono')->default('123 45 67 89');
             $table->timestamps();
         });
     }

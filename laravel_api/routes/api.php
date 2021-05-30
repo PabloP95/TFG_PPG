@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\ClientController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -37,4 +39,15 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('userProfile', [AuthController::class, 'userProfile']);
+});
+
+
+Route::group(['middleware' => 'api'], function($router){
+    Route::put('/user/{id}', [UserController::class, 'update']);
+    Route::put('/client/{id}', [ClientController::class, 'update']);
+    Route::put('/restaurant/{id}', [RestaurantController::class, 'update']);
+    Route::delete('/user/{id}', [UserController::class, 'destroy']);
+    Route::get('/client/{id}', [ClientController::class, 'show']);
+    Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
+
 });

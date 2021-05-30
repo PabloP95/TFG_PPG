@@ -1,12 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Form, FormGroup, Input, Label, Button, Row, Col } from 'reactstrap';
 import Swal from "sweetalert2";
-import axios from 'axios'
+import axios from 'axios';
 import authHeader from '../Security/auth/auth-header';
+import Logout from '../Security/Logout';
+
 export class ConfigUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            idUser: '',
             emailUser: '',
             nameSurname: '',
             newPassword: '',
@@ -26,10 +29,19 @@ export class ConfigUser extends Component {
             headers: authHeader()
         }).then(res => {
             this.setState({
+                idUser: res.data.id,
                 nickname: res.data.name,
-                emailUser: res.data.email
+                emailUser: res.data.email,
             });
-        })
+            axios.get('http://127.0.0.1:8000/api/client/' + res.data.userable_id).
+                then(res => {
+                    this.setState({
+                        nameSurname: res.data.nombreCompleto
+                    });
+                });
+        });
+
+
     }
     handleChange = (e) => {
         this.setState({
@@ -41,25 +53,37 @@ export class ConfigUser extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
-            console.log(this.state);
+            axios.put('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
+                name: this.state.nickname,
+                email: this.state.emailUser,
+                password: this.state.newPassword
+            },
+                { headers: authHeader() }
+            ).then(res => {
+                console.log(res.data);
+                this.setState({
+                    nickname: res.data.name,
+                    emailUser: res.data.email,
+                });
+            })
         }
     }
 
     validate() {
         let errorsConfig = {};
         let allOK = true;
-        if (!this.state.nameSurname) {
+        /*if (!this.state.nameSurname) {
             allOK = false;
             errorsConfig['errorName'] = "Introduzca su nombre y apellidos";
         }
         /* Comprobamos que, en caso de haber modificado nameSurname, este solo tenga letras*/
-        if (typeof this.state.nameSurname !== 'undefined') {
+        /* if (typeof this.state.nameSurname !== 'undefined') {
             let pattern = new RegExp(/^[a-zA-Z]+( [a-zA-Z]+)*$/);
             if (!pattern.test(this.state.nameSurname)) {
                 allOK = false;
                 errorsConfig["errorName"] = "Solo utilizar letras";
             }
-        }
+        } */
 
         if (!this.state.emailUser) {
             allOK = false;
@@ -78,11 +102,6 @@ export class ConfigUser extends Component {
         if (!this.state.nickname) {
             allOK = false;
             errorsConfig['errorNickname'] = "Introduzca su nombre de usuario";
-        }
-
-        if (!this.state.newPassword || !this.state.repeatNewPassword) {
-            allOK = false;
-            errorsConfig['errorPassword'] = "Debe introducir una contraseña";
         }
 
         if (typeof this.state.newPassword !== 'undefined') {
@@ -116,11 +135,19 @@ export class ConfigUser extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                    'Cuenta eliminada!',
-                    'Su cuenta ha sido eliminada correctamente.',
-                    'success'
-                )
+                axios.delete('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
+                    headers: authHeader()
+                })
+                Swal.fire({
+                    title: 'Cuenta eliminada!',
+                    text: 'Su cuenta ha sido eliminada correctamente.',
+                    icon: 'success',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        { Logout() };
+                        window.location = '/'
+                    }
+                })
             }
         });
     }

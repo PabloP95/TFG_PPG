@@ -16,7 +16,7 @@ class Client extends Model
      */
 
     protected $fillable = [
-        'nickname',
+        'nombreCompleto',
     ];
 
     public function user(){

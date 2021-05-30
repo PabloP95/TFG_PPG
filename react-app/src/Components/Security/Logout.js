@@ -1,7 +1,9 @@
 import axios from 'axios';
 import authHeader from './auth/auth-header';
 function Logout() {
-    axios.post('http://127.0.0.1/api/auth/logout', authHeader)
+    axios.post('http://127.0.0.1/api/auth/logout', {
+        headers: authHeader()
+    })
         .then(res => {
             console.log(res.data.message);
         }

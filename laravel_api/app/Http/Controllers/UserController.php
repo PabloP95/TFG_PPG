@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index', 'show']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,17 +20,19 @@ class UserController extends Controller
         return User::all();
     }
 
+    
+    
     /**
-     * Store a newly created resource in storage.
+     * Display the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $user = User::findOrFail($id);
+        return response()->json($user);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -37,7 +43,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+        return $user;
     }
 
     /**
@@ -48,6 +56,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+        return $user;
     }
 }

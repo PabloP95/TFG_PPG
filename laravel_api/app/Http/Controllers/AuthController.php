@@ -68,25 +68,22 @@ class AuthController extends Controller
             $client->save();
             $id = $client->id;
         }
-        
+
         if($request->input('userable_type') === 'App\\Models\\Restaurant'){
             $restaurant = new Restaurant();
             $restaurant->save();
             $id = $restaurant->id;       
-    
         }
-            $user = User::create([
-                'email' => $request->input('email'),
-                'password' => bcrypt($request->input('password')),
-                'name' => $request->input('name'),
-                'userable_id' => $id,
-                'userable_type' => $request->input('userable_type')
-            ]);
-            $token = auth()->login($user);
-            return $this->createNewToken($token);
-            
-        
 
+        $user = User::create([
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'name' => $request->input('name'),
+            'userable_id' => $id,
+            'userable_type' => $request->input('userable_type')
+        ]);
+        $token = auth()->login($user);
+        return $this->createNewToken($token);
     }
     
     /**
@@ -97,7 +94,6 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        
         return response()->json(['message' => 'Successfully logged out']);
     }
 

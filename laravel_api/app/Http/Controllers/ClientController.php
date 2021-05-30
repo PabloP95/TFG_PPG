@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use App\Models\Restaurant;
-class RestaurantController extends Controller
+use App\Models\Client;
+class ClientController extends Controller
 {
     public function __construct()
     {
@@ -16,10 +17,9 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        return Restaurant::all();
+        //
     }
 
-    
     /**
      * Display the specified resource.
      *
@@ -28,8 +28,8 @@ class RestaurantController extends Controller
      */
     public function show($id)
     {
-        $restaurant = Restaurant::findOrFail($id);
-        return response()->json($restaurant);
+        $client = Client::findOrFail($id);
+        return response()->json($client);
     }
 
     /**
@@ -41,9 +41,9 @@ class RestaurantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $restaurant = Restaurant::findOrFail($id);
-        $restaurant->update($request->all());
-        return $restaurant;
+        $client = Client::findOrFail($id);
+        $client->update($request->all());
+        return $client;
     }
 
     /**

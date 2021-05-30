@@ -15,8 +15,11 @@ class Restaurant extends Model
      * @var array
      */
     
+    protected $fillable = [
+        'numTelefono'
+    ];
 
     public function user(){
-        return $this->morphOne('App\User', 'userable');
+        return $this->morphOne('App\Models\User', 'userable');
     }
 }

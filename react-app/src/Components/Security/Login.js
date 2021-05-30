@@ -29,12 +29,13 @@ export class Login extends Component {
         let user = JSON.parse(localStorage.getItem('user'));
         Swal.fire({
             icon: 'success',
-            title: 'Bienvenido',
-            timer: 3000,
-        }).then(
+            title: 'Bienvenido'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location = '/user/' + user.user.name
+            }
+        });
 
-            window.location = '/user/' + user.user.name
-        );
     }
 
     handleLoginRestaurant() {
@@ -42,10 +43,11 @@ export class Login extends Component {
         Swal.fire({
             icon: 'success',
             title: 'Bienvenido',
-            timer: 3000,
-        }).then(
-            window.location = '/restaurante/' + user.user.name
-        );
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location = '/restaurante/' + user.user.name
+            }
+        });
     }
 
     onSubmitHandler = (e) => {

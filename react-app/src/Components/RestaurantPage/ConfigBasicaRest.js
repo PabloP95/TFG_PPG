@@ -3,10 +3,12 @@ import { Row, Col, Form, FormGroup, Input, Label, Button } from 'reactstrap';
 import axios from 'axios';
 import authHeader from '../Security/auth/auth-header';
 import Swal from 'sweetalert2';
+import Logout from '../Security/Logout';
 export class ConfigBasicaRest extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            idUser: 0,
             nameRest: '',
             emailRest: '',
             phoneRest: '',
@@ -25,9 +27,16 @@ export class ConfigBasicaRest extends Component {
             headers: authHeader()
         }).then(res => {
             this.setState({
+                idUser: res.data.id,
                 nameRest: res.data.name,
                 emailRest: res.data.email
             });
+            axios.get('http://127.0.0.1:8000/api/restaurant/' + res.data.userable_id)
+                .then(res => {
+                    this.setState({
+                        phoneRest: res.data.numTelefono
+                    })
+                })
         })
     }
     handleChange = (e) => {
@@ -40,7 +49,20 @@ export class ConfigBasicaRest extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
-            console.log(this.state);
+            axios.put('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
+                name: this.state.nameRest,
+                email: this.state.emailRest,
+                password: this.state.newPassword
+            },
+                { headers: authHeader() },
+            ).then(res => {
+                this.setState({
+                    nameRest: res.data.name,
+                    emailRest: res.data.email,
+                })
+            }).catch(error => {
+                console.log(error);
+            });
         }
     }
 
@@ -53,10 +75,10 @@ export class ConfigBasicaRest extends Component {
         }
         /* Comprobamos que, en caso de haber modificado nameSurname, este solo tenga letras*/
         else if (typeof this.state.nameRest !== 'undefined') {
-            let pattern = new RegExp(/^[a-zA-Z]+( [a-zA-Z]+)*$/);
+            let pattern = new RegExp(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/);
             if (!pattern.test(this.state.nameRest)) {
                 allOK = false;
-                errors["nameRest"] = "Solo utilizar letras";
+                errors["nameRest"] = "Solo utilizar letras o números";
             }
         }
 
@@ -94,12 +116,9 @@ export class ConfigBasicaRest extends Component {
             }
         }
 
-        if (!this.state.newPassword || !this.state.repeatNewPassword) {
-            allOK = false;
-            errors['errorPassword'] = "Debe introducir una contraseña";
-        }
+
         /* Comprobamos que en caso de haber modificado la contraseña, que newPassword === repeatNewPassword*/
-        else if (typeof this.state.newPassword !== 'undefined' && typeof this.state.repeatNewPassword !== 'undefined') {
+        if (typeof this.state.newPassword !== 'undefined' && typeof this.state.repeatNewPassword !== 'undefined') {
             if (this.state.newPassword !== this.state.repeatNewPassword) {
                 allOK = false;
                 errors['errorPassword'] = "Las contraseñas no coinciden";
@@ -126,11 +145,21 @@ export class ConfigBasicaRest extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                    'Cuenta eliminada!',
-                    'Su cuenta ha sido eliminada correctamente.',
-                    'success'
-                )
+                axios.delete('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
+                    headers: authHeader()
+                }).then(res => {
+                    console.log("Logout")
+                })
+                Swal.fire({
+                    title: 'Cuenta eliminada!',
+                    text: 'Su cuenta ha sido eliminada correctamente.',
+                    icon: 'success',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        { Logout() };
+                        window.location = '/'
+                    }
+                })
             }
         });
     }
@@ -154,7 +183,7 @@ export class ConfigBasicaRest extends Component {
 
 
                         <FormGroup>
-                            <Label for="phoneRest">Telefono de contacto</Label>
+                            <Label for="phoneRest">Teléfono de contacto</Label>
                             <Input style={{ 'border': this.state.errors.phoneRest ? '1px solid red' : '' }} type="text" name="phoneRest" id="phoneRest"
                                 value={this.state.phoneRest} onChange={this.handleChange} />
                             <div className="text-danger">{this.state.errors.phoneRest}</div>
@@ -179,7 +208,7 @@ export class ConfigBasicaRest extends Component {
                         </FormGroup>
                         <Row>
                             <Col md="6" sm="6" xs="6">
-                                <Button color="primary" className=" mb-2 text-center">Guardar cambios</Button>
+                                <Button color="primary" className="mb-2 text-center">Guardar cambios</Button>
                             </Col>
                             <Col md="6" sm="6" xs="6">
                                 <Button color="danger" onClick={this.checkProfileDelete} className="mb-2">Eliminar cuenta</Button>
