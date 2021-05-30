@@ -54,6 +54,8 @@ class RestaurantController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $restaurant = Restaurant::findOrFail($id);
+        $restaurant->delete();
+        return $restaurant;
     }
 }

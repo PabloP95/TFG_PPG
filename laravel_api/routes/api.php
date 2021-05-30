@@ -43,11 +43,15 @@ Route::group([
 
 
 Route::group(['middleware' => 'api'], function($router){
+    Route::get('/client/{id}', [ClientController::class, 'show']);
+    Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
+
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::put('/client/{id}', [ClientController::class, 'update']);
     Route::put('/restaurant/{id}', [RestaurantController::class, 'update']);
+    
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
-    Route::get('/client/{id}', [ClientController::class, 'show']);
-    Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
+    Route::delete('/client/{id}', [ClientController::class, 'destroy']);
+    Route::delete('/restaurant/{id}', [RestaurantController::class, 'destroy']);
 
 });

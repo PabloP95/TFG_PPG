@@ -9,6 +9,7 @@ export class ConfigUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userableId: '',
             idUser: '',
             emailUser: '',
             nameSurname: '',
@@ -29,6 +30,7 @@ export class ConfigUser extends Component {
             headers: authHeader()
         }).then(res => {
             this.setState({
+                userableId: res.data.userable_id,
                 idUser: res.data.id,
                 nickname: res.data.name,
                 emailUser: res.data.email,
@@ -135,9 +137,12 @@ export class ConfigUser extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
+                axios.delete('http://127.0.0.1:8000/api/client/' + this.state.userableId, {
+                    headers: authHeader()
+                }).then()
                 axios.delete('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
                     headers: authHeader()
-                })
+                }).then()
                 Swal.fire({
                     title: 'Cuenta eliminada!',
                     text: 'Su cuenta ha sido eliminada correctamente.',

@@ -9,6 +9,7 @@ export class ConfigBasicaRest extends Component {
         super(props);
         this.state = {
             idUser: 0,
+            userableId: 0,
             nameRest: '',
             emailRest: '',
             phoneRest: '',
@@ -28,6 +29,7 @@ export class ConfigBasicaRest extends Component {
         }).then(res => {
             this.setState({
                 idUser: res.data.id,
+                userableId: res.data.userable_id,
                 nameRest: res.data.name,
                 emailRest: res.data.email
             });
@@ -145,11 +147,12 @@ export class ConfigBasicaRest extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
+                axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.userableId, {
+                    headers: authHeader()
+                }).then()
                 axios.delete('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
                     headers: authHeader()
-                }).then(res => {
-                    console.log("Logout")
-                })
+                }).then()
                 Swal.fire({
                     title: 'Cuenta eliminada!',
                     text: 'Su cuenta ha sido eliminada correctamente.',
