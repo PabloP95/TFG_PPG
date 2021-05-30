@@ -9,7 +9,6 @@ export class ConfigUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userableId: '',
             idUser: '',
             emailUser: '',
             nameSurname: '',
@@ -17,8 +16,8 @@ export class ConfigUser extends Component {
             repeatNewPassword: '',
             nickname: '',
             errorsConfig: {
-                errorEmail: '',
-                errorName: '',
+                email: '',
+                name: '',
                 errorNickname: '',
                 errorPassword: '',
             }
@@ -26,24 +25,18 @@ export class ConfigUser extends Component {
     }
 
     componentDidMount = () => {
-        axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
-            headers: authHeader()
-        }).then(res => {
-            this.setState({
-                userableId: res.data.userable_id,
-                idUser: res.data.id,
-                nickname: res.data.name,
-                emailUser: res.data.email,
-            });
-            axios.get('http://127.0.0.1:8000/api/client/' + res.data.userable_id).
-                then(res => {
-                    this.setState({
-                        nameSurname: res.data.nombreCompleto
-                    });
+        let user = JSON.parse(localStorage.getItem('user'));
+        this.setState({
+            idUser: user.user.id,
+            nickname: user.user.name,
+            emailUser: user.user.email
+        })
+        axios.get('http://127.0.0.1:8000/api/client/' + user.user.userable_id).
+            then(res => {
+                this.setState({
+                    nameSurname: res.data.nombreCompleto
                 });
-        });
-
-
+            });
     }
     handleChange = (e) => {
         this.setState({
@@ -51,6 +44,17 @@ export class ConfigUser extends Component {
             [e.target.name]: e.target.value
         });
     }
+    modifyOKUser = (name) => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Modificación realizada',
+            text: 'Modificación realizada correctamente',
+            timer: 2000,
+        }).then(() => {
+            window.location = '/user/' + name
+        })
+    }
+
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -58,38 +62,56 @@ export class ConfigUser extends Component {
             axios.put('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
                 name: this.state.nickname,
                 email: this.state.emailUser,
-                password: this.state.newPassword
+                password: this.state.newPassword,
+                password_confirmation: this.state.repeatNewPassword
             },
                 { headers: authHeader() }
             ).then(res => {
-                console.log(res.data);
-                this.setState({
-                    nickname: res.data.name,
-                    emailUser: res.data.email,
+                localStorage.removeItem('user');
+                localStorage.setItem('user', JSON.stringify(res.data));
+                axios.put('http://127.0.0.1:8000/api/client/' + res.data.user.userable_id, {
+                    nombreCompleto: this.state.nameSurname
+                }, {
+                    headers: authHeader()
+                }).catch(error => {
+                    console.log(error);
+                    if (error.response) {
+                        if (error.response.status === 400) {
+                            this.setState({ errorsConfig: JSON.parse(error.response.data) });
+                        }
+                    }
                 });
-            })
+                this.modifyOKUser(res.data.user.name);
+            }).catch(error => {
+                console.log(error);
+                if (error.response) {
+                    if (error.response.status === 400) {
+                        this.setState({ errorsConfig: JSON.parse(error.response.data) });
+                    }
+                }
+            });
         }
     }
 
     validate() {
         let errorsConfig = {};
         let allOK = true;
-        /*if (!this.state.nameSurname) {
+        if (!this.state.nameSurname) {
             allOK = false;
             errorsConfig['errorName'] = "Introduzca su nombre y apellidos";
         }
         /* Comprobamos que, en caso de haber modificado nameSurname, este solo tenga letras*/
-        /* if (typeof this.state.nameSurname !== 'undefined') {
+        if (typeof this.state.nameSurname !== 'undefined') {
             let pattern = new RegExp(/^[a-zA-Z]+( [a-zA-Z]+)*$/);
             if (!pattern.test(this.state.nameSurname)) {
                 allOK = false;
                 errorsConfig["errorName"] = "Solo utilizar letras";
             }
-        } */
+        }
 
         if (!this.state.emailUser) {
             allOK = false;
-            errorsConfig['errorEmail'] = 'Introduzca su correo electrónico';
+            errorsConfig['email'] = 'Introduzca su correo electrónico';
         }
 
         /* Comprobamos que, en caso de haber modificado emailUser, este sea una dirección de correo electrónico*/
@@ -97,15 +119,26 @@ export class ConfigUser extends Component {
             let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
             if (!pattern.test(this.state.emailUser)) {
                 allOK = false;
-                errorsConfig["errorEmail"] = "Introduzca un correo electrónico válido";
+                errorsConfig["email"] = "Introduzca un correo electrónico válido";
             }
         }
 
         if (!this.state.nickname) {
             allOK = false;
-            errorsConfig['errorNickname'] = "Introduzca su nombre de usuario";
+            errorsConfig['name'] = "Introduzca su nombre de usuario";
         }
 
+        if (typeof this.state.nickname !== 'undefined') {
+            let pattern = new RegExp(/([A-Z])\w+/i);
+            if (!pattern.test(this.state.nickname)) {
+                allOK = false;
+                errorsConfig['name'] = "Nombre de usuario incorrecto";
+            }
+        }
+        if (!this.state.newPassword || !this.state.repeatNewPassword) {
+            allOK = false;
+            errorsConfig['errorPassword'] = 'Contraseña necesaria';
+        }
         if (typeof this.state.newPassword !== 'undefined') {
             let patternMySql = new RegExp(/select/i);
             if (patternMySql.test(this.state.newPassword)) {
@@ -172,10 +205,10 @@ export class ConfigUser extends Component {
                                 <Label for="emailUser">
                                     Correo electrónico
                                 </Label>
-                                <Input type="email" name="emailUser" id="emailUser" style={{ 'border': this.state.errorsConfig.errorEmail ? '1px solid red' : '' }}
+                                <Input type="email" name="emailUser" id="emailUser" style={{ 'border': this.state.errorsConfig.email ? '1px solid red' : '' }}
                                     value={this.state.emailUser} onChange={this.handleChange} />
                                 <div className="text-danger">
-                                    {this.state.errorsConfig.errorEmail}
+                                    {this.state.errorsConfig.email}
                                 </div>
                             </FormGroup>
 
@@ -194,10 +227,10 @@ export class ConfigUser extends Component {
                                 <Label for="nickname">
                                     Nombre de usuario/nickname
                                 </Label>
-                                <Input style={{ 'border': this.state.errorsConfig.errorNickname ? '1px solid red' : '' }}
+                                <Input style={{ 'border': this.state.errorsConfig.name ? '1px solid red' : '' }}
                                     type="text" name="nickname" id="nickname"
                                     value={this.state.nickname} onChange={this.handleChange} />
-                                <div className="text-danger">{this.state.errorsConfig.nickname}</div>
+                                <div className="text-danger">{this.state.errorsConfig.name}</div>
                             </FormGroup>
 
                             <FormGroup>

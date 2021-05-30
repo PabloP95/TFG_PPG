@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Client;
+use Validator;
 class ClientController extends Controller
 {
     public function __construct()
@@ -42,6 +43,17 @@ class ClientController extends Controller
     public function update(Request $request, $id)
     {
         $client = Client::findOrFail($id);
+        $validator = Validator::make($request->all(),[
+            'nombreCompleto' => [
+                'required',
+                'string',
+                'regex:/^[a-zA-Z]+( [a-zA-Z]+)*$/'
+            ]
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
         $client->update($request->all());
         return $client;
     }

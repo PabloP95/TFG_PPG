@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Restaurant;
+use Validator;
 class RestaurantController extends Controller
 {
     public function __construct()
@@ -42,6 +43,14 @@ class RestaurantController extends Controller
     public function update(Request $request, $id)
     {
         $restaurant = Restaurant::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'numTelefono' => 'required|string|regex:/([\d]{3} )([\d]{2} )([\d]{2} )([\d]{2})$/',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
         $restaurant->update($request->all());
         return $restaurant;
     }

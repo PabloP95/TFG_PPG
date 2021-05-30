@@ -29,11 +29,10 @@ export class Login extends Component {
         let user = JSON.parse(localStorage.getItem('user'));
         Swal.fire({
             icon: 'success',
-            title: 'Bienvenido'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location = '/user/' + user.user.name
-            }
+            title: 'Bienvenido',
+            timer: 2000,
+        }).then(() => {
+            window.location = '/user/' + user.user.name
         });
 
     }
@@ -43,10 +42,9 @@ export class Login extends Component {
         Swal.fire({
             icon: 'success',
             title: 'Bienvenido',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location = '/restaurante/' + user.user.name
-            }
+            timer: 2000,
+        }).then(() => {
+            window.location = '/restaurante/' + user.user.name
         });
     }
 

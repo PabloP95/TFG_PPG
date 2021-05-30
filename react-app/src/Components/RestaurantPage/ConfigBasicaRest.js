@@ -9,37 +9,32 @@ export class ConfigBasicaRest extends Component {
         super(props);
         this.state = {
             idUser: 0,
-            userableId: 0,
             nameRest: '',
             emailRest: '',
             phoneRest: '',
             newPassword: '',
             repeatNewPassword: '',
             errors: {
-                nameRest: '',
-                emailRest: '',
+                name: '',
+                email: '',
                 phoneRest: '',
                 errorPassword: ''
             }
         }
     }
     componentDidMount = () => {
-        axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
-            headers: authHeader()
-        }).then(res => {
-            this.setState({
-                idUser: res.data.id,
-                userableId: res.data.userable_id,
-                nameRest: res.data.name,
-                emailRest: res.data.email
+        let user = JSON.parse(localStorage.getItem('user'));
+        this.setState({
+            idUser: user.user.id,
+            nameRest: user.user.name,
+            emailRest: user.user.email
+        });
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id)
+            .then(res => {
+                this.setState({
+                    phoneRest: res.data.numTelefono
+                });
             });
-            axios.get('http://127.0.0.1:8000/api/restaurant/' + res.data.userable_id)
-                .then(res => {
-                    this.setState({
-                        phoneRest: res.data.numTelefono
-                    })
-                })
-        })
     }
     handleChange = (e) => {
         this.setState({
@@ -48,23 +43,50 @@ export class ConfigBasicaRest extends Component {
         });
     }
 
+    modifyOK = (name) => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Modificación realizada',
+            text: 'Modificación realizada correctamente',
+            timer: 3000,
+        }).then(() => {
+            window.location = '/restaurante/' + name
+        })
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
             axios.put('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
                 name: this.state.nameRest,
                 email: this.state.emailRest,
-                password: this.state.newPassword
+                password: this.state.newPassword,
+                password_confirmation: this.state.repeatNewPassword
             },
-                { headers: authHeader() },
-            ).then(res => {
-                this.setState({
-                    nameRest: res.data.name,
-                    emailRest: res.data.email,
-                })
-            }).catch(error => {
-                console.log(error);
-            });
+                {
+                    headers: authHeader()
+                }).then(res => {
+                    localStorage.removeItem('user');
+                    localStorage.setItem('user', JSON.stringify(res.data));
+                    axios.put('http://127.0.0.1:8000/api/restaurant/' + res.data.user.userable_id, {
+                        numTelefono: this.state.phoneRest
+                    }, {
+                        headers: authHeader()
+                    }).catch(error => {
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                this.setState({ errors: JSON.parse(error.response.data) });
+                            }
+                        }
+                    });
+                    this.modifyOK(res.data.user.name);
+                }).catch(error => {
+                    if (error.response) {
+                        if (error.response.status === 400) {
+                            this.setState({ errors: JSON.parse(error.response.data) });
+                        }
+                    }
+                });
         }
     }
 
@@ -73,20 +95,20 @@ export class ConfigBasicaRest extends Component {
         let errors = {};
         if (!this.state.nameRest) {
             allOK = false;
-            errors['nameRest'] = "Introduzca el nombre del restaurante";
+            errors['name'] = "Introduzca el nombre del restaurante";
         }
         /* Comprobamos que, en caso de haber modificado nameSurname, este solo tenga letras*/
         else if (typeof this.state.nameRest !== 'undefined') {
             let pattern = new RegExp(/^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/);
             if (!pattern.test(this.state.nameRest)) {
                 allOK = false;
-                errors["nameRest"] = "Solo utilizar letras o números";
+                errors["name"] = "Solo utilizar letras o números";
             }
         }
 
         if (!this.state.emailRest) {
             allOK = false;
-            errors['emailRest'] = 'Introduzca su correo electrónico';
+            errors['email'] = 'Introduzca su correo electrónico';
         }
 
         /* Comprobamos que, en caso de haber modificado emailUser, este sea una dirección de correo electrónico*/
@@ -94,7 +116,7 @@ export class ConfigBasicaRest extends Component {
             let pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
             if (!pattern.test(this.state.emailRest)) {
                 allOK = false;
-                errors["emailRest"] = "Introduzca un correo electrónico válido";
+                errors["email"] = "Introduzca un correo electrónico válido";
             }
         }
 
@@ -110,6 +132,12 @@ export class ConfigBasicaRest extends Component {
                 errors["phoneRest"] = "El formato no es correcto (xxx xx xx xx)";
             }
         }
+
+        if (!this.state.newPassword || !this.state.repeatNewPassword) {
+            allOK = false;
+            errors['errorPassword'] = 'Contraseña necesaria';
+        }
+
         if (typeof this.state.newPassword !== 'undefined') {
             let patternMySql = new RegExp(/select/i);
             if (patternMySql.test(this.state.newPassword)) {
@@ -173,15 +201,15 @@ export class ConfigBasicaRest extends Component {
                     <Form onSubmit={this.handleSubmit}>
                         <FormGroup>
                             <Label for="nameRest">Nombre restaurante</Label>
-                            <Input style={{ 'textTransform': 'capitalize', 'border': this.state.errors.nameRest ? '1px solid red' : '' }} type="text" name="nameRest" id="nameRest"
+                            <Input style={{ 'textTransform': 'capitalize', 'border': this.state.errors.name ? '1px solid red' : '' }} type="text" name="nameRest" id="nameRest"
                                 value={this.state.nameRest} onChange={this.handleChange} />
-                            <div className="text-danger">{this.state.errors.nameRest}</div>
+                            <div className="text-danger">{this.state.errors.name}</div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="emailRest">Correo electrónico</Label>
-                            <Input style={{ 'border': this.state.errors.emailRest ? '1px solid red' : '' }} type="email" name="emailRest" id="emailRest"
+                            <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="emailRest" id="emailRest"
                                 value={this.state.emailRest} onChange={this.handleChange} />
-                            <div className="text-danger">{this.state.errors.emailRest}</div>
+                            <div className="text-danger">{this.state.errors.email}</div>
                         </FormGroup>
 
 

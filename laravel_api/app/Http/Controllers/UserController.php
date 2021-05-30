@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Controllers\AuthController;
+use Validator;
 class UserController extends Controller
 {
     public function __construct()
@@ -44,8 +46,26 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->update($request->all());
-        return $user;
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed|string|min:6',
+            'name' => 'required|string|unique:users'
+            ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+        
+        $user->update([
+                'email' => $request->input('email'),
+                'password' => bcrypt($request->input('password')),
+                'name' => $request->input('name')
+            ]
+        );
+        $authController = new AuthController();
+        $authController->logout();
+        $cosa = $authController->login($request);
+        return $cosa;
     }
 
     /**
