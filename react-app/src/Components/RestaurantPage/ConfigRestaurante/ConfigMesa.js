@@ -37,8 +37,6 @@ export class ConfigMesa extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log(prevState.numeroConsultas);
-        console.log(this.state.numeroConsultas);
         if (prevState.numeroConsultas !== this.state.numeroConsultas) {
             axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/mesas', {
                 headers: authHeader(),
@@ -47,9 +45,6 @@ export class ConfigMesa extends Component {
                     mesas: res.data
                 });
             })
-        }
-        else {
-            console.log("No hay cambios");
         }
     }
 
