@@ -128,17 +128,17 @@ export class Login extends Component {
             <div className="contenedor">
                 <div className="registration">
                     <div className="registration-header">
-                        <h3>Log in</h3>
+                        <h3>Login</h3>
                     </div>
                     <Form onSubmit={this.onSubmitHandler} className="formulario">
                         <FormGroup>
                             <Label for="email" hidden>Email</Label>
-                            <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="test@test.com" onChange={this.onChangeHandler} />
+                            <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="Correo electrónico" onChange={this.onChangeHandler} />
                             <div className="text-danger">{this.state.errors.email}</div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="password" hidden>Password</Label>
-                            <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }} type="password" name="password" id="password" placeholder="password" onChange={this.onChangeHandler} />
+                            <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }} type="password" name="password" id="password" placeholder="Contraseña" onChange={this.onChangeHandler} />
                             <div className="text-danger">{this.state.errors.password}</div>
                         </FormGroup>
                         <Button style={{ 'textAlign': 'center' }}>Login</Button>

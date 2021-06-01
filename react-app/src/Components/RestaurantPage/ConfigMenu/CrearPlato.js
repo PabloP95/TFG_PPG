@@ -207,7 +207,7 @@ export class CrearPlato extends Component {
                             </FormGroup>
 
                             <FormGroup>
-                                <Label for="precioPlato">Precio del plato (en euros)</Label>
+                                <Label for="precioPlato">Precio del plato (21% IVA incluido)</Label>
                                 <Input type="number" id="precioPlato" name="precioPlato" placeholder="7.50"
                                     step="0.01" min="0"
                                     value={this.state.infoPlato.precioPlato}

@@ -24,7 +24,7 @@ const HeaderNormal = () => {
                     {user ? (
                         <Nav className="ml-sm-auto" navbar>
                             <NavItem className="mr-sm-auto mr-md-3">
-                                <NavLink href="/" onClick={Logout}>Logout</NavLink>
+                                <NavLink href="/" onClick={Logout}>Desconexión</NavLink>
                             </NavItem>
 
                             {user.user.userable_type === "App\\Models\\Client" ? (
@@ -43,7 +43,7 @@ const HeaderNormal = () => {
                                 <NavLink href="/login">Login</NavLink>
                             </NavItem>
                             <NavItem className="mr-sm-auto">
-                                <Button className="mr-md-2 my-md-0" color="secondary"><a href="/signup" style={{ textDecoration: 'none', color: 'white' }}>Sign up</a></Button>
+                                <Button className="mr-md-2 my-md-0" color="secondary"><a href="/signup" style={{ textDecoration: 'none', color: 'white' }}>Darse de alta</a></Button>
                             </NavItem>
                         </Nav>
 

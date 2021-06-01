@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\TableController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,6 +30,7 @@ Route::get('unauthorized', function() {
 })->name('api.jwt.unauthorized');
 
 Route::get('users', [UserController::class, 'index']);
+Route::get('restaurants', [RestaurantController::class, 'index']);
 
 Route::group([
     'middleware' => 'api',
@@ -43,15 +45,23 @@ Route::group([
 
 
 Route::group(['middleware' => 'api'], function($router){
+    Route::get('/restaurant/{id}/mesas', [TableController::class, 'index']);
+    
+    Route::post('/restaurant/{id}/mesa', [TableController::class, 'store']);
+    Route::post('/restaurant/{id}/multiple-mesa', [TableController::class, 'multipleStore']);
+    
     Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
-
+    Route::get('/restaurant/{id}/mesa/{idMesa}', [RestaurantController::class, 'show']);
+    
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::put('/client/{id}', [ClientController::class, 'update']);
     Route::put('/restaurant/{id}', [RestaurantController::class, 'update']);
+    Route::put('restaurant/{id}/mesa/{idMesa}', [TableController::class, 'update']);
     
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
     Route::delete('/client/{id}', [ClientController::class, 'destroy']);
     Route::delete('/restaurant/{id}', [RestaurantController::class, 'destroy']);
+    Route::delete('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'destroy']);
 
 });

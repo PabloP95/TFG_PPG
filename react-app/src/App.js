@@ -6,8 +6,6 @@ import SignUp from './Components/Security/Signup';
 import Login from './Components/Security/Login';
 import Home from './Components/Home';
 import PaginaPrueba from './Components/Footer/PaginaPrueba';
-import SignUpRestaurante from './Components/Security/signUpRestaurante';
-import SignUpUsuario from './Components/Security/signUpUsuario';
 import AvisoLegal from './Components/Footer/AvisoLegal';
 import PoliticaPrivacidad from './Components/Footer/PoliticaPrivacidad';
 import ScrollToTop from './Components/functions/ScrollToTop';
@@ -28,8 +26,6 @@ function App() {
         <Switch>
           <Route path="/login" component={Login}></Route>
           <Route path="/signup" component={SignUp}></Route>
-          <Route path="/signupuser" component={SignUpUsuario}></Route>
-          <Route path="/signuprest" component={SignUpRestaurante}></Route>
           <Route path="/paginaprueba" component={PaginaPrueba}></Route>
           <Route path="/aviso-legal" component={AvisoLegal}></Route>
           <Route path="/politica-privacidad" component={PoliticaPrivacidad}></Route>
@@ -43,6 +39,7 @@ function App() {
           <Route path="/" component={Home}></Route>
         </Switch>
       </Router>
+
       <Footer />
     </div>
   );

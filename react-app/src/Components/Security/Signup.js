@@ -64,7 +64,6 @@ class Signup extends Component {
                 name: this.state.signUpData.name,
                 userable_type: this.state.signUpData.userable_type
             }).then(res => {
-                console.log("Restaurante dice hola");
                 if (res.data.access_token) {
                     localStorage.setItem("user", JSON.stringify(res.data));
                     if (this.state.signUpData.userable_type === "App\\Models\\Restaurant") {
@@ -143,26 +142,26 @@ class Signup extends Component {
             <div className="contenedor">
                 <div className="registration">
                     <div className="registration-header">
-                        <h2>Register</h2>
+                        <h2>Dando de alta</h2>
                     </div>
                     <Form onSubmit={this.onSubmitHandler} className="formulario">
                         <FormGroup>
                             <Label for="email" hidden>Email</Label>
-                            <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="email" onChange={this.onChangeHandler} />
+                            <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="Correo electrónico" onChange={this.onChangeHandler} />
                             <div className="text-danger">{this.state.errors.email}</div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="password" hidden>Password</Label>
                             <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }}
                                 type="password" name="password" id="password"
-                                placeholder="password" onChange={this.onChangeHandler} />
+                                placeholder="Contraseña" onChange={this.onChangeHandler} />
                             <div className="text-danger">{this.state.errors.password}</div>
                         </FormGroup>
                         <FormGroup>
                             <Label for="confirmPassword" hidden>Confirm password</Label>
                             <Input style={{ 'border': this.state.errors.confirmPassword ? '1px solid red' : '' }}
                                 type="password" name="confirmPassword" id="confirmPassword"
-                                placeholder="confirm password" onChange={this.onChangeHandler} />
+                                placeholder="Repetir contraseña" onChange={this.onChangeHandler} />
                             <div className="text-danger">{this.state.errors.confirmPassword}</div>
                         </FormGroup>
                         <FormGroup>

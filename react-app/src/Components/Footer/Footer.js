@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Input, Label, Container, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import axios from 'axios';
+import './footer.css'
 
 export default class Footer extends Component {
     constructor(props) {
@@ -41,7 +42,6 @@ export default class Footer extends Component {
             value: e.target.value,
         });
 
-
         localStorage.setItem('moneda', this.state.paises[e.target.value]);
         localStorage.setItem('dinero', this.state.moneda[e.target.value]);
 
@@ -50,20 +50,20 @@ export default class Footer extends Component {
         let monedaActual = localStorage.getItem('moneda');
         let idiomaActual = localStorage.getItem('idioma');
         return (
-            <footer className="d-flex align-items-center mt-auto">
+            <footer className="d-flex align-items-center footer" style={{ 'fontSize': '0.95rem' }}>
                 <Container>
                     <hr />
                     <Row>
-                        <Col className="mt-3">
+                        <Col className="pt-2">
                             <strong><p>eRestaurant</p></strong>
                             <p>&copy;2021</p>
                         </Col>
-                        <Col className="mt-3">
+                        <Col className="pt-2">
                             <strong><p>Acciones</p></strong>
                             <p><a href="/signup" style={{ textDecoration: 'none' }}>Unirse</a></p>
                             <p><a href="/paginaprueba" style={{ textDecoration: 'none' }}>Página de pruebas</a></p>
                         </Col>
-                        <Col className="mt-3">
+                        <Col className="pt-2">
                             <strong><p>Internacionalización</p></strong>
                             <p
                                 style={{ 'cursor': 'pointer' }}
@@ -114,7 +114,7 @@ export default class Footer extends Component {
                                 </ModalFooter>
                             </Modal>
                         </Col>
-                        <Col className="mt-3">
+                        <Col className="pt-2">
                             <strong><p>Acerca de</p></strong>
                             <p><a href="/aviso-legal" style={{ textDecoration: 'none' }}>Aviso Legal</a></p>
                             <p><a href="/politica-privacidad" style={{ textDecoration: 'none' }}>Política de privacidad</a></p>

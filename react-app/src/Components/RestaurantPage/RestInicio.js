@@ -23,7 +23,6 @@ export class RestInicio extends Component {
             });
             axios.get('http://127.0.0.1:8000/api/restaurant/' + res.data.userable_id)
                 .then(res => {
-                    console.log(res.data);
                     this.setState({ telefono: res.data.numTelefono });
                 })
         })
@@ -41,7 +40,7 @@ export class RestInicio extends Component {
 
                 <Row>
                     <Col md={{ size: 6, offset: 3 }} sm={{ size: 6, offset: 3 }}>
-                        <h5>Ubicación</h5><p>Calle Falsa nº 123, San Fernando, Cadiz</p>
+                        <h5>Ubicación</h5><p>Calle Falsa nº 123, San Fernando, Cádiz</p>
                         <h5>Métodos de contacto</h5>
                         <Row>
                             <Col md={{ size: 6 }} sm="12">

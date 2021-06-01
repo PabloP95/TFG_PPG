@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 export class DetallesCard extends Component {
     render() {
+        let user = JSON.parse(localStorage.getItem('user'));
         return (
             <div id="detalles-card" className="p-4">
                 <hr />
@@ -29,28 +30,40 @@ export class DetallesCard extends Component {
                             </CardText>
                         </Card>
                     </Col>
-                    <Col sm="12" md="4" className="order-1 order-md-4 pb-4">
-                        <br />
-                        <br />
-                        <br />
-                        <br />
+                    {user && user.user.userable_type === 'App\\Models\\Client' ? (
+                        <Col sm="12" md="4" className="order-1 order-md-4 pb-4">
+                            <br />
+                            <br />
+                            <br />
+                            <br />
 
-                        <Link className="btn btn-primary btn-lg" id="reserva" to={{
-                            pathname: "/restaurantes/restaurante/1/reserva",
-                            state: {
-                                idRestaurante: "0",
-                                nomRestaurante: "Restaurante A"
-                            }
-                        }}
-                        >
-                            Realizar reserva
+                            <Link className="btn btn-primary btn-lg" to={{
+                                pathname: "/restaurantes/restaurante/1/reserva",
+                                state: {
+                                    idRestaurante: "0",
+                                    nomRestaurante: "Restaurante A"
+                                }
+                            }}
+                            >
+                                Realizar reserva
+                            </Link>
+                        </Col>
+                    ) : (
+                        <Col sm="12" md="4" className="order-1 order-md-4 pb-4">
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <button className="btn btn-secondary btn-lg" style={{ 'cursor': 'auto' }}
+                                id="reserva">
+                                Realizar reserva
+                            </button>
+                            <UncontrolledTooltip fade placement="bottom" target="reserva">
+                                Para realizar la reserva debe haber iniciado sesión
+                            </UncontrolledTooltip>
 
-                        </Link>
-
-                        <UncontrolledTooltip fade placement="bottom" target="reserva">
-                            Para realizar la reserva debe haber iniciado sesión
-                        </UncontrolledTooltip>
-                    </Col>
+                        </Col>
+                    )}
                     <Col sm="12" md="4" className="order-3 order-md-4 pt-3">
                         <Card body>
                             <CardTitle tag="h5"><strong>Ubicación y contacto</strong></CardTitle>

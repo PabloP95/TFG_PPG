@@ -22,4 +22,8 @@ class Restaurant extends Model
     public function user(){
         return $this->morphOne('App\Models\User', 'userable');
     }
+
+    public function tables(){
+        return $this->hasMany('App\Models\Table');
+    }
 }

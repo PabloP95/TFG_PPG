@@ -44,7 +44,7 @@ return [
 	'file'                  => 'El campo :attribute debe ser un archivo.',
 	'filled'                => 'El campo :attribute es requerido.',
 	'gt'                    => [
-		'numeric' => 'El campo :attribute debe ser mayor que :value.',
+		'numeric' => 'Este campo debe ser mayor que :value.',
 		'file'    => 'El campo :attribute debe ser mayor que :value kilobytes.',
 		'string'  => 'El campo :attribute debe ser mayor que :value caracteres.',
 		'array'   => 'El campo :attribute puede tener hasta :value elementos.',
