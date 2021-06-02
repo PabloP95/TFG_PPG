@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-
+use Validator;
+use DB;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -24,6 +25,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Validator::extend('unique_custom', function ($attribute, $value, $parameters)
+        {
+            // Get the parameters passed to the rule
+            list($table, $field, $field2, $field2Value) = $parameters;
+
+            return DB::table($table)->where($field, $value)->where($field2, $field2Value)->count() == 0;
+        });
         Schema::defaultStringLength(191);
     }
 }

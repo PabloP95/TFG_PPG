@@ -112,6 +112,7 @@ return [
 	'string'                => 'El campo :attribute debe ser una cadena.',
 	'timezone'              => 'El campo :attribute debe ser una zona válida.',
 	'unique'                => 'Este campo ya ha sido tomado.',
+	'unique_custom'         => 'Este campo ya ha sido tomado.',
 	'uploaded'              => 'El campo :attribute no ha podido ser cargado.',	
 	'url'                   => 'El formato de :attribute es inválido.',
 	'uuid'                  => 'El :attribute debe ser un UUID valido.',

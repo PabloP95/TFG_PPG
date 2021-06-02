@@ -41,7 +41,7 @@ class TableController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'numMesa' => 'required|integer|gt:0|unique:tables',
+            'numMesa' => 'required|integer|gt:0|unique_custom:tables,numMesa,restaurant_id,' . $request->restaurant_id,
             'numOcupantes' => 'required|integer|gt:0',
             'restaurant_id' => 'required|integer|exists:restaurants,id',
         ]);
@@ -49,6 +49,7 @@ class TableController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
+
         return Table::create($request->all());
     }
 
@@ -61,7 +62,7 @@ class TableController extends Controller
     public function show($id, $idMesa)
     {
         $restaurant = Restaurant::findOrFail($id);
-        $table = Table::findOrFail($idMesa);
+        return $restaurant->tables()->where('idMesa', '=', $idMesa)->get();
         return $table;
     }
 
@@ -75,10 +76,9 @@ class TableController extends Controller
     public function update(Request $request, $id, $idMesa)
     {
         $restaurant = Restaurant::findOrFail($id);
-    
-        $table = Table::findOrFail($idMesa);
+        
         $validator = Validator::make($request->all(), [
-            'numMesa' => 'sometimes|required|integer|gt:0|unique:tables',
+            'numMesa' => 'sometimes|required|integer|gt:0|unique_custom:tables,numMesa,restaurant_id,' . $id,
             'numOcupantes' => 'required|integer|gt:0',
         ]);
 
@@ -86,7 +86,7 @@ class TableController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $table->update([
+        $table = $restaurant->tables()->where('idMesa', '=', $idMesa)->update([
             'numMesa' => $request->input('numMesa'),
             'numOcupantes' => $request->input('numOcupantes'),
         ]);
@@ -103,8 +103,8 @@ class TableController extends Controller
     public function destroy($id, $idMesa)
     {
         $restaurant = Restaurant::findOrFail($id);
-        $table = Table::findOrFail($idMesa);
-        $table->delete();
+        $table = $restaurant->tables()->where('idMesa', '=', $idMesa)->delete();
+        
         return $table;
     }
 

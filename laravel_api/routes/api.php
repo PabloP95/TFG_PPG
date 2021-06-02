@@ -53,7 +53,7 @@ Route::group(['middleware' => 'api'], function($router){
     
     Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
-    Route::get('/restaurant/{id}/mesa/{idMesa}', [RestaurantController::class, 'show']);
+    Route::get('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'show']);
     
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::put('/client/{id}', [ClientController::class, 'update']);
