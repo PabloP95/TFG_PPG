@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTiposCocinaRestaurantesTable extends Migration
+class RestaurantTiposCocina extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateTiposCocinaRestaurantesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tipos_cocina__restaurantes', function (Blueprint $table) {
-            $table->BigInteger('tiposCocina_id')->unsigned();
+        Schema::create('restaurant_tipos_cocina', function (Blueprint $table) {
+            $table->BigInteger('tipos_cocina_id')->unsigned();
             $table->bigInteger('restaurant_id')->unsigned();
 
-            $table->foreign('tiposCocina_id')
+            $table->foreign('tipos_cocina_id')
                 ->references('id')
                 ->on('tipos_cocinas')
                 ->onUpdate('cascade')
@@ -37,6 +37,6 @@ class CreateTiposCocinaRestaurantesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipos_cocina__restaurantes');
+        Schema::dropIfExists('restaurant_tipos_cocina');
     }
 }

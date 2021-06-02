@@ -2,30 +2,38 @@ import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap'
 import axios from 'axios'
 import authHeader from '../Security/auth/auth-header';
-
+import './ConfigRestaurante/showTipoCocina.css'
 export class RestInicio extends Component {
     constructor(props) {
         super(props);
         this.state = {
             nomRestaurante: '',
             email: '',
-            telefono: ''
+            telefono: '',
+            tiposCocinaSelected: [],
         }
     }
-
     componentDidMount = () => {
-        axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
-            headers: authHeader()
-        }).then(res => {
-            this.setState({
-                nomRestaurante: res.data.name,
-                email: res.data.email
-            });
-            axios.get('http://127.0.0.1:8000/api/restaurant/' + res.data.userable_id)
-                .then(res => {
-                    this.setState({ telefono: res.data.numTelefono });
-                })
-        })
+        let user = JSON.parse(localStorage.getItem('user'));
+
+        this.setState({
+            nomRestaurante: user.user.name,
+            email: user.user.email
+        });
+
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id)
+            .then(res => {
+                this.setState({ telefono: res.data.numTelefono });
+            })
+
+        axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
+            { headers: authHeader() }).then(res => {
+                this.setState({
+                    tiposCocinaSelected: res.data
+                });
+            })
+
+
     }
     render() {
         return (
@@ -50,7 +58,14 @@ export class RestInicio extends Component {
                                 <h6>Correo electrónico</h6><p>{this.state.email}</p>
                             </Col>
                         </Row>
-                        <h5>Tipos de cocina</h5><p>Italiano</p>
+                        <h5>Tipos de cocina</h5>
+                        <ul className="pr-5">
+                            {this.state.tiposCocinaSelected.map((tipoCocina) =>
+                                <li className="showTypes" key={tipoCocina.id}>
+                                    {tipoCocina.tipoCocina}
+                                </li>
+                            )}
+                        </ul>
                         <h5>Horario</h5>
                         <Row >
                             <Col md="6" sm="6" xs="6" className="p-2">

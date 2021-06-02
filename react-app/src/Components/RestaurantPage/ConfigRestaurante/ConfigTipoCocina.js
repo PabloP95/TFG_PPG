@@ -10,30 +10,37 @@ export class ConfigTipoCocina extends Component {
         super(props);
         this.state = {
             tiposCocinaSelected: [],
+            numConsultas: 0,
         }
     }
 
     componentDidMount() {
         let user = JSON.parse(localStorage.getItem('user'));
-        axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/tiposCocina',
+        axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
             { headers: authHeader() }).then(res => {
                 this.setState({
-                    tiposCocinaSelected: res.data
+                    tiposCocinaSelected: res.data,
+                    numConsultas: this.state.numConsultas++
                 });
             })
     }
+
+    eventHandler = (data) => {
+        this.setState({ tiposCocinaSelected: data });
+    }
+
     render() {
         return (
             <div className="p-2">
                 <h5>Tipos de cocina actual</h5>
                 <ul className="pr-5">
                     {this.state.tiposCocinaSelected.map((tipoCocina) =>
-                        <li key={tipoCocina.id}>
+                        <li className="showTypes" key={tipoCocina.id}>
                             {tipoCocina.tipoCocina}
                         </li>
                     )}
                 </ul>
-                <TipoCocina />
+                <TipoCocina onChange={this.eventHandler} />
             </div>
         )
     }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TiposCocina;
 use App\Models\Restaurant;
+
+use Validator;
 class TiposCocinaController extends Controller
 {
     /**
@@ -18,7 +20,7 @@ class TiposCocinaController extends Controller
     }
 
     public function indexTipoCocinaRestaurante($id){
-        $tiposCocina = Restaurant::with('tiposCocina')->get();
+        $tiposCocina = Restaurant::find($id)->tiposCocina()->get();
         return $tiposCocina;
     }
 
@@ -28,9 +30,14 @@ class TiposCocinaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        $restaurant = Restaurant::findOrFail($id);
+        $tiposCocina = $request->input('tiposCocinaSelected');
+        $tiposCocinaConNombre = $request->input('tiposCocinaNombre');
+        $res = $restaurant->tiposCocina()->sync($tiposCocina);
+        
+        return response()->json(['data' => $tiposCocinaConNombre], 200);
     }
 
     /**
@@ -39,10 +46,7 @@ class TiposCocinaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.
@@ -51,10 +55,7 @@ class TiposCocinaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+    
 
     /**
      * Remove the specified resource from storage.
