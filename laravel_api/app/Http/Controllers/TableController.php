@@ -16,9 +16,20 @@ class TableController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        return Table::orderBy('numMesa', 'asc')->get();
+        /*$tables = Restaurant::with(['tables' => function ($q){
+                        $q->orderBy('numMesa');
+                    }])
+                    ->get();
+        return $tables;
+        */
+
+        $tablesRestaurant = Restaurant::find($id)->tables()
+        ->orderBy('numMesa', 'asc')
+        ->get();
+        return $tablesRestaurant;
+
     }
 
     /**
@@ -63,7 +74,6 @@ class TableController extends Controller
      */
     public function update(Request $request, $id, $idMesa)
     {
-        
         $restaurant = Restaurant::findOrFail($id);
     
         $table = Table::findOrFail($idMesa);

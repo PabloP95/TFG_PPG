@@ -26,4 +26,8 @@ class Restaurant extends Model
     public function tables(){
         return $this->hasMany('App\Models\Table');
     }
+
+    public function tiposCocina(){
+        return $this->belongsToMany('App\Models\TiposCocina');
+    }
 }

@@ -13,7 +13,6 @@ export class ConfigMesa extends Component {
             mesas: [],
             idRestaurante: '',
             numeroConsultas: 0,
-            numConsultasPrevState: '',
         }
     }
 
@@ -86,6 +85,11 @@ export class ConfigMesa extends Component {
                 </Row>
 
                 <Row className="p-2">
+                    {this.state.mesas.length !== 0 ? ('') : (
+                        <Col md="12" sm="12" className="p-2">
+                            <p className="text-center">Para crear una mesa, pulse en el botón correspondiente</p>
+                        </Col>
+                    )}
                     {this.state.mesas.map(mesa => (
                         <Col md="6" sm="6" className="p-2" key={mesa.idMesa}>
                             <Card body>
@@ -106,6 +110,7 @@ export class ConfigMesa extends Component {
                             </Card>
                         </Col>
                     ))}
+
                 </Row>
             </div>
         )

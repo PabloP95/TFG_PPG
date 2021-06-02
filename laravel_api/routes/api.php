@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\TiposCocinaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,7 +47,7 @@ Route::group([
 
 Route::group(['middleware' => 'api'], function($router){
     Route::get('/restaurant/{id}/mesas', [TableController::class, 'index']);
-    
+    Route::get('/tiposCocina', [TiposCocinaController::class, 'index']);
     Route::post('/restaurant/{id}/mesa', [TableController::class, 'store']);
     Route::post('/restaurant/{id}/multiple-mesa', [TableController::class, 'multipleStore']);
     
