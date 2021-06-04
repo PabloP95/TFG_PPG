@@ -9,8 +9,6 @@ export class Bebidas extends Component {
             moneda = '€';
             dinero = 1;
         }
-
-        console.log(dinero);
         return (
             <Col md="12" className="p-4">
                 <Row>

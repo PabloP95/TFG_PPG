@@ -29,10 +29,10 @@ function App() {
           <Route path="/paginaprueba" component={PaginaPrueba}></Route>
           <Route path="/aviso-legal" component={AvisoLegal}></Route>
           <Route path="/politica-privacidad" component={PoliticaPrivacidad}></Route>
-          <Route path="/restaurantes/restaurante/1/menu/detalle-plato" component={DetallePlato}></Route>
-          <Route path="/restaurantes/restaurante/1/menu" component={Menu}></Route>
-          <Route path="/restaurantes/restaurante/1/reserva" component={RealizarReserva}></Route>
-          <Route path="/restaurantes/restaurante/1" component={PaginaRestaurante}></Route>
+          <Route path="/restaurantes/restaurante/:id/menu/detalle-plato" component={DetallePlato}></Route>
+          <Route path="/restaurantes/restaurante/:id/menu" component={Menu}></Route>
+          <Route path="/restaurantes/restaurante/:id/reserva" component={RealizarReserva}></Route>
+          <Route path="/restaurantes/restaurante/:id" component={PaginaRestaurante}></Route>
           <Route path="/restaurantes" component={Restaurantes}></Route>
           <Route path="/user/:nickname" component={UserPage}></Route>
           <Route path="/restaurante/:nomRestaurante" component={RestaurantPage}></Route>

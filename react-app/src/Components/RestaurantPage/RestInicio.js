@@ -16,14 +16,13 @@ export class RestInicio extends Component {
     componentDidMount = () => {
         let user = JSON.parse(localStorage.getItem('user'));
 
-        this.setState({
-            nomRestaurante: user.user.name,
-            email: user.user.email
-        });
-
         axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id)
             .then(res => {
-                this.setState({ telefono: res.data.numTelefono });
+                this.setState({
+                    nomRestaurante: res.data[0].name,
+                    email: res.data[0].email, 
+                    telefono: res.data[0].numTelefono 
+                    });
             })
 
         axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,

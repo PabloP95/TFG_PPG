@@ -112,7 +112,7 @@ export class TipoCocina extends Component {
                 <Modal isOpen={this.state.modalCocina} toggle={this.toggleCocina}>
                     <ModalHeader toggle={this.toggleCocina}>Tipos de cocina</ModalHeader>
                     <ModalBody>
-                        {this.state.tiposCocinaSeleccionados.map(tipococina => <div>{tipococina.tipoCocina}</div>)}
+                        {this.state.tiposCocinaSeleccionados.map(tipococina => <div key={tipococina.id}>{tipococina.tipoCocina}</div>)}
                         <Button block color="info" onClick={this.toggleCocinaNested} className="mt-3">{this.state.tiposCocinaSeleccionados.length === 0 ? 'Introducir tipos de cocina' : 'Modificar tipos de cocina'}</Button>
                         <Modal style={{ 'height': '100%' }} scrollable isOpen={this.state.modalCocinaNested} toggle={this.toggleCocinaNested}>
                             <ModalHeader toggle={this.toggleCocinaNested}>{this.state.tiposCocinaSeleccionados.length !== 0 ? 'Modificando tipos de cocina' : 'Introduciendo tipos de cocina'}</ModalHeader>

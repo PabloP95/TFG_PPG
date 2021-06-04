@@ -16,7 +16,7 @@ class Restaurant extends Model
      */
     
     protected $fillable = [
-        'numTelefono'
+        'numTelefono',
     ];
 
     public function user(){
@@ -29,5 +29,9 @@ class Restaurant extends Model
 
     public function tiposCocina(){
         return $this->belongsToMany('App\Models\TiposCocina');
+    }
+
+    public function horarios(){
+        return $this->hasMany('App\Models\Horario');
     }
 }

@@ -18,13 +18,6 @@ class TableController extends Controller
      */
     public function index($id)
     {
-        /*$tables = Restaurant::with(['tables' => function ($q){
-                        $q->orderBy('numMesa');
-                    }])
-                    ->get();
-        return $tables;
-        */
-
         $tablesRestaurant = Restaurant::find($id)->tables()
         ->orderBy('numMesa', 'asc')
         ->get();

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Restaurant;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Validator;
 class RestaurantController extends Controller
 {
@@ -17,7 +19,11 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        return Restaurant::all();
+        $restaurantes = DB::select("SELECT userable_id, email, name, numTelefono
+        FROM users
+        JOIN restaurants as r
+        ON userable_id = r.id");
+        return $restaurantes;
     }
 
     
@@ -29,8 +35,12 @@ class RestaurantController extends Controller
      */
     public function show($id)
     {
-        $restaurant = Restaurant::findOrFail($id);
-        return response()->json($restaurant);
+        $restaurant = DB::select("SELECT email, name, numTelefono
+        FROM users
+        JOIN restaurants as r
+        ON userable_id = r.id
+        WHERE userable_id = $id");
+        return $restaurant;
     }
 
     /**

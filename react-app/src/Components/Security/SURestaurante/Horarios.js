@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
+import axios from 'axios'
+import authHeader from '../auth/auth-header';
 export class Horarios extends Component {
     constructor(props) {
         super(props);
@@ -7,297 +9,278 @@ export class Horarios extends Component {
             modalHorario: false,
             nestedModal: false,
             closeAll: false,
-            restaurantData: {
-                horario: {
-                    lunes: {
-                        l_apertura: "",
-                        l_cierre: ""
-                    },
-                    martes: {
-                        m_apertura: "",
-                        m_cierre: ""
-                    },
-                    miercoles: {
-                        x_apertura: "",
-                        x_cierre: ""
-                    },
-                    jueves: {
-                        j_apertura: "",
-                        j_cierre: ""
-                    },
-                    viernes: {
-                        v_apertura: "",
-                        v_cierre: ""
-                    },
-                    sabado: {
-                        s_apertura: "",
-                        s_cierre: ""
-                    },
-                    domingo: {
-                        d_apertura: "",
-                        d_cierre: ""
-                    }
-                }
+            horarios: [],
+            dias: [],
+            restaurantID: '',
+            dia: '',
+            horaAperturaP1: '',
+            horaAperturaP2: '',
+            horaCierreP1: '',
+            horaCierreP2: '',
+            errors: {
+                horarioAperturaP1: '',
+                horarioAperturaP2: '',
+                horarioCierreP1: '',
+                horarioCierreP2: '',
             }
         }
     }
-    onChangeTimeHandler = (e) => {
-        const { restaurantData } = this.state;
-        let arrHorario = e.target.name.split("_");
-        switch (arrHorario[0]) {
-            case 'l': {
-                if (arrHorario[1] === "apertura") {
-                    restaurantData["horario"]["lunes"][e.target.name] = e.target.value;
-                }
-                if (arrHorario[1] === "cierre") {
-                    restaurantData["horario"]["lunes"][e.target.name] = e.target.value;
-                }
-                break;
-            }
-            case 'm': {
-                if (arrHorario[1] === "apertura") {
-                    restaurantData["horario"]["martes"][e.target.name] = e.target.value;
-                }
-                if (arrHorario[1] === "cierre") {
-                    restaurantData["horario"]["martes"][e.target.name] = e.target.value;
-                }
-                break;
-            }
 
-            case 'x': {
-                if (arrHorario[1] === "apertura") {
-                    restaurantData["horario"]["miercoles"][e.target.name] = e.target.value;
-                }
-                if (arrHorario[1] === "cierre") {
-                    restaurantData["horario"]["miercoles"][e.target.name] = e.target.value;
-                }
-                break;
+    componentDidMount() {
+        let user = JSON.parse(localStorage.getItem('user'));
+        axios.get('http://127.0.0.1:8000/api/horarios/restaurant/' + user.user.userable_id).then(
+            res => {
+                this.setState({
+                    horarios: res.data,
+                    restaurantID: user.user.userable_id
+                })
             }
-            case 'j': {
-                if (arrHorario[1] === "apertura") {
-                    restaurantData["horario"]["jueves"][e.target.name] = e.target.value;
-                }
-                if (arrHorario[1] === "cierre") {
-                    restaurantData["horario"]["jueves"][e.target.name] = e.target.value;
-                }
-                break;
-            }
-            case 'v': {
-                if (arrHorario[1] === "apertura") {
-                    restaurantData["horario"]["viernes"][e.target.name] = e.target.value;
-                }
-                if (arrHorario[1] === "cierre") {
-                    restaurantData["horario"]["viernes"][e.target.name] = e.target.value;
-                }
-                break;
-            }
-            case 's': {
-                if (arrHorario[1] === "apertura") {
-                    restaurantData["horario"]["sabado"][e.target.name] = e.target.value;
-                }
-                if (arrHorario[1] === "cierre") {
-                    restaurantData["horario"]["sabado"][e.target.name] = e.target.value;
-                }
-                break;
-            }
-            case 'd': {
-                if (arrHorario[1] === "apertura") {
-                    restaurantData["horario"]["domingo"][e.target.name] = e.target.value;
-                }
-                if (arrHorario[1] === "cierre") {
-                    restaurantData["horario"]["domingo"][e.target.name] = e.target.value;
-                }
-                break;
-            }
-            default: {
-
-            }
+        );
+        if (this.state.dia !== '') {
+            axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/horario/' + this.state.dia, {
+                headers: authHeader()
+            }).then(res => {
+                this.setState({
+                    horaAperturaP1: res.data[0].horarioAperturaP1 !== null ? res.data[0].horarioAperturaP1 : '',
+                    horaAperturaP2: res.data[0].horarioAperturaP2 !== null ? res.data[0].horarioAperturaP2 : '',
+                    horaCierreP1: res.data[0].horarioCierreP1 !== null ? res.data[0].horarioCierreP1 : '',
+                    horaCierreP2: res.data[0].horarioCierreP2 !== null ? res.data[0].horarioCierreP2 : '',
+                })
+            })
         }
-        this.setState({ restaurantData });
+        else {
+            this.setState({
+                horaAperturaP1: '',
+                horaAperturaP2: '',
+                horaCierreP1: '',
+                horaCierreP2: '',
+            })
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if ((prevState.dia !== this.state.dia) && this.state.dia !== '') {
+            let user = JSON.parse(localStorage.getItem('user'));
+            axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/horario/' + this.state.dia, {
+                headers: authHeader()
+            }).then(res => {
+                this.setState({
+                    horaAperturaP1: res.data[0].horarioAperturaP1 !== null ? res.data[0].horarioAperturaP1 : '',
+                    horaAperturaP2: res.data[0].horarioAperturaP2 !== null ? res.data[0].horarioAperturaP2 : '',
+                    horaCierreP1: res.data[0].horarioCierreP1 !== null ? res.data[0].horarioCierreP1 : '',
+                    horaCierreP2: res.data[0].horarioCierreP2 !== null ? res.data[0].horarioCierreP2 : '',
+                })
+
+            }).catch(() => {
+                this.setState({
+                    horaAperturaP1: '',
+                    horaAperturaP2: '',
+                    horaCierreP1: '',
+                    horaCierreP2: '',
+                })
+            });
+        }
+    }
+    onChangeDay = (e) => {
+        this.setState({
+            ...this.state,
+            [e.target.name]: e.target.value
+        });
+    }
+    onChangeHours = (e) => {
+        this.setState({
+            ...this.state,
+            [e.target.name]: e.target.value
+        });
     }
     toggleHorario = () => {
         this.setState({ modalHorario: !this.state.modalHorario });
     }
     toggleNested = () => {
+        let arr = this.state.horarios.map((horario) => { return horario.dia });
         this.setState({
             nestedModal: !this.state.nestedModal,
-            closeAll: !this.state.closeAll
+            closeAll: !this.state.closeAll,
+            dias: arr
         });
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.restaurantData.horario);
+        this.validate();
+        console.log(this.state.horaAperturaP1);
+        console.log(this.state.horaAperturaP2);
+        console.log(this.state.horaCierreP1);
+        console.log(this.state.horaCierreP2);
+        if (this.state.dias.indexOf(this.state.dia) !== -1) {
+            let arrHA1 = this.state.horaAperturaP1.split(':').slice(0, 2);
+            let arrHA2 = this.state.horaAperturaP2.split(':').slice(0, 2);
+            let arrHC1 = this.state.horaCierreP1.split(':').slice(0, 2);
+            let arrHC2 = this.state.horaCierreP2.split(':').slice(0, 2);
+            axios.put('http://127.0.0.1:8000/api/restaurant/' + this.state.restaurantID + '/horario/' + this.state.dia, {
+                horarioAperturaP1: arrHA1.join(':'),
+                horarioAperturaP2: arrHA2.join(':'),
+                horarioCierreP1: arrHC1.join(':'),
+                horarioCierreP2: arrHC2.join(':'),
+            },
+                { headers: authHeader() }
+            ).then((res => {
+                this.setState({
+                    horarios: res.data
+                }, () => {
+                    if (this.props.onChange) {
+                        this.props.onChange(this.state.horarios);
+                    }
+                })
+            })
+            ).catch(error => {
+                if (error.response) {
+                    if (error.response.status === 400) {
+                        this.setState({ errors: JSON.parse(error.response.data) });
+                    }
+                }
+            })
+        }
+
+        else {
+            if (this.state.dia !== '') {
+                axios.post('http://127.0.0.1:8000/api/horarios/restaurant/' + this.state.restaurantID,
+                    {
+                        dia: this.state.dia,
+                        horarioAperturaP1: this.state.horaAperturaP1,
+                        horarioAperturaP2: this.state.horaAperturaP2,
+                        horarioCierreP1: this.state.horaCierreP1,
+                        horarioCierreP2: this.state.horaCierreP2,
+                        restaurant_id: this.state.restaurantID,
+                    },
+                    {
+                        headers: authHeader()
+                    }
+                ).then((res => {
+                    this.setState({
+                        horarios: res.data
+                    }, () => {
+                        if (this.props.onChange) {
+                            this.props.onChange(this.state.horarios);
+                        }
+                    })
+                })
+                ).catch(error => {
+                    if (error.response) {
+                        if (error.response.status === 400) {
+                            this.setState({ errors: JSON.parse(error.response.data) });
+                        }
+                    }
+                })
+            }
+        }
+    }
+    validate() {
+        console.log(this.state.horaAperturaP1 < this.state.horaAperturaP2);
+
+        let allOK = true;
+        let errors = {};
+
+        if (this.state.horaAperturaP1 !== '' && this.state.horaCierreP1 !== '') {
+            if (this.state.horaCierreP1 < this.state.horaAperturaP1) {
+                allOK = false;
+                errors['horarioAperturaP1'] = 'La hora de apertura debe ser antes de la hora de cierre";
+            }
+            if (this.state.horaCierreP1 < this.state.horaAperturaP1) {
+                allOK = false;
+                errors['horarioAperturaP1'] = 'La hora de apertura debe ser antes de la hora de cierre";
+            }
+        }
+
+
+        this.setState({
+            errors: errors
+        });
+        return allOK;
     }
     render() {
         return (
             <>
                 <Label for="horarios" hidden>Horario</Label>
-                <Button block color="secondary" onClick={this.toggleHorario}>{this.props.nomBoton ? this.props.nomBoton : 'Introducir horarios'}</Button>
-                <Modal isOpen={this.state.modalHorario} toggle={this.toggleHorario}>
+                <Button block color="secondary" onClick={this.toggleHorario}>{this.state.horarios.length === 0 ? 'Introducir horarios' : 'Modificar horarios'}</Button>
+                <Modal scrollable isOpen={this.state.modalHorario} toggle={this.toggleHorario}>
                     <ModalHeader toggle={this.toggleHorario}>Horarios</ModalHeader>
                     <ModalBody>
-                        Lunes: {this.state.restaurantData.horario.lunes.l_apertura} - {this.state.restaurantData.horario.lunes.l_cierre}
-                        <br />
-                        Martes: {this.state.restaurantData.horario.martes.m_apertura} - {this.state.restaurantData.horario.martes.m_cierre}
-                        <br />
-                        Miércoles: {this.state.restaurantData.horario.miercoles.x_apertura} - {this.state.restaurantData.horario.miercoles.x_cierre}
-                        <br />
-                        Jueves: {this.state.restaurantData.horario.jueves.j_apertura} - {this.state.restaurantData.horario.jueves.j_cierre}
-                        <br />
-                        Viernes: {this.state.restaurantData.horario.viernes.v_apertura} - {this.state.restaurantData.horario.viernes.v_cierre}
-                        <br />
-                        Sábado: {this.state.restaurantData.horario.sabado.s_apertura} - {this.state.restaurantData.horario.sabado.s_cierre}
-                        <br />
-                        Domingo: {this.state.restaurantData.horario.domingo.d_apertura} - {this.state.restaurantData.horario.domingo.d_cierre}
-                        <br />
+                        {this.state.horarios.map(horario => (
+                            <div key={horario.id}>
+                                <h5>{horario.dia}</h5>
+                                {horario.horarioAperturaP1 === null && horario.horarioCierreP1 === null && horario.horarioAperturaP2 === null && horario.horarioCierreP2 === null ?
+                                    (
+                                        'Cerrado'
+                                    ) :
+                                    <div>
+                                        {horario.horarioAperturaP1.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP1.split(':').slice(0, 2).join(':')} | {horario.horarioAperturaP2.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP2.split(':').slice(0, 2).join(':')}
+                                    </div>
+                                }
+                                <br />
+                            </div>
+                        ))}
                         <hr />
-                        <Button block color="info" onClick={this.toggleNested}>{this.props.nomBoton ? this.props.nomBoton : 'Introducir horarios'}</Button>
+                        <Button block color="info" onClick={this.toggleNested}>{this.state.horarios.length === 0 ? 'Introducir horarios' : 'Modificar horarios'}</Button>
                         <Modal scrollable isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.toggle : undefined}>
-                            <ModalHeader>{this.props.nomBoton ? 'Modificando horarios' : 'Introduciendo horarios'}</ModalHeader>
+                            <ModalHeader>{this.state.horarios.length === 0 ? 'Introduciendo horarios' : 'Modificando horarios'}</ModalHeader>
                             <ModalBody>
                                 <Form onSubmit={this.handleSubmit}>
-                                    <Row form>
-                                        <Col md={3}></Col>
-                                        <Col md={6}>
-                                            <h3 style={{ 'textAlign': 'center' }}>Lunes</h3>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
+                                    <Label for="dia">Seleccione un día</Label>
+                                    <Input type="select" name="dia" id="dia" value={this.state.dia} onChange={this.onChangeDay}>
+                                        <option></option>
+                                        <option>Lunes</option>
+                                        <option>Martes</option>
+                                        <option>Miércoles</option>
+                                        <option>Jueves</option>
+                                        <option>Viernes</option>
+                                        <option>Sábado</option>
+                                        <option>Domingo</option>
+                                    </Input>
+                                    <Row form className="pt-3">
                                         <Col md={6}>
                                             <FormGroup>
-                                                <Label for="l_apertura">Horario apertura</Label>
-                                                <Input type="time" name="l_apertura" id="l_apertura" placeholder="--:--" onChange={this.onChangeTimeHandler} />
+                                                <Label for="horaAperturaP1">Apertura</Label>
+                                                <Input
+                                                    style={{ 'border': this.state.errors.horarioAperturaP1 ? '1px solid red' : '' }}
+                                                    type="time" name="horaAperturaP1" id="horaAperturaP1" placeholder="--:--"
+                                                    value={this.state.horaAperturaP1} onChange={this.onChangeHours} />
+                                                <div className="text-danger">{this.state.errors.horaAperturaP1}</div>
                                             </FormGroup>
                                         </Col>
                                         <Col md={6}>
                                             <FormGroup>
-                                                <Label for="l_cierre">Horario cierre</Label>
-                                                <Input type="time" name="l_cierre" id="l_cierre" placeholder="--:--" onChange={this.onChangeTimeHandler} />
+                                                <Label for="horaCierreP1">Cierre</Label>
+                                                <Input
+                                                    style={{ 'border': this.state.errors.horarioCierreP1 ? '1px solid red' : '' }}
+                                                    type="time" name="horaCierreP1" id="horaCierreP1" placeholder="--:--"
+                                                    value={this.state.horaCierreP1} onChange={this.onChangeHours} />
+                                                <div className="text-danger">{this.state.errors.horaCierreP1}</div>
                                             </FormGroup>
                                         </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={3}></Col>
-                                        <Col md={6}>
-                                            <h3 style={{ 'textAlign': 'center' }}>Martes</h3>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
+
                                         <Col md={6}>
                                             <FormGroup>
-                                                <Label for="m_apertura">Horario apertura</Label>
-                                                <Input type="time" name="m_apertura" id="m_apertura" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="m_cierre">Horario cierre</Label>
-                                                <Input type="time" name="m_cierre" id="m_cierre" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={3}></Col>
-                                        <Col md={6}>
-                                            <h3 style={{ 'textAlign': 'center' }}>Miércoles</h3>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="x_apertura">Horario apertura</Label>
-                                                <Input type="time" name="x_apertura" id="x_apertura" placeholder="--:--" onChange={this.onChangeTimeHandler} />
+                                                <Label for="horaAperturaP2">Segunda apertura</Label>
+                                                <Input
+                                                    style={{ 'border': this.state.errors.horarioAperturaP2 ? '1px solid red' : '' }}
+                                                    type="time" name="horaAperturaP2" id="horaAperturaP2" placeholder="--:--" value={this.state.horaAperturaP2} onChange={this.onChangeHours} />
+                                                <div className="text-danger">{this.state.errors.horarioAperturaP2}</div>
                                             </FormGroup>
                                         </Col>
                                         <Col md={6}>
                                             <FormGroup>
-                                                <Label for="x_cierre">Horario cierre</Label>
-                                                <Input type="time" name="x_cierre" id="x_cierre" placeholder="--:--" onChange={this.onChangeTimeHandler} />
+                                                <Label for="horaCierreP2">Segundo cierre</Label>
+                                                <Input
+                                                    style={{ 'border': this.state.errors.horarioCierreP2 ? '1px solid red' : '' }}
+                                                    type="time" name="horaCierreP2" id="horaCierreP2" placeholder="--:--" value={this.state.horaCierreP2} onChange={this.onChangeHours} />
+                                                <div className="text-danger">{this.state.errors.horarioCierreP2}</div>
                                             </FormGroup>
                                         </Col>
                                     </Row>
-                                    <Row form>
-                                        <Col md={3}></Col>
-                                        <Col md={6}>
-                                            <h3 style={{ 'textAlign': 'center' }}>Jueves</h3>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="j_apertura">Horario apertura</Label>
-                                                <Input type="time" name="j_apertura" id="j_apertura" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="j_cierre">Horario cierre</Label>
-                                                <Input type="time" name="j_cierre" id="j_cierre" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={3}></Col>
-                                        <Col md={6}>
-                                            <h3 style={{ 'textAlign': 'center' }}>Viernes</h3>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="v_apertura">Horario apertura</Label>
-                                                <Input type="time" name="v_apertura" id="v_apertura" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="v_cierre">Horario cierre</Label>
-                                                <Input type="time" name="v_cierre" id="v_cierre" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={3}></Col>
-                                        <Col md={6}>
-                                            <h3 style={{ 'textAlign': 'center' }}>Sábado</h3>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="s_apertura">Horario apertura</Label>
-                                                <Input type="time" name="s_apertura" id="s_apertura" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="s_cierre">Horario cierre</Label>
-                                                <Input type="time" name="s_cierre" id="s_cierre" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={3}></Col>
-                                        <Col md={6}>
-                                            <h3 style={{ 'textAlign': 'center' }}>Domingo</h3>
-                                        </Col>
-                                    </Row>
-                                    <Row form>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="d_apertura">Horario apertura</Label>
-                                                <Input type="time" name="d_apertura" id="d_apertura" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={6}>
-                                            <FormGroup>
-                                                <Label for="d_cierre">Horario cierre</Label>
-                                                <Input type="time" name="d_cierre" id="d_cierre" placeholder="--:--" onChange={this.onChangeTimeHandler} />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
-                                    <Button type="button" onClick={this.handleSubmit} block color="success">Guardar cambios</Button>
+                                    {this.state.dia !== '' ? (
+                                        <Button type="button" onClick={this.handleSubmit} block color="success">Guardar cambios</Button>
+                                    ) : (<Button type="button" disabled onClick={this.handleSubmit} block color="success">Guardar cambios</Button>)}
                                 </Form>
                             </ModalBody>
                             <ModalFooter>

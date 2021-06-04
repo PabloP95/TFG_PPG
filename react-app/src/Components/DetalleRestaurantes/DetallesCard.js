@@ -3,9 +3,11 @@ import { Card, CardTitle, CardText, Row, Col, UncontrolledTooltip } from 'reacts
 import { GoLocation } from "react-icons/go";
 import { FaPhoneAlt, FaRegEnvelope } from "react-icons/fa";
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import '../RestaurantPage/ConfigRestaurante/showTipoCocina.css';
 
 export class DetallesCard extends Component {
     render() {
+
         let user = JSON.parse(localStorage.getItem('user'));
         return (
             <div id="detalles-card" className="p-4">
@@ -18,8 +20,13 @@ export class DetallesCard extends Component {
                             <CardText>
                                 TIPOS COCINA
                                 <br />
-                                Italiano, ...
-                                <br /><br />
+                                <ul className="pr-5">
+                                    {this.props.tiposCocina.map((tipoCocina) => (
+                                        <li className="showTypes" key={tipoCocina.id}>
+                                            {tipoCocina.tipoCocina}
+                                        </li>
+                                    ))}
+                                </ul>
                                 DIETAS ESPECIALES
                                 <br />
                                 Opciones vegetarianas
@@ -40,8 +47,8 @@ export class DetallesCard extends Component {
                             <Link className="btn btn-primary btn-lg" to={{
                                 pathname: "/restaurantes/restaurante/1/reserva",
                                 state: {
-                                    idRestaurante: "0",
-                                    nomRestaurante: "Restaurante A"
+                                    idRestaurante: this.props.idRestaurante,
+                                    nomRestaurante: this.props.nomRestaurante
                                 }
                             }}
                             >
@@ -61,7 +68,6 @@ export class DetallesCard extends Component {
                             <UncontrolledTooltip fade placement="bottom" target="reserva">
                                 Para realizar la reserva debe haber iniciado sesión
                             </UncontrolledTooltip>
-
                         </Col>
                     )}
                     <Col sm="12" md="4" className="order-3 order-md-4 pt-3">
@@ -73,8 +79,8 @@ export class DetallesCard extends Component {
                             </figure>
                             <CardText>
                                 <GoLocation /> Ubicación<br /><br />
-                                <FaPhoneAlt /> Número teléfono<br /><br />
-                                <FaRegEnvelope /> Correo electrónico<br />
+                                <FaPhoneAlt /> {this.props.numTelefono}<br /><br />
+                                <FaRegEnvelope /> {this.props.email}<br />
                             </CardText>
                         </Card>
                     </Col>

@@ -8,6 +8,7 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TiposCocinaController;
+use App\Http\Controllers\HorarioController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,10 +20,10 @@ use App\Http\Controllers\TiposCocinaController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+*/
 Route::get('unauthorized', function() {
     return response()->json([
         'status' => 'error',
@@ -30,8 +31,14 @@ Route::get('unauthorized', function() {
     ], 401);
 })->name('api.jwt.unauthorized');
 
-Route::get('users', [UserController::class, 'index']);
-Route::get('restaurants', [RestaurantController::class, 'index']);
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/restaurants', [RestaurantController::class, 'index']);
+Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
+Route::get('/tiposCocina/restaurant/{id}', [TiposCocinaController::class, 'indexTipoCocinaRestaurante']);
+Route::get('/horarios/restaurant/{id}', [HorarioController::class, 'index']);
+Route::get('/restaurant/{id}/mesas', [TableController::class, 'index']);
+Route::get('/tiposCocina', [TiposCocinaController::class, 'index']);
+
 
 Route::group([
     'middleware' => 'api',
@@ -46,28 +53,28 @@ Route::group([
 
 
 Route::group(['middleware' => 'api'], function($router){
-    Route::get('/restaurant/{id}/mesas', [TableController::class, 'index']);
-    Route::get('/tiposCocina', [TiposCocinaController::class, 'index']);
-    Route::get('/tiposCocina/restaurant/{id}', [TiposCocinaController::class, 'indexTipoCocinaRestaurante']);
-
     Route::post('/restaurant/{id}/mesa', [TableController::class, 'store']);
     Route::post('/restaurant/{id}/multiple-mesa', [TableController::class, 'multipleStore']);
     Route::post('/tiposCocina/restaurant/{id}', [TiposCocinaController::class, 'store']);
+    Route::post('/horarios/restaurant/{id}', [HorarioController::class, 'store']);
 
     Route::get('/client/{id}', [ClientController::class, 'show']);
     Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
     Route::get('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'show']);
+    Route::get('/restaurant/{id}/horario/{dia}', [HorarioController::class, 'show']);
     
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::put('/client/{id}', [ClientController::class, 'update']);
     Route::put('/restaurant/{id}', [RestaurantController::class, 'update']);
     Route::put('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'update']);
-
+    Route::put('/restaurant/{id}/horario/{dia}', [HorarioController::class, 'update']);
 
 
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
     Route::delete('/client/{id}', [ClientController::class, 'destroy']);
     Route::delete('/restaurant/{id}', [RestaurantController::class, 'destroy']);
     Route::delete('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'destroy']);
+    Route::delete('/restaurant/{id}/horario/{idHorario}', [HorarioController::class, 'destroy']);
+
 
 });

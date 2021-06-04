@@ -7,12 +7,43 @@ import { FaPhoneAlt, FaUtensils } from "react-icons/fa";
 import Votos from './Votos';
 import DetallesCard from './DetallesCard';
 import Opiniones from './Opiniones/Opiniones';
+import '../RestaurantPage/ConfigRestaurante/showTipoCocina.css';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 export class PaginaRestaurante extends Component {
+    constructor(props) {
+        super(props);
+        let arr = window.location.href.split('/');
+        console.log(arr);
+        this.state = {
+            idRestaurante: arr[5],
+            nomRestaurante: '',
+            numTelefono: '',
+            email: '',
+            tiposCocina: [],
+            ubicacion: [],
+        }
+    }
+
+    componentDidMount() {
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante).then((res) => {
+            this.setState({
+                nomRestaurante: res.data[0].name,
+                numTelefono: res.data[0].numTelefono,
+                email: res.data[0].email,
+            })
+        })
+
+        axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + this.state.idRestaurante).then((res) => {
+            this.setState({
+                tiposCocina: res.data
+            })
+        });
+    }
     render() {
         return (
             <div className="p-4">
                 <div id="detalles">
-                    <h2 className="poppins-font">Restaurante 1</h2>
+                    <h2 className="poppins-font">Restaurante {this.state.nomRestaurante}</h2>
                     <Row className="p-3">
                         <Col sm="6" md="4" xs="6">
                             <Votos />
@@ -21,7 +52,15 @@ export class PaginaRestaurante extends Component {
                             <p>x opiniones</p>
                         </Col>
                         <Col sm="12" md="4" xs="12">
-                            <p className="text-center">€€ - €€€, Italiano</p>
+                            <p className="text-center">€€ - €€€, Tipos de cocina:
+                                <ul className="pr-5">
+                                    {this.state.tiposCocina.map((tipoCocina) => (
+                                        <li className="showTypes" key={tipoCocina.id}>
+                                            {tipoCocina.tipoCocina}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </p>
                         </Col>
                     </Row>
 
@@ -30,12 +69,14 @@ export class PaginaRestaurante extends Component {
                             <p> <GoLocation /> Ubicación</p>
                         </Col>
                         <Col sm="6" md="3" xs="7">
-                            <p> <FaPhoneAlt /> Número teléfono</p>
+                            <p> <FaPhoneAlt /> {this.state.numTelefono}</p>
                         </Col>
                         <Col sm="6" md="3" xs="5">
-                            <a href="/restaurantes/restaurante/1/menu">
+                            <Link to={{
+                                pathname: "/restaurantes/restaurante/" + this.state.idRestaurante + "/menu"
+                            }}>
                                 <p><FaUtensils /> Carta</p>
-                            </a>
+                            </Link>
                         </Col>
                         <Col sm="6" md="3" xs="7">
                             <p><GoClock /> Horario</p>
@@ -58,8 +99,15 @@ export class PaginaRestaurante extends Component {
                         </Col>
                     </Row>
                 </div>
-                <DetallesCard />
-                <Opiniones />
+                <DetallesCard
+                    idRestaurante={this.state.idRestaurante}
+                    nomRestaurante={this.state.nomRestaurante}
+                    tiposCocina={this.state.tiposCocina}
+                    numTelefono={this.state.numTelefono}
+                    ubicacion={this.state.ubicacion}
+                    email={this.state.email}
+                />
+                <Opiniones idRestaurante={this.state.idRestaurante} />
             </div>
         )
     }

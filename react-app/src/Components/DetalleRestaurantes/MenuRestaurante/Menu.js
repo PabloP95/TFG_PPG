@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, Input, FormGroup, Label } from 'reactstrap'
 import { IoArrowBackCircle } from 'react-icons/io5';
-
+import axios from 'axios';
 import NavCarta from './NavCarta'
 import Entrantes from './Entrantes';
 import PlatosPrincipales from './PlatosPrincipales';
@@ -14,7 +14,10 @@ import './menu.css';
 export class Menu extends Component {
     constructor(props) {
         super(props);
+        let arr = window.location.href.split('/');
         this.state = {
+            idRestaurante: arr[5],
+            nomRestaurante: '',
             glutenSI: false,
             lacteosSI: false,
             italianoSI: false,
@@ -25,6 +28,13 @@ export class Menu extends Component {
         }
     }
 
+    componentDidMount() {
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante).then((res) => {
+            this.setState({
+                nomRestaurante: res.data[0].name,
+            })
+        })
+    }
     handleChange = (e) => {
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -54,7 +64,7 @@ export class Menu extends Component {
                         )}
                     </Col>
                     <Col md="10" sm="10">
-                        <h3 className="text-center">Carta Restaurante A</h3>
+                        <h3 className="text-center">Carta {this.state.nomRestaurante}</h3>
                     </Col>
                 </Row>
                 <NavCarta />
