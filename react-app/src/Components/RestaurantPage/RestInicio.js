@@ -11,6 +11,7 @@ export class RestInicio extends Component {
             email: '',
             telefono: '',
             tiposCocinaSelected: [],
+            horarios: [],
         }
     }
     componentDidMount = () => {
@@ -20,9 +21,9 @@ export class RestInicio extends Component {
             .then(res => {
                 this.setState({
                     nomRestaurante: res.data[0].name,
-                    email: res.data[0].email, 
-                    telefono: res.data[0].numTelefono 
-                    });
+                    email: res.data[0].email,
+                    telefono: res.data[0].numTelefono
+                });
             })
 
         axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
@@ -30,8 +31,15 @@ export class RestInicio extends Component {
                 this.setState({
                     tiposCocinaSelected: res.data
                 });
-            })
-
+            });
+        axios.get('http://127.0.0.1:8000/api/horarios/restaurant/' + user.user.userable_id).then(
+            res => {
+                this.setState({
+                    horarios: res.data,
+                    restaurantID: user.user.userable_id
+                })
+            }
+        );
 
     }
     render() {
@@ -66,35 +74,36 @@ export class RestInicio extends Component {
                             )}
                         </ul>
                         <h5>Horario</h5>
-                        <Row >
-                            <Col md="6" sm="6" xs="6" className="p-2">
-                                <h5>Lunes</h5>
-                                16:00 - 22:00
-                            </Col>
-                            <Col md="6" sm="6" xs="6" className="p-2">
-                                <h5>Martes</h5>
-                                16:00 - 22:00
-                            </Col>
-                            <Col md="6" sm="6" xs="6" className="p-2">
-                                <h5>Miércoles</h5>
-                                16:00 - 22:00
-                            </Col>
-                            <Col md="6" sm="6" xs="6" className="p-2">
-                                <h5>Jueves</h5>
-                                Cerrado
-                            </Col>
-                            <Col md="6" sm="6" xs="6" className="p-2">
-                                <h5>Viernes</h5>
-                                15:00 - 22:00
-                            </Col>
-                            <Col md="6" sm="6" xs="6" className="p-2">
-                                <h5>Sábado</h5>
-                                14:00 - 22:00
-                            </Col>
-                            <Col md="12" sm="12" xs="12" className="p-2 pb-5">
-                                <h5>Domingo</h5>
-                                Cerrado
-                            </Col>
+                        <Row>
+                            {this.state.horarios.map(horario => (
+                                (
+                                    (horario.dia === 'Domingo') ? (
+                                        <Col md="12" sm="12" xs="12" key={horario.id} className="p-2 pb-5">
+                                            <h5>{horario.dia}</h5>
+                                            {horario.horarioAperturaP1 === null && horario.horarioCierreP1 === null && horario.horarioAperturaP2 === null && horario.horarioCierreP2 === null ?
+                                                (
+                                                    'Cerrado'
+                                                ) :
+                                                <div>
+                                                    {horario.horarioAperturaP1.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP1.split(':').slice(0, 2).join(':')} <br /> {horario.horarioAperturaP2.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP2.split(':').slice(0, 2).join(':')}
+                                                </div>
+                                            }
+                                        </Col>
+                                    ) : (
+                                        <Col md="6" sm="6" xs="6" key={horario.id} className="p-2">
+                                            <h5>{horario.dia}</h5>
+                                            {horario.horarioAperturaP1 === null && horario.horarioCierreP1 === null && horario.horarioAperturaP2 === null && horario.horarioCierreP2 === null ?
+                                                (
+                                                    'Cerrado'
+                                                ) :
+                                                <div>
+                                                    {horario.horarioAperturaP1.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP1.split(':').slice(0, 2).join(':')} <br /> {horario.horarioAperturaP2.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP2.split(':').slice(0, 2).join(':')}
+                                                </div>
+                                            }
+                                        </Col>
+                                    )
+                                )
+                            ))}
                         </Row>
                     </Col>
                 </Row>

@@ -33,15 +33,33 @@ export class ConfigHorarios extends Component {
                 <h5>Horario actual</h5>
                 <Row>
                     {this.state.horarios.map(horario => (
-                        <Col md="6" sm="6" xs="6" className="p-2" key={horario.id}>
-                            <h5>{horario.dia}</h5>
-                            {horario.horarioAperturaP1 === null && horario.horarioCierreP1 === null && horario.horarioAperturaP2 === null && horario.horarioCierreP2 === null ?
-                                (
-                                    'Cerrado'
-                                ) :
-                                <div>{horario.horarioAperturaP1.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP1.split(':').slice(0, 2).join(':')} | {horario.horarioAperturaP2.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP2.split(':').slice(0, 2).join(':')}</div>
-                            }
-                        </Col>
+                        (
+                            (horario.dia === 'Domingo') ? (
+                                <Col md="12" sm="12" xs="12" key={horario.id} className="p-2 pb-5">
+                                    <h5>{horario.dia}</h5>
+                                    {horario.horarioAperturaP1 === null && horario.horarioCierreP1 === null && horario.horarioAperturaP2 === null && horario.horarioCierreP2 === null ?
+                                        (
+                                            'Cerrado'
+                                        ) :
+                                        <div>
+                                            {horario.horarioAperturaP1.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP1.split(':').slice(0, 2).join(':')} <br /> {horario.horarioAperturaP2.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP2.split(':').slice(0, 2).join(':')}
+                                        </div>
+                                    }
+                                </Col>
+                            ) : (
+                                <Col md="6" sm="6" xs="6" key={horario.id} className="p-2">
+                                    <h5>{horario.dia}</h5>
+                                    {horario.horarioAperturaP1 === null && horario.horarioCierreP1 === null && horario.horarioAperturaP2 === null && horario.horarioCierreP2 === null ?
+                                        (
+                                            'Cerrado'
+                                        ) :
+                                        <div>
+                                            {horario.horarioAperturaP1.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP1.split(':').slice(0, 2).join(':')} <br /> {horario.horarioAperturaP2.split(':').slice(0, 2).join(':')} - {horario.horarioCierreP2.split(':').slice(0, 2).join(':')}
+                                        </div>
+                                    }
+                                </Col>
+                            )
+                        )
                     ))}
                 </Row>
                 <br />

@@ -107,55 +107,19 @@ export class Horarios extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.validate();
-        console.log(this.state.horaAperturaP1);
-        console.log(this.state.horaAperturaP2);
-        console.log(this.state.horaCierreP1);
-        console.log(this.state.horaCierreP2);
-        if (this.state.dias.indexOf(this.state.dia) !== -1) {
-            let arrHA1 = this.state.horaAperturaP1.split(':').slice(0, 2);
-            let arrHA2 = this.state.horaAperturaP2.split(':').slice(0, 2);
-            let arrHC1 = this.state.horaCierreP1.split(':').slice(0, 2);
-            let arrHC2 = this.state.horaCierreP2.split(':').slice(0, 2);
-            axios.put('http://127.0.0.1:8000/api/restaurant/' + this.state.restaurantID + '/horario/' + this.state.dia, {
-                horarioAperturaP1: arrHA1.join(':'),
-                horarioAperturaP2: arrHA2.join(':'),
-                horarioCierreP1: arrHC1.join(':'),
-                horarioCierreP2: arrHC2.join(':'),
-            },
-                { headers: authHeader() }
-            ).then((res => {
-                this.setState({
-                    horarios: res.data
-                }, () => {
-                    if (this.props.onChange) {
-                        this.props.onChange(this.state.horarios);
-                    }
-                })
-            })
-            ).catch(error => {
-                if (error.response) {
-                    if (error.response.status === 400) {
-                        this.setState({ errors: JSON.parse(error.response.data) });
-                    }
-                }
-            })
-        }
-
-        else {
-            if (this.state.dia !== '') {
-                axios.post('http://127.0.0.1:8000/api/horarios/restaurant/' + this.state.restaurantID,
-                    {
-                        dia: this.state.dia,
-                        horarioAperturaP1: this.state.horaAperturaP1,
-                        horarioAperturaP2: this.state.horaAperturaP2,
-                        horarioCierreP1: this.state.horaCierreP1,
-                        horarioCierreP2: this.state.horaCierreP2,
-                        restaurant_id: this.state.restaurantID,
-                    },
-                    {
-                        headers: authHeader()
-                    }
+        if (this.validate()) {
+            if (this.state.dias.indexOf(this.state.dia) !== -1) {
+                let arrHA1 = this.state.horaAperturaP1.split(':').slice(0, 2);
+                let arrHA2 = this.state.horaAperturaP2.split(':').slice(0, 2);
+                let arrHC1 = this.state.horaCierreP1.split(':').slice(0, 2);
+                let arrHC2 = this.state.horaCierreP2.split(':').slice(0, 2);
+                axios.put('http://127.0.0.1:8000/api/restaurant/' + this.state.restaurantID + '/horario/' + this.state.dia, {
+                    horarioAperturaP1: arrHA1.join(':'),
+                    horarioAperturaP2: arrHA2.join(':'),
+                    horarioCierreP1: arrHC1.join(':'),
+                    horarioCierreP2: arrHC2.join(':'),
+                },
+                    { headers: authHeader() }
                 ).then((res => {
                     this.setState({
                         horarios: res.data
@@ -165,33 +129,67 @@ export class Horarios extends Component {
                         }
                     })
                 })
-                ).catch(error => {
-                    if (error.response) {
-                        if (error.response.status === 400) {
-                            this.setState({ errors: JSON.parse(error.response.data) });
+                ).catch()
+            }
+
+            else {
+                if (this.state.dia !== '') {
+                    axios.post('http://127.0.0.1:8000/api/horarios/restaurant/' + this.state.restaurantID,
+                        {
+                            dia: this.state.dia,
+                            horarioAperturaP1: this.state.horaAperturaP1,
+                            horarioAperturaP2: this.state.horaAperturaP2,
+                            horarioCierreP1: this.state.horaCierreP1,
+                            horarioCierreP2: this.state.horaCierreP2,
+                            restaurant_id: this.state.restaurantID,
+                        },
+                        {
+                            headers: authHeader()
                         }
-                    }
-                })
+                    ).then((res => {
+                        this.setState({
+                            horarios: res.data,
+                        }, () => {
+                            if (this.props.onChange) {
+                                this.props.onChange(this.state.horarios);
+                            }
+                        });
+                        this.toggleNested();
+                    })
+                    ).catch()
+                }
             }
         }
     }
     validate() {
-        console.log(this.state.horaAperturaP1 < this.state.horaAperturaP2);
-
         let allOK = true;
         let errors = {};
 
         if (this.state.horaAperturaP1 !== '' && this.state.horaCierreP1 !== '') {
-            if (this.state.horaCierreP1 < this.state.horaAperturaP1) {
+            if (this.state.horaCierreP1 <= this.state.horaAperturaP1) {
                 allOK = false;
-                errors['horarioAperturaP1'] = 'La hora de apertura debe ser antes de la hora de cierre";
-            }
-            if (this.state.horaCierreP1 < this.state.horaAperturaP1) {
-                allOK = false;
-                errors['horarioAperturaP1'] = 'La hora de apertura debe ser antes de la hora de cierre";
+                errors['horarioAperturaP1'] = "La hora de apertura debe ser anterior a la hora de cierre";
+                errors['horarioCierreP1'] = 'La hora de cierre debe ser posterior a la hora de apertura';
             }
         }
 
+        if (this.state.horaAperturaP1 !== '' && this.state.horaCierreP1 !== '' && this.state.horaAperturaP2 !== '') {
+            if (this.state.horaCierreP1 > this.state.horaAperturaP1) {
+                if (this.state.horaCierreP1 >= this.state.horaAperturaP2) {
+                    errors['horarioCierreP1'] = "Debe ser anterior a la hora de apertura del segundo turno";
+                    errors['horarioAperturaP2'] = "Debe ser posterior a la hora de cierre del primer turno";
+                }
+            }
+        }
+
+        if (this.state.horaAperturaP1 !== '' && this.state.horaCierreP1 !== '' && this.state.horaAperturaP2 !== '') {
+            if (this.state.horaCierreP1 > this.state.horaAperturaP1 && this.state.horaAperturaP2 > this.state.horaCierreP1) {
+                if (this.state.horaAperturaP2 >= this.state.horaCierreP2) {
+                    errors['horaAperturaP2'] = "Debe ser anterior a la hora de cierre del segundo turno";
+                    errors['horaCierreP2'] = "Debe ser posterior a la hora de cierre del primer turno";
+                }
+            }
+        }
 
         this.setState({
             errors: errors
@@ -245,7 +243,7 @@ export class Horarios extends Component {
                                                     style={{ 'border': this.state.errors.horarioAperturaP1 ? '1px solid red' : '' }}
                                                     type="time" name="horaAperturaP1" id="horaAperturaP1" placeholder="--:--"
                                                     value={this.state.horaAperturaP1} onChange={this.onChangeHours} />
-                                                <div className="text-danger">{this.state.errors.horaAperturaP1}</div>
+                                                <div className="text-danger">{this.state.errors.horarioAperturaP1}</div>
                                             </FormGroup>
                                         </Col>
                                         <Col md={6}>
@@ -255,7 +253,7 @@ export class Horarios extends Component {
                                                     style={{ 'border': this.state.errors.horarioCierreP1 ? '1px solid red' : '' }}
                                                     type="time" name="horaCierreP1" id="horaCierreP1" placeholder="--:--"
                                                     value={this.state.horaCierreP1} onChange={this.onChangeHours} />
-                                                <div className="text-danger">{this.state.errors.horaCierreP1}</div>
+                                                <div className="text-danger">{this.state.errors.horarioCierreP1}</div>
                                             </FormGroup>
                                         </Col>
 

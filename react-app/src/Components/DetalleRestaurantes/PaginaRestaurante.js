@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios'; //Necesario para obtener datos del restaurante
 //por base de datos
 import { Row, Col } from 'reactstrap';
-import { GoLocation, GoClock } from "react-icons/go";
+import { GoLocation } from "react-icons/go";
 import { FaPhoneAlt, FaUtensils } from "react-icons/fa";
 import Votos from './Votos';
+import VerHorario from './VerHorario';
 import DetallesCard from './DetallesCard';
 import Opiniones from './Opiniones/Opiniones';
 import '../RestaurantPage/ConfigRestaurante/showTipoCocina.css';
@@ -13,7 +14,6 @@ export class PaginaRestaurante extends Component {
     constructor(props) {
         super(props);
         let arr = window.location.href.split('/');
-        console.log(arr);
         this.state = {
             idRestaurante: arr[5],
             nomRestaurante: '',
@@ -78,9 +78,7 @@ export class PaginaRestaurante extends Component {
                                 <p><FaUtensils /> Carta</p>
                             </Link>
                         </Col>
-                        <Col sm="6" md="3" xs="7">
-                            <p><GoClock /> Horario</p>
-                        </Col>
+                        <VerHorario idRestaurante={this.state.idRestaurante} />
                     </Row>
 
                     <Row>
