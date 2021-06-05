@@ -17,6 +17,9 @@ class Restaurant extends Model
     
     protected $fillable = [
         'numTelefono',
+        'direccionPostal',
+        'longitud',
+        'latitud'
     ];
 
     public function user(){

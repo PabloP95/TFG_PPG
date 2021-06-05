@@ -39,7 +39,9 @@ export class TipoCocina extends Component {
     }
 
     onSelect = (selectedList, selectedItem) => {
-        this.setState({ objectSelected: [...this.state.objectSelected, selectedItem] });
+        if (this.state.objectSelected.indexOf(selectedItem) === -1) {
+            this.setState({ objectSelected: [...this.state.objectSelected, selectedItem] });
+        }
     }
     onRemove = (selectedList, removedItem) => {
         let arr = [...this.state.objectSelected];
@@ -85,23 +87,53 @@ export class TipoCocina extends Component {
     handleSubmitTipoCocina = (e) => {
         e.preventDefault();
         let user = JSON.parse(localStorage.getItem('user'));
-        let arr = this.state.objectSelected.concat(this.state.tiposCocinaSeleccionados);
-        let arrID = arr.map((arr) => { return arr.id });
-        axios.post('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
-            {
-                tiposCocinaSelected: arrID,
-                tiposCocinaNombre: arr,
-            },
-            { headers: authHeader() }
-        ).then(res => {
-            this.setState({
-                tiposCocinaSeleccionados: res.data.data
-            }, () => {
-                if (this.props.onChange) {
-                    this.props.onChange(this.state.tiposCocinaSeleccionados);
-                }
+        let arr;
+        let arrID;
+        if (this.state.objectSelected === []) {
+            arr = this.state.tiposCocinaSeleccionados;
+            arrID = arr.map((arr) => { return arr.id });
+            axios.post('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
+                {
+                    tiposCocinaSelected: arrID,
+                    tiposCocinaNombre: arr,
+                },
+                { headers: authHeader() }
+            ).then(res => {
+                this.setState({
+                    tiposCocinaSeleccionados: res.data.data
+                }, () => {
+                    if (this.props.onChange) {
+                        this.props.onChange(this.state.tiposCocinaSeleccionados);
+                    }
+                });
             });
-        });
+            this.toggleCocinaNested();
+        }
+
+        else {
+            let arrayDistintos = this.state.objectSelected.filter(o => this.state.tiposCocinaSeleccionados.indexOf(o) >= 0);
+            if (arrayDistintos) {
+                arr = this.state.objectSelected.concat(this.state.tiposCocinaSeleccionados);
+                arrID = arr.map((arr) => { return arr.id });
+                axios.post('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
+                    {
+                        tiposCocinaSelected: arrID,
+                        tiposCocinaNombre: arr,
+                    },
+                    { headers: authHeader() }
+                ).then(res => {
+                    this.setState({
+                        tiposCocinaSeleccionados: res.data.data,
+                        objectSelected: []
+                    }, () => {
+                        if (this.props.onChange) {
+                            this.props.onChange(this.state.tiposCocinaSeleccionados);
+                        }
+                    });
+                });
+                this.toggleCocinaNested();
+            }
+        }
     }
 
     render() {

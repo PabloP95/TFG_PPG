@@ -10,6 +10,7 @@ export class RestInicio extends Component {
             nomRestaurante: '',
             email: '',
             telefono: '',
+            direccionActual: '',
             tiposCocinaSelected: [],
             horarios: [],
         }
@@ -22,7 +23,8 @@ export class RestInicio extends Component {
                 this.setState({
                     nomRestaurante: res.data[0].name,
                     email: res.data[0].email,
-                    telefono: res.data[0].numTelefono
+                    telefono: res.data[0].numTelefono,
+                    direccionActual: res.data[0].direccionPostal
                 });
             })
 
@@ -55,7 +57,7 @@ export class RestInicio extends Component {
 
                 <Row>
                     <Col md={{ size: 6, offset: 3 }} sm={{ size: 6, offset: 3 }}>
-                        <h5>Ubicación</h5><p>Calle Falsa nº 123, San Fernando, Cádiz</p>
+                        <h5>Ubicación</h5><p>{this.state.direccionActual}</p>
                         <h5>Métodos de contacto</h5>
                         <Row>
                             <Col md={{ size: 6 }} sm="12">

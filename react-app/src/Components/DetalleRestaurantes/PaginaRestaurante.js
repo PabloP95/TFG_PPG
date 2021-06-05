@@ -19,8 +19,10 @@ export class PaginaRestaurante extends Component {
             nomRestaurante: '',
             numTelefono: '',
             email: '',
+            dirActual: '',
+            latitud: '',
+            longitud: '',
             tiposCocina: [],
-            ubicacion: [],
         }
     }
 
@@ -30,6 +32,9 @@ export class PaginaRestaurante extends Component {
                 nomRestaurante: res.data[0].name,
                 numTelefono: res.data[0].numTelefono,
                 email: res.data[0].email,
+                dirActual: res.data[0].direccionPostal,
+                latitud: res.data[0].latitud,
+                longitud: res.data[0].longitud
             })
         })
 
@@ -66,7 +71,7 @@ export class PaginaRestaurante extends Component {
 
                     <Row className="p-4">
                         <Col sm="6" md="3" xs="5">
-                            <p> <GoLocation /> Ubicación</p>
+                            <p> <GoLocation /> {this.state.dirActual}</p>
                         </Col>
                         <Col sm="6" md="3" xs="7">
                             <p> <FaPhoneAlt /> {this.state.numTelefono}</p>
@@ -102,7 +107,9 @@ export class PaginaRestaurante extends Component {
                     nomRestaurante={this.state.nomRestaurante}
                     tiposCocina={this.state.tiposCocina}
                     numTelefono={this.state.numTelefono}
-                    ubicacion={this.state.ubicacion}
+                    dirActual={this.state.dirActual}
+                    lat={this.state.latitud}
+                    lng={this.state.longitud}
                     email={this.state.email}
                 />
                 <Opiniones idRestaurante={this.state.idRestaurante} />

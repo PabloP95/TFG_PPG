@@ -4,10 +4,22 @@ import { GoLocation } from "react-icons/go";
 import { FaPhoneAlt, FaRegEnvelope } from "react-icons/fa";
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import '../RestaurantPage/ConfigRestaurante/showTipoCocina.css';
+import 'leaflet/dist/leaflet.css';
+import '../../react-leaflet.css';
+import { MarkerIcon } from '../../react-leaflet-icon';
+import { Map, TileLayer, Marker } from 'react-leaflet'
 
+const CustomMarker = props => {
+    const initMarker = ref => {
+        if (ref) {
+            ref.leafletElement.openPopup();
+        }
+    }
+    return <Marker ref={initMarker} {...props} />
+}
 export class DetallesCard extends Component {
     render() {
-
+        let currentPosition = { lat: this.props.lat, lng: this.props.lng };
         let user = JSON.parse(localStorage.getItem('user'));
         return (
             <div id="detalles-card" className="p-4">
@@ -74,11 +86,15 @@ export class DetallesCard extends Component {
                         <Card body>
                             <CardTitle tag="h5"><strong>Ubicación y contacto</strong></CardTitle>
                             <br />
-                            <figure className="figure">
-                                <img src="https://via.placeholder.com/200x90.png?text=Img1Restaurante" alt="Imagen mapa" />
-                            </figure>
+                            <Map center={currentPosition} zoom={16} className="leaflet-container">
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution="© <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
+                                />
+                                <CustomMarker position={currentPosition} icon={MarkerIcon}></CustomMarker>
+                            </Map>
                             <CardText>
-                                <GoLocation /> Ubicación<br /><br />
+                                <GoLocation /> {this.props.dirActual}<br /><br />
                                 <FaPhoneAlt /> {this.props.numTelefono}<br /><br />
                                 <FaRegEnvelope /> {this.props.email}<br />
                             </CardText>

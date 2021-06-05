@@ -66,6 +66,7 @@ Route::group(['middleware' => 'api'], function($router){
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::put('/client/{id}', [ClientController::class, 'update']);
     Route::put('/restaurant/{id}', [RestaurantController::class, 'update']);
+    Route::put('/restaurant/{id}/location', [RestaurantController::class, 'storeLocation']);
     Route::put('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'update']);
     Route::put('/restaurant/{id}/horario/{dia}', [HorarioController::class, 'update']);
 

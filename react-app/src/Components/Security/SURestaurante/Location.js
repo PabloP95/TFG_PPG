@@ -1,29 +1,30 @@
 import React, { Component } from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
-
+import { FaSpinner } from 'react-icons/fa'
+import * as opencage from 'opencage-api-client';
+import '../../../react-leaflet.css'
+import axios from 'axios';
+import authHeader from '../auth/auth-header';
 export class Location extends Component {
     constructor(props) {
         super(props);
         this.state = {
             modal: false,
+            query: '',
+            apikey: '9fe141db7f4a489fb7bdcc998923cbde',
+            submittingLoad: false,
+            currentLocation: { lat: 0, lng: 0 },
+            zoom: 12,
             ubicacion: {
-                direccionPostal: "",
-                infoAdicional: "",
-                localizacion: "",
-                codigoPostal: "",
-                latitud: "",
-                longitud: ""
+                direccionPostal: this.props.dirActual
             },
             errorsLocation: {
                 direccionPostal: "",
-                infoAdicional: "",
-                localizacion: "",
-                codigoPostal: "",
-                latitud: "",
-                longitud: ""
             }
         }
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
+
     onChangeLocation = (e) => {
         const { ubicacion } = this.state;
         ubicacion[e.target.name] = [e.target.value];
@@ -36,7 +37,41 @@ export class Location extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.checkLocation()) {
-            console.log(this.state.ubicacion);
+            let user = JSON.parse(localStorage.getItem('user'));
+            this.setState({ submittingLoad: true });
+            let query = this.state.ubicacion.direccionPostal;
+            opencage.geocode({
+                key: this.state.apikey,
+                q: query
+            }).then(res => {
+                axios.put('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/location',
+                    {
+                        direccionPostal: this.state.ubicacion.direccionPostal[0],
+                        latitud: res.results[0].geometry.lat,
+                        longitud: res.results[0].geometry.lng
+                    },
+                    { headers: authHeader() }
+                ).then(() => {
+                    this.setState({
+                        submittingLoad: false,
+                    }, () => {
+                        if (this.props.onChange) {
+                            this.props.onChange(this.state.ubicacion.direccionPostal)
+                        }
+                    });
+                    this.toggle();
+                });
+                this.setState({
+                    lat: res.results[0].geometry.lat,
+                    lng: res.results[0].geometry.lng
+                })
+            }).catch(err => {
+                console.log(err);
+                this.setState({
+                    submittingLoad: false
+                })
+                this.toggle();
+            });
         }
     }
 
@@ -44,86 +79,39 @@ export class Location extends Component {
         let allOK = true;
         let errorsLocation = {};
 
-        if (!this.state.ubicacion.codigoPostal) {
+        if (!this.state.ubicacion.direccionPostal) {
             allOK = false;
-            errorsLocation["codigoPostal"] = "Introduzca el código postal";
+            errorsLocation["direccionPostal"] = "Introduzca el nombre de la calle/avenida/plaza o edificio";
         }
-
-        else if (typeof this.state.ubicacion.codigoPostal !== "undefined") {
-            let patternCodigoPostal = new RegExp(/\b\d{5}\b/);
-            if (!patternCodigoPostal.test(this.state.ubicacion.codigoPostal)) {
-                allOK = false;
-                errorsLocation["codigoPostal"] = "El código postal debe estar formado por 5 números"
-            }
-        }
-        if (!this.state.ubicacion.localizacion) {
-            allOK = false;
-            errorsLocation["localizacion"] = "Introduzca la localización";
-        }
-        else if (typeof this.state.ubicacion.localizacion !== "undefined") {
-            let patternLocalizacion = new RegExp(/\d+|\B\W+\B/);
-            if (patternLocalizacion.test(this.state.ubicacion.localizacion)) {
-                allOK = false;
-                errorsLocation["localizacion"] = "ERROR, en la localización solo podemos tener letras"
-            }
-        }
-        if (!this.state.ubicacion.latitud) {
-            allOK = false;
-            errorsLocation["latitud"] = "Introduzca la latitud";
-        }
-        if (!this.state.ubicacion.longitud) {
-            allOK = false;
-            errorsLocation["longitud"] = "Introduzca la longitud";
-        }
-
         this.setState({ errorsLocation: errorsLocation });
         return allOK;
     }
     render() {
-
+        console.log(this.state.ubicacion.direccionPostal);
         return (
             <>
                 <Label for="ubicacion" hidden>Ubicación</Label>
-                <Button block color="secondary" onClick={this.toggle}>{this.props.nomBoton ? this.props.nomBoton : 'Ubicación'}</Button>
+                <Button block color="secondary" onClick={this.toggle}>{this.state.ubicacion.direccionPostal !== '' ? 'Modificar ubicación' : 'Introducir ubicación'}</Button>
                 <Modal scrollable isOpen={this.state.modal} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle}>Ubicación</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>{this.state.ubicacion.direccionPostal !== '' ? 'Modificando ubicación' : 'Introduciendo ubicación'}</ModalHeader>
                     <ModalBody>
-                        <Form>
+                        <Form onSubmit={this.handleSubmit}>
                             <FormGroup>
-                                <Label for="direccionPostal">Dirección postal</Label>
-                                <Input type="text" id="direccionPostal" name="direccionPostal" onChange={this.onChangeLocation} />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label for="infoAdicional">Información adicional sobre la ubicación</Label>
-                                <Input type="text" id="infoAdicional" name="infoAdicional" onChange={this.onChangeLocation} />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label for="localizacion">Localización, estado/provincia/región*</Label>
-                                <Input style={{ 'border': this.state.errorsLocation.localizacion ? '1px solid red' : '' }} type="text" id="localizacion" name="localizacion" onChange={this.onChangeLocation} />
-                                <div className="text-danger">{this.state.errorsLocation.localizacion}</div>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label for="codigoPostal">Código Postal*</Label>
-                                <Input style={{ 'border': this.state.errorsLocation.codigoPostal ? '1px solid red' : '' }} type="number" id="codigoPostal" name="codigoPostal" placeholder="11100" onChange={this.onChangeLocation} />
-                                <div className="text-danger">{this.state.errorsLocation.codigoPostal}</div>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label for="latitud">Latitud*</Label>
-                                <Input style={{ 'border': this.state.errorsLocation.latitud ? '1px solid red' : '' }} type="number" step="0.00000001" id="latitud" name="latitud" placeholder="36.4651097" onChange={this.onChangeLocation} />
-                                <div className="text-danger">{this.state.errorsLocation.latitud}</div>
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label for="longitud">Longitud*</Label>
-                                <Input style={{ 'border': this.state.errorsLocation.longitud ? '1px solid red' : '' }} type="number" step="0.00000001" id="longitud" name="longitud" placeholder="-6.1996775" onChange={this.onChangeLocation} />
-                                <div className="text-danger">{this.state.errorsLocation.longitud}</div>
+                                <Label for="direccionPostal">Dirección postal*</Label>
+                                <Input
+                                    style={{ 'border': this.state.errorsLocation.direccionPostal ? '1px solid red' : '' }} type="text"
+                                    id="direccionPostal" name="direccionPostal" placeholder="Escuela Superior de Ingeniería, 11519 Puerto Real, España"
+                                    value={this.state.ubicacion.direccionPostal}
+                                    onChange={this.onChangeLocation}
+                                />
+                                <div className="text-danger">{this.state.errorsLocation.direccionPostal}</div>
                             </FormGroup>
                             <hr />
-                            <Button type="button" color="success" block onClick={this.handleSubmit}>Guardar cambios</Button>
+                            {this.state.submittingLoad ? (
+                                <Button type="button" color="success" block onClick={this.handleSubmit}><FaSpinner className="icon-spin" /> Guardar cambios</Button>
+                            ) : (
+                                <Button type="button" color="success" block onClick={this.handleSubmit}>Guardar cambios</Button>
+                            )}
                         </Form>
 
                     </ModalBody>

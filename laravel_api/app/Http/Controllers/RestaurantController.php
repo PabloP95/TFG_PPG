@@ -26,6 +26,21 @@ class RestaurantController extends Controller
         return $restaurantes;
     }
 
+    public function storeLocation(Request $request, $id){
+        $restaurant = Restaurant::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'direccionPostal' => 'required|string|unique:restaurants,direccionPostal',
+            'longitud' => 'required|numeric',
+            'latitud' => 'required|numeric'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        return $restaurant->update($request->all());
+    }
     
     /**
      * Display the specified resource.
@@ -35,7 +50,7 @@ class RestaurantController extends Controller
      */
     public function show($id)
     {
-        $restaurant = DB::select("SELECT email, name, numTelefono
+        $restaurant = DB::select("SELECT email, name, numTelefono, latitud, longitud, direccionPostal
         FROM users
         JOIN restaurants as r
         ON userable_id = r.id
