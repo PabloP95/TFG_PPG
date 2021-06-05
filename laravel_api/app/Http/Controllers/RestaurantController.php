@@ -69,7 +69,7 @@ class RestaurantController extends Controller
     {
         $restaurant = Restaurant::findOrFail($id);
         $validator = Validator::make($request->all(), [
-            'numTelefono' => 'required|string|regex:/([\d]{3} )([\d]{2} )([\d]{2} )([\d]{2})$/',
+            'numTelefono' => 'required|string|regex:/([\d]{3} )([\d]{2} )([\d]{2} )([\d]{2})$/|unique:restaurants,numTelefono,'.$id,
         ]);
 
         if($validator->fails()){
