@@ -10,6 +10,8 @@ import Trunc from '../functions/Trunc';
 import 'leaflet/dist/leaflet.css';
 import * as opencage from 'opencage-api-client';
 
+
+
 const CustomMarker = props => {
     const initMarker = ref => {
         if (ref) {
@@ -69,12 +71,6 @@ export class PaginaPrueba extends Component {
 */
     }
 
-    onDrop = (picture) => {
-        this.setState({
-            pictures: this.state.pictures.concat(picture),
-        });
-    }
-
     handleChange = (e) => {
         this.setState({ query: e.target.value });
     }
@@ -94,13 +90,20 @@ export class PaginaPrueba extends Component {
                 <h2>Esta es la página de este usuario:</h2>
                 <h3>El articulo vale 50 euros, que en dolares canadienses es: {<Trunc x={dinero * 50} posiciones={2} />} {moneda}</h3>
                 <hr />
-                <h3 underline>
+                <h3>
                     Enlaces de importancia en el testeo de la página
                 </h3>
                 <a href="user/sonicblazer">Diseño de la página de usuario de nombreUsuario = sonicblazer</a>
                 <br />
                 <a href="restaurante/a">Diseño de la página de restaurante</a>
                 <p>En especial del restaurante de nombre a (aunque mejor el id)</p>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
                         <Label for="query">Localización</Label>
@@ -125,7 +128,7 @@ export class PaginaPrueba extends Component {
                 }
 
             </div >
-        )
+        );
     }
 }
 

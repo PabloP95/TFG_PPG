@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Row, Col } from 'reactstrap'
+import { Button, Modal, ModalHeader, ModalBody, Col } from 'reactstrap'
 import { GoClock } from "react-icons/go";
 import axios from 'axios';
 export class VerHorario extends Component {
@@ -30,7 +30,7 @@ export class VerHorario extends Component {
         return (
             <>
                 <Col sm="6" md="3" xs="7">
-                    <Button shadow rounded color="white" onClick={this.toggleHorario}><GoClock className="mb-1" /> Horario</Button>
+                    <Button outline color="secondary" onClick={this.toggleHorario}><GoClock className="mb-1" /> Horario</Button>
                 </Col>
                 <Modal scrollable isOpen={this.state.modalHorario} toggle={this.toggleHorario}>
                     <ModalHeader toggle={this.toggleHorario}>Horarios</ModalHeader>

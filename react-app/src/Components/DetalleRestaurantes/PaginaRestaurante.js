@@ -36,6 +36,10 @@ export class PaginaRestaurante extends Component {
                 latitud: res.data[0].latitud,
                 longitud: res.data[0].longitud
             })
+        }).catch(error => {
+            if (error.response && error.response.status === 400) {
+                console.log('Error 400, el restaurante no existe');
+            }
         })
 
         axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + this.state.idRestaurante).then((res) => {

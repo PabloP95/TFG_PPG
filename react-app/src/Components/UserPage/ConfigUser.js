@@ -33,8 +33,8 @@ export class ConfigUser extends Component {
             emailUser: user.user.email,
             userableId: user.user.userable_id,
         })
-        axios.get('http://127.0.0.1:8000/api/client/' + user.user.userable_id).
-            then(res => {
+        axios.get('http://127.0.0.1:8000/api/client/' + user.user.userable_id)
+            .then(res => {
                 this.setState({
                     nameSurname: res.data.nombreCompleto
                 });

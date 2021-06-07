@@ -77,6 +77,10 @@ export class ConfigBasicaRest extends Component {
                             if (error.response.status === 400) {
                                 this.setState({ errors: JSON.parse(error.response.data) });
                             }
+                            if (error.response.status === 401) {
+                                { Logout() };
+                                window.location = '/login'
+                            }
                         }
                     });
                     this.modifyOK(res.data.user.name);
@@ -84,6 +88,11 @@ export class ConfigBasicaRest extends Component {
                     if (error.response) {
                         if (error.response.status === 400) {
                             this.setState({ errors: JSON.parse(error.response.data) });
+                        }
+
+                        if (error.response.status === 401) {
+                            { Logout() };
+                            window.location = '/login'
                         }
                     }
                 });
@@ -177,10 +186,10 @@ export class ConfigBasicaRest extends Component {
             if (result.isConfirmed) {
                 axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.userableId, {
                     headers: authHeader()
-                }).then()
+                })
                 axios.delete('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
                     headers: authHeader()
-                }).then()
+                });
                 Swal.fire({
                     title: 'Cuenta eliminada!',
                     text: 'Su cuenta ha sido eliminada correctamente.',

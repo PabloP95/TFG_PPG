@@ -3,10 +3,31 @@ import { BsFillTrashFill } from 'react-icons/bs'
 import Swal from 'sweetalert2'
 import { Row, Col, Button, UncontrolledTooltip } from 'reactstrap'
 import CrearPlato from './CrearPlato'
+import AlergenosPlato from './AlergenosPlato'
 import './menuEstilos.css'
+import axios from 'axios'
+import authHeader from '../../Security/auth/auth-header'
 export class RestMenu extends Component {
 
-    checkDishDelete = () => {
+    constructor(props) {
+        super(props);
+        this.state = {
+            platos: [],
+            idRestaurante: '',
+            nomRestaurante: ''
+        }
+    }
+
+    componentDidMount() {
+        let user = JSON.parse(localStorage.getItem('user'));
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/platos').then(res => (
+            this.setState({ platos: res.data, idRestaurante: user.user.userable_id, nomRestaurante: user.user.name })
+        ));
+
+    }
+
+    checkDishDelete = (idPlato) => {
+        console.log(idPlato);
         Swal.fire({
             icon: 'warning',
             title: 'Eliminar plato?',
@@ -18,25 +39,29 @@ export class RestMenu extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                    'Plato eliminado!',
-                    'El plato ha sido eliminado correctamente.',
-                    'success'
-                )
+
+                axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/plato/' + idPlato.target.id,
+                    {
+                        headers: authHeader()
+                    }).then(() => {
+                        Swal.fire(
+                            'Plato eliminado!',
+                            'El plato ha sido eliminado correctamente.',
+                            'success'
+                        )
+
+                    })
             }
         });
     }
 
-    eliminarPlato = () => {
-        this.checkDishDelete();
-    }
     render() {
         return (
             <div>
                 <Row className="p-4">
                     <Col md="12" className="bg-dark text-light rounded text-center">
                         <h5>
-                            Carta restaurante A
+                            Carta restaurante {this.state.nomRestaurante}
                         </h5>
                     </Col>
                 </Row>
@@ -63,63 +88,36 @@ export class RestMenu extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <td className="oneliner">Plato 1</td>
-                            <td id="descripcionPlato" className="oneliner">
-                                Plato de prueba asdadqasdasdasdasdasdasd
-                                <UncontrolledTooltip fade placement="bottom" target="descripcionPlato">
-                                    Plato de prueba asdadqasdasdasdasdasdasd
-                                </UncontrolledTooltip>
-                            </td>
-
-                            <td>Platos principales</td>
-                            <td>No</td>
-                            <td className="oneliner"></td>
-                            <td>7.50</td>
-                            <td className="oneliner"></td>
-                            <td>
-                                <CrearPlato
-                                    nomModal="Editar plato"
-                                    nomPlato="Plato 1"
-                                    descPlato="Plato de prueba"
-                                    tipoPlato="Platos principales"
-                                    vegano="no"
-                                    alergenos=""
-                                    precioPlato="7.50"
-                                />
-                                <Button color="danger" className="mb-1" onClick={this.eliminarPlato}><BsFillTrashFill /></Button>
-                            </td>
-
-
-                        </tbody>
-
-                        <tbody>
-                            <td className="oneliner">Plato 1</td>
-                            <td id="descripcionPlato" className="oneliner">
-                                Plato de prueba asdadqasdasdasdasdasdasd
-                                <UncontrolledTooltip fade placement="bottom" target="descripcionPlato">
-                                    Plato de prueba asdadqasdasdasdasdasdasd
-                                </UncontrolledTooltip>
-                            </td>
-
-                            <td>Platos principales</td>
-                            <td>No</td>
-                            <td className="oneliner"></td>
-                            <td>7.50</td>
-                            <td className="oneliner"></td>
-                            <td>
-                                <CrearPlato
-                                    nomModal="Editar plato"
-                                    nomPlato="Plato 1"
-                                    descPlato="Plato de prueba"
-                                    tipoPlato="Platos principales"
-                                    vegano="no"
-                                    alergenos=""
-                                    precioPlato="7.50"
-                                />
-                                <Button color="danger" className="mb-1" onClick={this.eliminarPlato}><BsFillTrashFill /></Button>
-                            </td>
-
-
+                            {this.state.platos.map(plato => (
+                                <tr key={plato.id}>
+                                    <td className="oneliner">{plato.nombre}</td>
+                                    <td id="descripcionPlato" className="oneliner">
+                                        {plato.descripcion}
+                                        <UncontrolledTooltip fade placement="bottom" target="descripcionPlato">
+                                            {plato.descripcion}
+                                        </UncontrolledTooltip>
+                                    </td>
+                                    <td>{plato.tipo_plato}</td>
+                                    <td>{plato.vegano == 0 ? 'No' : 'Si'}</td>
+                                    <AlergenosPlato idPlato={plato.id} />
+                                    <td>{plato.precio}</td>
+                                    <td className="oneliner"></td>
+                                    <td>
+                                        <CrearPlato
+                                            nomModal="Editar plato"
+                                            idPlato={plato.id}
+                                            nomPlato={plato.nombre}
+                                            descPlato={plato.descripcion}
+                                            tipoPlato={plato.tipo_plato}
+                                            vegano={plato.vegano}
+                                            alergenos=""
+                                            precioPlato={plato.precio}
+                                        />
+                                        {console.log(plato.id)}
+                                        <Button id={plato.id} color="danger" className="mb-1" onClick={this.checkDishDelete}><BsFillTrashFill /></Button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </Row>

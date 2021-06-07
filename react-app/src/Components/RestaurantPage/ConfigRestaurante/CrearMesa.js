@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import authHeader from '../../Security/auth/auth-header';
 
-import CrearMesas from './CrearMesas';
 export class CrearMesa extends Component {
     constructor(props) {
         super(props);

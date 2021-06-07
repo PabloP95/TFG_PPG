@@ -15,7 +15,7 @@ class HorarioController extends Controller
      */
     public function index($id)
     {
-        $horariosRestaurant = Restaurant::find($id)->horarios()->get();
+        $horariosRestaurant = Restaurant::findOrFail($id)->horarios()->get();
         return $horariosRestaurant;
     }
 
@@ -49,7 +49,7 @@ class HorarioController extends Controller
             'restaurant_id' => $request->input('restaurant_id'),
         ]);
 
-        return $horariosRestaurant = Restaurant::find($request->restaurant_id)->horarios()->get();
+        return $horariosRestaurant = Restaurant::findOrFail($request->restaurant_id)->horarios()->get();
     }
 
     /**
@@ -60,7 +60,7 @@ class HorarioController extends Controller
      */
     public function show($id, $dia)
     {
-        return Restaurant::find($id)->horarios()->where('dia', '=', $dia)->get();
+        return Restaurant::findOrFail($id)->horarios()->where('dia', '=', $dia)->get();
     }
 
     /**
@@ -85,14 +85,14 @@ class HorarioController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $horario = Restaurant::find($id)->horarios()->where('dia', '=', $dia)->update([
+        $horario = Restaurant::findOrFail($id)->horarios()->where('dia', '=', $dia)->update([
             'horarioAperturaP1' => $request->input('horarioAperturaP1'),
             'horarioAperturaP2' => $request->input('horarioAperturaP2'),
             'horarioCierreP1' => $request->input('horarioCierreP1'),
             'horarioCierreP2' => $request->input('horarioCierreP2'),
         ]);
 
-        return $horariosRestaurant = Restaurant::find($id)->horarios()->get();
+        return $horariosRestaurant = Restaurant::findorFail($id)->horarios()->get();
     }
 
     /**

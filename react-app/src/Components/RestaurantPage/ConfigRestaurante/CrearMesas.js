@@ -4,7 +4,7 @@ import { BsPlusCircleFill } from 'react-icons/bs'
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import authHeader from '../../Security/auth/auth-header';
-import ConfigMesa from './ConfigMesa';
+
 export class CrearMesas extends Component {
     constructor(props) {
         super(props);

@@ -3,26 +3,14 @@ import { BsPencilSquare, BsPlusCircleFill } from 'react-icons/bs'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Col } from 'reactstrap'
 import { Multiselect } from 'multiselect-react-dropdown'
 import Swal from 'sweetalert2';
+import axios from 'axios';
+import authHeader from '../../Security/auth/auth-header';
 export class CrearPlato extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            alergenos: [
-                { id: 0, name: "Gluten" },
-                { id: 1, name: "Crustáceos" },
-                { id: 2, name: "Huevos" },
-                { id: 3, name: "Pescado" },
-                { id: 4, name: "Cacahuetes" },
-                { id: 5, name: "Soja" },
-                { id: 6, name: "Lácteos" },
-                { id: 7, name: "Frutos de cáscara" },
-                { id: 8, name: "Apio" },
-                { id: 9, name: "Mostaza" },
-                { id: 10, name: "Granos de sesamo" },
-                { id: 11, name: "Dioxido de azufre y sulfitos" },
-                { id: 12, name: "Moluscos" },
-                { id: 13, name: "Altramuces" },
-            ],
+            idPlato: '',
+            alergenos: [],
             infoPlato: {
                 nomPlato: this.props.nomPlato ? this.props.nomPlato : '',
                 descPlato: this.props.descPlato ? this.props.descPlato : '',
@@ -39,6 +27,14 @@ export class CrearPlato extends Component {
                 precioPlato: ''
             }
         }
+    }
+
+    componentDidMount() {
+        axios.get('http://127.0.0.1:8000/api/alergenos').then(res => (
+            this.setState({
+                alergenos: res.data
+            })
+        ))
     }
 
     toggleNewDish = () => {
@@ -86,6 +82,59 @@ export class CrearPlato extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
+            let user = JSON.parse(localStorage.getItem('user'));
+            {
+                this.props.nomModal ? (
+                    axios.put('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.props.idPlato,
+                        {
+                            nombre: this.state.infoPlato.nomPlato,
+                            descripcion: this.state.infoPlato.descPlato,
+                            tipo_plato: this.state.infoPlato.tipoPlato,
+                            vegano: this.state.infoPlato.vegano,
+                            precio: this.state.infoPlato.precioPlato
+                        },
+                        { headers: authHeader() }).then(() => {
+                            axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.props.idPlato + '/alergenos',
+                                {
+                                    alergenosSelected: this.state.alergenosPlato
+                                },
+                                {
+                                    headers: authHeader()
+                                }).then(() => {
+                                    this.setState({
+                                        alergenos: this.state.alergenosPlato
+                                    })
+                                })
+                        })
+                ) : (
+                    axios.post('http://127.0.0.1:8000/api/plato/restaurant/' + user.user.userable_id,
+                        {
+                            nombre: this.state.infoPlato.nomPlato,
+                            descripcion: this.state.infoPlato.descPlato,
+                            tipo_plato: this.state.infoPlato.tipoPlato,
+                            vegano: this.state.infoPlato.vegano === 'si' ? 1 : 0,
+                            precio: this.state.infoPlato.precioPlato,
+                            restaurant_id: user.user.userable_id,
+                        },
+                        { headers: authHeader() }).then((res) => {
+                            this.setState({
+                                idPlato: res.data.id
+                            })
+                        }))
+
+                axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.state.idPlato + '/alergenos',
+                    {
+                        alergenosSelected: this.state.alergenosPlato
+                    },
+                    {
+                        headers: authHeader()
+                    }).then(() => {
+                        this.setState({
+                            alergenos: this.state.alergenosPlato
+                        })
+                    })
+
+            }
             this.showAllOK();
             console.log(this.state.infoPlato);
             console.log(this.state.alergenosPlato);
@@ -201,7 +250,8 @@ export class CrearPlato extends Component {
                                 <Multiselect options={this.state.alergenos} // Options to display in the dropdown
                                     onSelect={this.onSelect} // Function will trigger on select event
                                     onRemove={this.onRemove} // Function will trigger on remove event
-                                    displayValue="name"
+                                    selectedValues={this.state.alergenosPlato}
+                                    displayValue="nomAlergeno"
                                     hidePlaceholder={true}
                                     placeholder="Elija los alérgenos" />
                             </FormGroup>

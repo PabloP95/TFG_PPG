@@ -5,7 +5,7 @@ import RestInicio from './RestInicio'
 import RestConfig from './RestConfig'
 import RestMenu from './ConfigMenu/RestMenu'
 import RestOpiniones from './RestOpiniones'
-import RestEstadisticas from './RestEstadisticas'
+
 export class RestaurantPage extends Component {
     render() {
         return (
@@ -28,9 +28,7 @@ export class RestaurantPage extends Component {
                             <div className="tab-pane fade" id="pills-opinionesRest" role="tabpanel" aria-labelledby="pills-opinionesRest-tab">
                                 <RestOpiniones />
                             </div>
-                            <div className="tab-pane fade" id="pills-estadisticasRest" role="tabpanel" aria-labelledby="pills-estadisticasRest-tab">
-                                <RestEstadisticas />
-                            </div>
+
                         </div>
                     </Col>
                 </Row>

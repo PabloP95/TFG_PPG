@@ -20,7 +20,7 @@ class TiposCocinaController extends Controller
     }
 
     public function indexTipoCocinaRestaurante($id){
-        $tiposCocina = Restaurant::find($id)->tiposCocina()->get();
+        $tiposCocina = Restaurant::findOrFail($id)->tiposCocina()->get();
         return $tiposCocina;
     }
 
@@ -33,38 +33,17 @@ class TiposCocinaController extends Controller
     public function store(Request $request, $id)
     {
         $restaurant = Restaurant::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'tiposCocinaSelected' => 'required|exists:tipos_cocinas,id'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
         $tiposCocina = $request->input('tiposCocinaSelected');
         $tiposCocinaConNombre = $request->input('tiposCocinaNombre');
         $res = $restaurant->tiposCocina()->sync($tiposCocina);
         
         return response()->json(['data' => $tiposCocinaConNombre], 200);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

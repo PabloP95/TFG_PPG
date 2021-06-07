@@ -14,7 +14,7 @@ class RestaurantTiposCocina extends Migration
     public function up()
     {
         Schema::create('restaurant_tipos_cocina', function (Blueprint $table) {
-            $table->BigInteger('tipos_cocina_id')->unsigned();
+            $table->bigInteger('tipos_cocina_id')->unsigned();
             $table->bigInteger('restaurant_id')->unsigned();
 
             $table->foreign('tipos_cocina_id')

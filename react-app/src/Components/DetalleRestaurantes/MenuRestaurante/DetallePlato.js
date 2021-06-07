@@ -2,8 +2,22 @@ import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap';
 import { IoArrowBackCircle } from 'react-icons/io5';
 import Trunc from '../../functions/Trunc';
+import axios from 'axios';
 export class DetallePlato extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            alergenosPlato: [],
+        }
+    }
 
+    componentDidMount() {
+        axios.get('http://127.0.0.1:8000/api/plato/' + this.props.location.state.idPlato + "/alergenos").then((res) => {
+            this.setState({
+                alergenosPlato: res.data
+            })
+        })
+    }
     render() {
         let moneda = localStorage.getItem('moneda');
         let dinero = localStorage.getItem('dinero');
@@ -37,32 +51,27 @@ export class DetallePlato extends Component {
                         <h5>Alérgenos</h5>
                     </Col>
                 </Row>
-                <Row className="mt-3">
-                    <Col md={{ size: 2, offset: 3 }} sm="4" xs="4">
-                        <img src="https://via.placeholder.com/100.png" className="rounded-circle" alt="Alergeno 1" />
-                    </Col>
-                    <Col md="2" sm="4" xs="4">
-                        <img src="https://via.placeholder.com/100.png" className="rounded-circle" alt="Alergeno 2" />
-                    </Col>
-                    <Col md="2" sm="4" xs="4">
-                        <img src="https://via.placeholder.com/100.png" className="rounded-circle" alt="Alergeno 3" />
-                    </Col>
+                <Row className="p-3 mt-3 mr-3">
+                    {this.state.alergenosPlato.length !== 0 ? (
+                        this.state.alergenosPlato.map(alergeno => (
+                            <Col md="4" sm="4" xs="4" key={alergeno.id}>
+                                <img src={alergeno.img} width="100" height="100" className="rounded-circle border border-secondary" alt="Alergeno 1" />
+                                <figcaption>
+                                    <p>{alergeno.nomAlergeno}</p>
+                                </figcaption>
+                            </Col>
+                        ))
+
+                    ) : <Col md="12" className="pl-5 pb-2"><p>Este plato no tiene alérgenos</p></Col>}
                 </Row>
                 <br />
                 <Row className="p-3 pt-3">
-                    <Col md="6" sm="6" className="pr-5">
-                        <h4 >Tipo cocina</h4>
-                        <Row>
-                            <Col md="12" sm="12">
-                                Italiano
-                            </Col>
-                        </Row>
-                    </Col>
-                    <Col md="6" sm="6" className="pt-3 pl-2">
+
+                    <Col md="12" sm="12" className="pt-3 pl-2">
                         <h4>Descripción</h4>
                         <Row>
                             <Col md="12" sm="12">
-                                Ejemplo de descripción de {this.props.location.state.nombrePlato}
+                                {this.props.location.state.descripcion}
                             </Col>
                         </Row>
                     </Col>

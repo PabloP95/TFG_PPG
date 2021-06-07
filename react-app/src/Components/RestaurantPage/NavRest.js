@@ -33,12 +33,6 @@ export class NavRest extends Component {
                         </a>
                     </li>
 
-                    <li className="nav-item">
-                        <a className="nav-link" id="pills-estadisticasRest-tab" data-toggle="pill" href="#pills-estadisticasRest"
-                            role="tab" aria-controls="pills-estadisticasRest" aria-selected="false">
-                            Panel de estadisticas
-                        </a>
-                    </li>
                 </ul>
             </div>
         )

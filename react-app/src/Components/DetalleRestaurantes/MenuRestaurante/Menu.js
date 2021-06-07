@@ -17,12 +17,14 @@ export class Menu extends Component {
         let arr = window.location.href.split('/');
         this.state = {
             idRestaurante: arr[5],
+            pprincipal: [],
+            entrantes: [],
+            postres: [],
+            bebidas: [],
             nomRestaurante: '',
             glutenSI: false,
             lacteosSI: false,
-            italianoSI: false,
-            japonesSI: false,
-            francesSI: false,
+
             veganaSI: false,
             vegetaSI: false,
         }
@@ -34,7 +36,30 @@ export class Menu extends Component {
                 nomRestaurante: res.data[0].name,
             })
         })
+
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/platos').then((res) => {
+            console.log(res.data);
+            let arrPrincipal = [];
+            let arrEntrantes = [];
+            let arrBebidas = [];
+            let arrPostres = [];
+            res.data.map((plato) =>
+                (plato.tipo_plato === 'Entrantes') ? (arrEntrantes.push(plato)) :
+                    (plato.tipo_plato === 'Platos principales') ? (arrPrincipal.push(plato)) :
+                        (plato.tipo_plato === 'Bebidas') ? arrBebidas.push(plato) :
+                            (plato.tipo_plato === 'Postres') ? arrPostres.push(plato)
+                                : (''))
+            console.log('arrPrincipal = ' + arrPrincipal);
+            this.setState({
+                entrantes: arrEntrantes,
+                pprincipal: arrPrincipal,
+                bebidas: arrBebidas,
+                postres: arrPostres,
+            });
+        })
     }
+
+
     handleChange = (e) => {
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -45,12 +70,10 @@ export class Menu extends Component {
         });
     }
     render() {
+        console.log('Todos los platos en Menu.js: ' + this.state.platos);
         console.log('Opciones escogidas: ');
         console.log("Gluten: " + this.state.glutenSI);
         console.log("Lacteos: " + this.state.lacteosSI);
-        console.log("Italiano: " + this.state.italianoSI);
-        console.log("Japones: " + this.state.japonesSI);
-        console.log("Frances: " + this.state.francesSI);
 
         const lastCharOfURL = window.location.href.charAt(window.location.href.length - 1);
         return (
@@ -86,24 +109,7 @@ export class Menu extends Component {
                         </Row>
 
                         <hr />
-                        <Row className="p-3">
-                            <Form className="form-horizontal">
-                                <p>Tipos de comida</p>
-                                <FormGroup check className="move-left checkbox-inline">
-                                    <Input type="checkbox" name="italianoSI" id="italianoSI" checked={this.state.italianoSI} onChange={this.handleChange} />
-                                    <Label check for="italianoSI">Italiano</Label>
-                                </FormGroup>
-                                <FormGroup check className="move-left checkbox-inline">
-                                    <Input type="checkbox" name="japonesSI" id="japonesSI" checked={this.state.japonesSI} onChange={this.handleChange} />
-                                    <Label check for="japonesSI">Japones</Label>
-                                </FormGroup>
-                                <FormGroup check className="move-left checkbox-inline">
-                                    <Input type="checkbox" name="francesSI" id="francesSI" checked={this.state.francesSI} onChange={this.handleChange} />
-                                    <Label check for="francesSI">Francesa</Label>
-                                </FormGroup>
-                            </Form>
-                        </Row>
-                        <hr />
+
                         <Row className="p-3">
                             <Form className="form-horizontal">
                                 <p>Tipos de dieta</p>
@@ -123,16 +129,16 @@ export class Menu extends Component {
                     <Col md="8" xs="12">
                         <div className="tab-content bg-light" id="pills-tabContent">
                             <div className="tab-pane fade show active" id="pills-entrantes" role="tabpanel" aria-labelledby="pills-entrantes-tab">
-                                <Entrantes />
+                                <Entrantes entrantes={this.state.entrantes} idRestaurante={this.state.idRestaurante} />
                             </div>
                             <div className="tab-pane fade" id="pills-platosprincipales" role="tabpanel" aria-labelledby="pills-platosprincipales-tab">
-                                <PlatosPrincipales />
+                                <PlatosPrincipales pprincipales={this.state.pprincipal} idRestaurante={this.state.idRestaurante} />
                             </div>
                             <div className="tab-pane fade" id="pills-bebidas" role="tabpanel" aria-labelledby="pills-bebidas-tab">
-                                <Bebidas />
+                                <Bebidas bebidas={this.state.bebidas} idRestaurante={this.state.idRestaurante} />
                             </div>
                             <div className="tab-pane fade" id="pills-postres" role="tabpanel" aria-labelledby="pills-postres-tab">
-                                <Postres />
+                                <Postres postres={this.state.postres} idRestaurante={this.state.idRestaurante} />
                             </div>
                         </div>
                     </Col>
