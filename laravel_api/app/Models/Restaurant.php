@@ -41,4 +41,8 @@ class Restaurant extends Model
     public function horarios(){
         return $this->hasMany('App\Models\Horario');
     }
+
+    public function opiniones(){
+        return $this->hasMany('App\Models\Opinion');
+    }
 }

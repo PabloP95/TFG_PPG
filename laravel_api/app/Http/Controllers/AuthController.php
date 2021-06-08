@@ -10,6 +10,7 @@ use App\Models\Client;
 use App\Models\Restaurant;
 
 use Validator;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -56,7 +57,10 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
             'name' => 'required|string|unique:users',
-            'userable_type' => 'required|string|in:App\Models\User,App\Models\Restaurant',
+            'userable_type' => [
+                'required',
+                'string'
+            ]
         ]);
 
         if($validator->fails()){

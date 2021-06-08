@@ -22,4 +22,8 @@ class Client extends Model
     public function user(){
         return $this->morphOne('App\Models\User', 'userable');
     }
+
+    public function opiniones(){
+        return $this->hasMany('App\Models\Opinion');
+    }
 }
