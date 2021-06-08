@@ -14,20 +14,47 @@ export class RestMenu extends Component {
         this.state = {
             platos: [],
             idRestaurante: '',
-            nomRestaurante: ''
+            nomRestaurante: '',
+            numeroConsultas: 0,
         }
+
+        this.eventHandler = this.eventHandler.bind(this);
     }
 
     componentDidMount() {
         let user = JSON.parse(localStorage.getItem('user'));
         axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/platos').then(res => (
-            this.setState({ platos: res.data, idRestaurante: user.user.userable_id, nomRestaurante: user.user.name })
+            this.setState({
+                platos: res.data,
+                idRestaurante: user.user.userable_id,
+                nomRestaurante: user.user.name,
+                numeroConsultas: this.state.numeroConsultas++
+            })
         ));
+    }
+
+    eventHandler = (data) => {
+        console.log(data);
+        this.setState({ numeroConsultas: data });
+
 
     }
 
-    checkDishDelete = (idPlato) => {
-        console.log(idPlato);
+    componentDidUpdate(prevProps, prevState) {
+        console.log(prevState.numeroConsultas);
+        console.log(this.state.numeroConsultas);
+
+        if (prevState.numeroConsultas !== this.state.numeroConsultas) {
+            console.log("HOLA");
+            axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/platos').then(res => {
+                this.setState({
+                    platos: res.data,
+                })
+            })
+        }
+    }
+
+    checkDishDelete = (e) => {
         Swal.fire({
             icon: 'warning',
             title: 'Eliminar plato?',
@@ -39,17 +66,18 @@ export class RestMenu extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-
-                axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/plato/' + idPlato.target.id,
+                axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/plato/' + e.target.id,
                     {
                         headers: authHeader()
                     }).then(() => {
+                        this.setState({
+                            numeroConsultas: this.state.numeroConsultas + 1
+                        })
                         Swal.fire(
                             'Plato eliminado!',
                             'El plato ha sido eliminado correctamente.',
                             'success'
                         )
-
                     })
             }
         });
@@ -67,7 +95,7 @@ export class RestMenu extends Component {
                 </Row>
 
                 <Row className="p-2">
-                    <CrearPlato />
+                    <CrearPlato numeroConsultas={this.state.numeroConsultas + 2} onChange={this.eventHandler} />
                 </Row>
 
                 <Row className="p-3 ml-1 container">
@@ -99,11 +127,15 @@ export class RestMenu extends Component {
                                     </td>
                                     <td>{plato.tipo_plato}</td>
                                     <td>{plato.vegano == 0 ? 'No' : 'Si'}</td>
-                                    <AlergenosPlato idPlato={plato.id} />
+                                    <AlergenosPlato idPlato={plato.id}
+                                        onChange={this.eventHandler}
+                                        numeroConsultas={this.state.numeroConsultas} />
                                     <td>{plato.precio}</td>
                                     <td className="oneliner"></td>
                                     <td>
                                         <CrearPlato
+                                            numeroConsultas={this.state.numeroConsultas + 1}
+                                            onChange={this.eventHandler}
                                             nomModal="Editar plato"
                                             idPlato={plato.id}
                                             nomPlato={plato.nombre}
@@ -113,8 +145,7 @@ export class RestMenu extends Component {
                                             alergenos=""
                                             precioPlato={plato.precio}
                                         />
-                                        {console.log(plato.id)}
-                                        <Button id={plato.id} color="danger" className="mb-1" onClick={this.checkDishDelete}><BsFillTrashFill /></Button>
+                                        <Button id={plato.id} color="danger" className="mb-1 noPointerEvents " onClick={this.checkDishDelete}><BsFillTrashFill className="icon" /></Button>
                                     </td>
                                 </tr>
                             ))}

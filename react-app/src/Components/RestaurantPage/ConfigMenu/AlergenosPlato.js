@@ -4,7 +4,8 @@ export class AlergenosPlato extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            alergenos: []
+            alergenos: [],
+            numeroConsultas: this.props.numeroConsultas
         }
     }
 
@@ -15,8 +16,16 @@ export class AlergenosPlato extends Component {
                     alergenos: res.data
                 });
             }
-        )
+        ).catch(error => {
+            if (error.response && error.response.status === 422) { console.log('ERROR en CrearPlato.js') }
+
+        });
     }
+
+
+
+
+
     render() {
         return (
             <td className="oneliner">
@@ -27,5 +36,4 @@ export class AlergenosPlato extends Component {
         )
     }
 }
-
 export default AlergenosPlato

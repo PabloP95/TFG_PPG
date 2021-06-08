@@ -28,7 +28,7 @@ class CreateAlergenosTable extends Migration
                 ['nomAlergeno' => 'Cacahuetes', 'img' => '../../../../img/alergenos/peanuts.png'],
                 ['nomAlergeno' => 'Soja', 'img' => '../../../../img/alergenos/soybean.png'],
                 ['nomAlergeno' => 'Lácteos', 'img' => '../../../../img/alergenos/milk.png'],
-                ['nomAlergeno' => 'Frutos de cáscara', '../../../../img' => 'img/alergenos/almond.png'],
+                ['nomAlergeno' => 'Frutos de cáscara', 'img' => '../../../../img/alergenos/almond.png'],
                 ['nomAlergeno' => 'Apio', 'img' => '../../../../img/alergenos/celery.png'],
                 ['nomAlergeno' => 'Mostaza', 'img' => '../../../../img/alergenos/mustard.png'],
                 ['nomAlergeno' => 'Granos de sesamo', 'img' => '../../../../img/alergenos/sesame.png'],

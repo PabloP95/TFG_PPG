@@ -35,7 +35,7 @@ class PlatoController extends Controller
             'vegano' => 'required|boolean',
             'precio' => 'required|gt:0',
             'restaurant_id' => 'required|integer|exists:restaurants,id'
-        ]);
+            ]);
 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
@@ -73,17 +73,17 @@ class PlatoController extends Controller
         $restaurant = Restaurant::findOrFail($idRestaurante);
 
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|unique:platos, nombre, restaurant_id,'.$idRestaurante,
-            'descripcion'=>'required|string',
-            'tipo_plato' => 'required|string|in:Entrantes,Platos principales,Bebidas,Postres',
-            'vegano' => 'required|boolean',
-            'precio' => 'required|gt:0',
+            'nombre' => 'string|unique:platos,nombre,'.$id,
+            'descripcion'=>'string',
+            'tipo_plato' => 'string|in:Entrantes,Platos principales,Bebidas,Postres',
+            'vegano' => 'boolean',
+            'precio' => 'gt:0',
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
-        $restaurantUpdated = $restaurant->tables()->where('id', '=', $idPlato)->update($request->all());
+        $restaurantUpdated = $restaurant->platos()->where('id', '=', $id)->update($request->all());
         
         if($restaurantUpdated == 1 ){
             return response()->json(['message' => 'Plato modificado correctamente'], 200);

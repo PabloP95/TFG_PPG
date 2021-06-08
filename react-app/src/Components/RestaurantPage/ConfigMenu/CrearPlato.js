@@ -9,24 +9,25 @@ export class CrearPlato extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            idPlato: '',
             alergenos: [],
             infoPlato: {
                 nomPlato: this.props.nomPlato ? this.props.nomPlato : '',
                 descPlato: this.props.descPlato ? this.props.descPlato : '',
                 tipoPlato: this.props.tipoPlato ? this.props.tipoPlato : 'Entrantes',
-                vegano: this.props.vegano ? this.props.vegano : 'no',
+                vegano: this.props.vegano ? this.props.vegano : '0',
                 precioPlato: this.props.precioPlato ? this.props.precioPlato : '',
                 imgPlato: ''
             },
+            numeroConsultas: this.props.numeroConsultas,
             alergenosPlato: [],
             dishOpen: false,
             errors: {
-                nomPlato: '',
+                nombre: '',
                 descripcionPlato: '',
                 precioPlato: ''
             }
         }
+
     }
 
     componentDidMount() {
@@ -35,7 +36,18 @@ export class CrearPlato extends Component {
                 alergenos: res.data
             })
         ))
+        if (this.props.idPlato !== undefined) {
+            axios.get('http://127.0.0.1:8000/api/plato/' + this.props.idPlato + '/alergenos').then(
+                res => {
+                    this.setState({
+                        alergenosPlato: res.data,
+                        numeroConsultas: this.state.numeroConsultas++
+                    })
+                }
+            )
+        }
     }
+
 
     toggleNewDish = () => {
         this.setState({ dishOpen: !this.state.dishOpen });
@@ -75,6 +87,11 @@ export class CrearPlato extends Component {
             confirmButtonText: 'Volver a la configuración del menu',
         }).then((result) => {
             if (result.isConfirmed) {
+
+                this.setState({ numeroConsultas: 1 + this.state.numeroConsultas });
+                if (this.props.onChange) {
+                    this.props.onChange(this.state.numeroConsultas);
+                }
                 this.toggleNewDish();
             }
         });
@@ -90,13 +107,15 @@ export class CrearPlato extends Component {
                             nombre: this.state.infoPlato.nomPlato,
                             descripcion: this.state.infoPlato.descPlato,
                             tipo_plato: this.state.infoPlato.tipoPlato,
-                            vegano: this.state.infoPlato.vegano,
+                            vegano: this.state.infoPlato.vegano === 'si' ? 1 : 0,
                             precio: this.state.infoPlato.precioPlato
                         },
                         { headers: authHeader() }).then(() => {
+
+                            let arrID = this.state.alergenosPlato.map((arr) => { return arr.id });
                             axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.props.idPlato + '/alergenos',
                                 {
-                                    alergenosSelected: this.state.alergenosPlato
+                                    alergenosSelected: arrID
                                 },
                                 {
                                     headers: authHeader()
@@ -105,6 +124,15 @@ export class CrearPlato extends Component {
                                         alergenos: this.state.alergenosPlato
                                     })
                                 })
+
+
+                            this.showAllOK();
+                        }).catch(error => {
+                            if (error.response) {
+                                if (error.response.status === 400) {
+                                    this.setState({ errors: JSON.parse(error.response.data) })
+                                }
+                            }
                         })
                 ) : (
                     axios.post('http://127.0.0.1:8000/api/plato/restaurant/' + user.user.userable_id,
@@ -116,31 +144,31 @@ export class CrearPlato extends Component {
                             precio: this.state.infoPlato.precioPlato,
                             restaurant_id: user.user.userable_id,
                         },
-                        { headers: authHeader() }).then((res) => {
-                            this.setState({
-                                idPlato: res.data.id
+                        {
+                            headers: authHeader()
+                        }
+                    ).then((res) => {
+                        console.log(res.data.id);
+                        let arrID = this.state.alergenosPlato.map((arr) => { return arr.id });
+                        console.log(arrID);
+                        axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + res.data.id + '/alergenos',
+                            {
+                                alergenosSelected: arrID
+                            },
+                            {
+                                headers: authHeader()
                             })
-                        }))
-
-                axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.state.idPlato + '/alergenos',
-                    {
-                        alergenosSelected: this.state.alergenosPlato
-                    },
-                    {
-                        headers: authHeader()
-                    }).then(() => {
-                        this.setState({
-                            alergenos: this.state.alergenosPlato
-                        })
+                        this.showAllOK();
+                    }).catch(error => {
+                        if (error.response && error.response.status === 400) {
+                            console.log(JSON.parse(error.response.data))
+                            this.setState({ errors: JSON.parse(error.response.data) });
+                        }
                     })
-
+                )
             }
-            this.showAllOK();
-            console.log(this.state.infoPlato);
-            console.log(this.state.alergenosPlato);
         }
     }
-
     handleChangeFile = (e) => {
         const { infoPlato } = this.state;
         infoPlato[e.target.name] = URL.createObjectURL(e.target.files[0]);
@@ -153,7 +181,7 @@ export class CrearPlato extends Component {
 
         if (!this.state.infoPlato.nomPlato) {
             allOK = false;
-            errors['nomPlato'] = "Debe introducir el nombre del plato"
+            errors['nombre'] = "Debe introducir el nombre del plato"
         }
 
         if (!this.state.infoPlato.descPlato) {
@@ -185,9 +213,7 @@ export class CrearPlato extends Component {
                     <Col md={{ size: 4, offset: 8 }} className="mt-3 mr-0">
                         <Button color="info" onClick={this.toggleNewDish}>< BsPlusCircleFill size={20} className="pb-1" /> Crear plato</Button>
                     </Col>
-
-                )
-                }
+                )}
 
                 <Modal scrollable className="pt-5" isOpen={this.state.dishOpen} toggle={this.toggleNewDish}>
                     <ModalHeader toggle={this.toggleNewDish}>{this.props.nomModal ? ('Editando plato') : ('Creando un nuevo plato')}</ModalHeader>
@@ -197,9 +223,9 @@ export class CrearPlato extends Component {
                                 <Label for="nomPlato">Nombre del plato</Label>
                                 <Input type="text" id="nomPlato" name="nomPlato"
                                     value={this.state.infoPlato.nomPlato}
-                                    style={{ 'border': this.state.errors.nomPlato ? '1px solid red' : '' }}
+                                    style={{ 'border': this.state.errors.nombre ? '1px solid red' : '' }}
                                     onChange={this.handleChange} />
-                                <div className="text-danger">{this.state.errors.nomPlato}</div>
+                                <div className="text-danger">{this.state.errors.nombre}</div>
                             </FormGroup>
 
                             <FormGroup>
@@ -226,8 +252,8 @@ export class CrearPlato extends Component {
                                 <legend>Vegano</legend>
                                 <FormGroup check>
                                     <Label check>
-                                        <Input type="radio" name="vegano" id="veganoSI" value="si"
-                                            checked={this.state.infoPlato.vegano === "si"}
+                                        <Input type="radio" name="vegano" id="veganoSI" value="1"
+                                            checked={this.state.infoPlato.vegano === "1"}
                                             onChange={this.handleChange} />
                                         Si
                                     </Label>
@@ -235,8 +261,8 @@ export class CrearPlato extends Component {
 
                                 <FormGroup check>
                                     <Label check>
-                                        <Input type="radio" name="vegano" id="veganoNO" value="no"
-                                            checked={this.state.infoPlato.vegano === "no"}
+                                        <Input type="radio" name="vegano" id="veganoNO" value="0"
+                                            checked={this.state.infoPlato.vegano === "0"}
                                             onChange={this.handleChange} />
                                         No
                                     </Label>

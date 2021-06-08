@@ -46,7 +46,7 @@ class AlergenoController extends Controller
         $plato = Plato::findOrFail($idPlato);
 
         $validator = Validator::make($request->all(), [
-            'alergenosSelected' => 'required|exists:alergenos,id'
+            'alergenosSelected' => 'exists:alergenos,id'
         ]);
 
         if($validator->fails()){
