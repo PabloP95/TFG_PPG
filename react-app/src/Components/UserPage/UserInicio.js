@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap'
 import axios from 'axios'
+import Logout from '../Security/Logout';
 import authHeader from '../Security/auth/auth-header';
 export class UserInicio extends Component {
     constructor(props) {
@@ -17,6 +18,11 @@ export class UserInicio extends Component {
             this.setState({
                 nickname: res.data.name
             });
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                { Logout() };
+                window.location = '/login'
+            }
         })
 
     }

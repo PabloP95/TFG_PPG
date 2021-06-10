@@ -18,7 +18,13 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $restaurantes = DB::select("SELECT userable_id, email, name
+        FROM users, clients
+        WHERE users.userable_id = clients.id
+        AND
+        users.userable_type like '%Client'
+        "
+        );
     }
 
     /**

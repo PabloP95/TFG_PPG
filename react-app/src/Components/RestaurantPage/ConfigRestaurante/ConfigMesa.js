@@ -50,7 +50,7 @@ export class ConfigMesa extends Component {
     checkTableDelete = (idMesa) => {
         Swal.fire({
             icon: 'warning',
-            title: 'Eliminar mesa?',
+            title: '¿Eliminar mesa?',
             text: '¿Quiere eliminar la mesa?',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

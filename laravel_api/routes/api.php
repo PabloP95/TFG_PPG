@@ -11,6 +11,7 @@ use App\Http\Controllers\TiposCocinaController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\PlatoController;
 use App\Http\Controllers\AlergenoController;
+use App\Http\Controllers\OpinionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -45,6 +46,8 @@ Route::get('/restaurant/{id}/plato/{idPlato}', [PlatoController::class, 'show'])
 Route::get('/restaurant/{id}/alergenosPlatos', [AlergenoController::class, 'alergenosPlatosRestaurante']);
 Route::get('/alergenos', [AlergenoController::class, 'index']);
 Route::get('/plato/{id}/alergenos', [AlergenoController::class, 'indexPlato']);
+Route::get('/restaurant/{id}/opiniones', [OpinionController::class, 'indexOpinionesRestaurante']);
+
 
 Route::group([
     'middleware' => 'api',
@@ -59,6 +62,7 @@ Route::group([
 
 
 Route::group(['middleware' => 'api'], function($router){
+    Route::post('/client/{id}/opinion/{restaurantId}', [OpinionController::class, 'store']);
     Route::post('/restaurant/{id}/mesa', [TableController::class, 'store']);
     Route::post('/restaurant/{id}/multiple-mesa', [TableController::class, 'multipleStore']);
     Route::post('/tiposCocina/restaurant/{id}', [TiposCocinaController::class, 'store']);
@@ -66,22 +70,26 @@ Route::group(['middleware' => 'api'], function($router){
     Route::post('plato/restaurant/{id}', [PlatoController::class, 'store']);
     Route::post('restaurant/{id}/plato/{idPlato}/alergenos', [AlergenoController::class, 'store']);
 
-
     Route::get('/client/{id}', [ClientController::class, 'show']);
+    Route::get('/client/{id}/opiniones', [OpinionController::class, 'indexOpinionesCliente']);
     Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
     Route::get('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'show']);
     Route::get('/restaurant/{id}/horario/{dia}', [HorarioController::class, 'show']);
-    
+
+
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::put('/client/{id}', [ClientController::class, 'update']);
+    Route::put('/client/{id}/opinion/{idOpinion}', [OpinionController::class, 'update']);
     Route::put('/restaurant/{id}', [RestaurantController::class, 'update']);
     Route::put('/restaurant/{id}/location', [RestaurantController::class, 'storeLocation']);
     Route::put('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'update']);
     Route::put('/restaurant/{id}/horario/{dia}', [HorarioController::class, 'update']);
     Route::put('/restaurant/{id}/plato/{idPlato}', [PlatoController::class, 'update']);
 
+
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
     Route::delete('/client/{id}', [ClientController::class, 'destroy']);
+    Route::delete('/client/{id}/opinion/{restaurantId}', [OpinionController::class, 'destroy']);
     Route::delete('/restaurant/{id}', [RestaurantController::class, 'destroy']);
     Route::delete('/restaurant/{id}/mesa/{idMesa}', [TableController::class, 'destroy']);
     Route::delete('/restaurant/{id}/horario/{idHorario}', [HorarioController::class, 'destroy']);

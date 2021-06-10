@@ -16,7 +16,7 @@ class CreateOpinionsTable extends Migration
         Schema::create('opinions', function (Blueprint $table) {
             $table->id();
             $table->integer('nota')->default('0');
-            $table->string('comentario');
+            $table->text('comentario');
             $table->bigInteger('client_id')->unsigned();
             $table->bigInteger('restaurant_id')->unsigned();
             $table->timestamps();

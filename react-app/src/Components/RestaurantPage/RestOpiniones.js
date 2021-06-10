@@ -1,6 +1,22 @@
 import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap'
+import axios from 'axios'
 export class RestOpiniones extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            opiniones: []
+        }
+    }
+
+    componentDidMount() {
+        let user = JSON.parse(localStorage.getItem('user'));
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/opiniones').then(res => {
+            this.setState({
+                opiniones: res.data
+            })
+        })
+    }
     render() {
         return (
             <div>
@@ -10,20 +26,18 @@ export class RestOpiniones extends Component {
                             Opiniones
                         </h5>
                     </Col>
-
                     <Row className="p-4 border rounded mt-3">
-                        <Col md="12" className="text-justify">
-                            <p>Nota: 4 estrellas/5</p>
-                            <p>Opinión: El servicio en el restaurante A ha sido excepcional, aunque la comida venia un poco fría</p>
-                            <p>Fecha opinión: 10/05/2021</p>
-                        </Col>
-                    </Row>
-                    <Row className="p-4 border rounded mt-3">
-                        <Col md="12" className="text-justify">
-                            <p>Nota: 5 estrellas/5</p>
-                            <p>Opinión: Todo bien</p>
-                            <p>Fecha opinión: 10/05/2021</p>
-                        </Col>
+                        {this.state.opiniones.map((opinion) => (
+                            <Col key={opinion.id} md="12" className="text-justify">
+                                <p>Nota: {opinion.nota} estrellas/5</p>
+                                <p>Opinión: {opinion.comentario}</p>
+                                <p>Fecha opinión:{
+                                    ' ' + new Date(opinion.updated_at).getDate() + '/' +
+                                    [new Date(opinion.updated_at).getMonth() + 1] + '/' +
+                                    new Date(opinion.updated_at).getFullYear()
+                                }</p>
+                            </Col>
+                        ))}
                     </Row>
                 </Row>
             </div>

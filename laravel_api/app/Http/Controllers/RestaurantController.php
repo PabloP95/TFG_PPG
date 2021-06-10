@@ -20,9 +20,12 @@ class RestaurantController extends Controller
     public function index()
     {
         $restaurantes = DB::select("SELECT userable_id, email, name, numTelefono
-        FROM users
-        JOIN restaurants as r
-        ON userable_id = r.id");
+        FROM users, restaurants
+        WHERE users.userable_id = restaurants.id
+        AND
+        users.userable_type like '%Restaurant'
+        "
+        );
         return $restaurantes;
     }
 
@@ -51,10 +54,11 @@ class RestaurantController extends Controller
     public function show($id)
     {
         $restaurant = DB::select("SELECT email, name, numTelefono, latitud, longitud, direccionPostal
-        FROM users
-        JOIN restaurants as r
-        ON userable_id = r.id
-        WHERE userable_id = $id");
+        FROM users, restaurants
+        WHERE userable_id = $id
+        AND
+        users.userable_type like '%Restaurant'
+        ");
         return $restaurant;
     }
 

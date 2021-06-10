@@ -1,35 +1,51 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'reactstrap';
-
+import axios from 'axios'
 export class OpinionesRestaurante extends Component {
+
+    constructor(props) {
+        super(props);
+        let arr = window.location.href.split('/');
+        this.state = {
+            opiniones: [],
+            idRestaurante: arr[5]
+        }
+    }
+
+    componentDidMount() {
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/opiniones').then((res) => {
+            this.setState({
+                opiniones: res.data
+            })
+        })
+    }
     render() {
         return (
             <Col md="8" sm="12" className="order-2 order-md-6">
                 <h5 className="text-left p-3">Opiniones</h5>
-                <Row>
-                    <Col md="4">
-                        <figure className="figure">
-                            <img src="https://via.placeholder.com/100.png" className="figure-img img-fluid figure-rounded" alt="Foto usuario" />
-                            <figcaption className="figure-caption text-center">Nombre usuario<br />Fecha publicación: 10/05/2021</figcaption>
-                        </figure>
-                    </Col>
-                    <Col md="6">
-                        <p className="text-left">Nota: 4/5</p>
-                        <p className="text-justify comments">El servicio en el restaurante A ha sido excepcional, aunque la comida venia un poco fría</p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md="4">
-                        <figure className="figure ">
-                            <img src="https://via.placeholder.com/100.png" className="figure-img img-fluid figure-rounded" alt="Foto usuario" />
-                            <figcaption className="figure-caption text-center">Nombre usuario<br />Fecha publicación: 08/05/2021</figcaption>
-                        </figure>
-                    </Col>
-                    <Col md="6">
-                        <p className="text-left">Nota: 5/5</p>
-                        <p className="text-justify comments">El servicio en el restaurante A ha sido excepcional.</p>
-                    </Col>
-                </Row>
+                {this.state.opiniones.length !== 0 ? (
+                    this.state.opiniones.map((opinion) => (
+
+                        <Row key={opinion.id}>
+                            <Col md="4">
+                                <figure className="figure">
+                                    <img src="https://via.placeholder.com/100.png" className="figure-img img-fluid figure-rounded" alt="Foto usuario" />
+                                    <figcaption className="figure-caption text-center">{opinion.name}<br />Fecha publicación:
+                                        {
+                                            ' ' + new Date(opinion.updated_at).getDate() + '/' +
+                                            [new Date(opinion.updated_at).getMonth() + 1] + '/' +
+                                            new Date(opinion.updated_at).getFullYear()
+                                        }
+                                    </figcaption>
+                                </figure>
+                            </Col>
+                            <Col md="6">
+                                <p className="text-left">Nota: {opinion.nota}/5</p>
+                                <p className="text-justify comments">{opinion.comentario}</p>
+                            </Col>
+                        </Row>
+                    ))
+                ) : (<h5>Ningún usuario ha realizado una opinión de este restaurante</h5>)}
             </Col>
         )
     }

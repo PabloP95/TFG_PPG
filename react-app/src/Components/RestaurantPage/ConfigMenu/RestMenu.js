@@ -41,11 +41,7 @@ export class RestMenu extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log(prevState.numeroConsultas);
-        console.log(this.state.numeroConsultas);
-
         if (prevState.numeroConsultas !== this.state.numeroConsultas) {
-            console.log("HOLA");
             axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/platos').then(res => {
                 this.setState({
                     platos: res.data,
@@ -121,9 +117,6 @@ export class RestMenu extends Component {
                                     <td className="oneliner">{plato.nombre}</td>
                                     <td id="descripcionPlato" className="oneliner">
                                         {plato.descripcion}
-                                        <UncontrolledTooltip fade placement="bottom" target="descripcionPlato">
-                                            {plato.descripcion}
-                                        </UncontrolledTooltip>
                                     </td>
                                     <td>{plato.tipo_plato}</td>
                                     <td>{plato.vegano == 0 ? 'No' : 'Si'}</td>

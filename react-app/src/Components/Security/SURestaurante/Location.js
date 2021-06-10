@@ -66,7 +66,6 @@ export class Location extends Component {
                     lng: res.results[0].geometry.lng
                 })
             }).catch(err => {
-                console.log(err);
                 this.setState({
                     submittingLoad: false
                 })
@@ -87,7 +86,6 @@ export class Location extends Component {
         return allOK;
     }
     render() {
-        console.log(this.state.ubicacion.direccionPostal);
         return (
             <>
                 <Label for="ubicacion" hidden>Ubicación</Label>
