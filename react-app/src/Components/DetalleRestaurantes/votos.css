@@ -17,3 +17,37 @@
     overflow: hidden;
     text-indent: -999em;
 }
+
+.stat {
+    position: absolute;
+    left: 25%;
+    top: 0;
+    overflow: hidden;
+    height: 20px;
+    z-index: 101
+}
+
+.stat span {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url(../../img/iconos.png) no-repeat -20px -24px;
+    position: absolute;
+    top: 0;
+}
+
+.stat span:nth-child(2) {
+    left: 20px
+}
+
+.stat span:nth-child(3) {
+    left: 40px
+}
+
+.stat span:nth-child(4) {
+    left: 60px
+}
+
+.stat span:nth-child(5) {
+    left: 80px
+}

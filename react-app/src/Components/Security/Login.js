@@ -124,32 +124,44 @@ export class Login extends Component {
     }
 
     render() {
-        return (
-            <div className="contenedor">
-                <div className="registration">
-                    <div className="registration-header">
-                        <h3>Login</h3>
-                    </div>
-                    <Form onSubmit={this.onSubmitHandler} className="formulario">
-                        <FormGroup>
-                            <Label for="email" hidden>Email</Label>
-                            <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="Correo electrónico" onChange={this.onChangeHandler} />
-                            <div className="text-danger">{this.state.errors.email}</div>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="password" hidden>Password</Label>
-                            <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }} type="password" name="password" id="password" placeholder="Contraseña" onChange={this.onChangeHandler} />
-                            <div className="text-danger">{this.state.errors.password}</div>
-                        </FormGroup>
-                        <Button style={{ 'textAlign': 'center' }}>Login</Button>
-                        <div className="mt-2">
-                            <p><a href="#" style={{ textDecoration: 'none' }}>¿Ha olvidado la contraseña?</a></p>
-                            <p><a href="/signup" style={{ textDecoration: 'none' }}>Registrese ahora</a></p>
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            if (user.user.userable_type === 'App\\Models\\Client') {
+                window.location = '/user/' + user.user.name
+            }
+
+            if (user.user.userable_type === 'App\\Models\\Restaurant') {
+                window.location = '/restaurante/' + user.user.name
+            }
+        }
+        else {
+            return (
+                <div className="contenedor">
+                    <div className="registration">
+                        <div className="registration-header">
+                            <h3>Login</h3>
                         </div>
-                    </Form>
+                        <Form onSubmit={this.onSubmitHandler} className="formulario">
+                            <FormGroup>
+                                <Label for="email" hidden>Email</Label>
+                                <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="Correo electrónico" onChange={this.onChangeHandler} />
+                                <div className="text-danger">{this.state.errors.email}</div>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="password" hidden>Password</Label>
+                                <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }} type="password" name="password" id="password" placeholder="Contraseña" onChange={this.onChangeHandler} />
+                                <div className="text-danger">{this.state.errors.password}</div>
+                            </FormGroup>
+                            <Button style={{ 'textAlign': 'center' }}>Login</Button>
+                            <div className="mt-2">
+                                <p><a href="#" style={{ textDecoration: 'none' }}>¿Ha olvidado la contraseña?</a></p>
+                                <p><a href="/signup" style={{ textDecoration: 'none' }}>Registrese ahora</a></p>
+                            </div>
+                        </Form>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 

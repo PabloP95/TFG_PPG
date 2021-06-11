@@ -97,13 +97,11 @@ export class CrearOpinion extends Component {
     //Aqui lo que hacemos es meter en la base de datos la opinion. y en lo de OpinionesUser leemos la base de datos con un map, y listo.
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.validate());
-        console.log(this.state.errors);
+
         if (this.validate()) {
             let restaurant_id = this.state.restaurantes.map((rest) => { if (rest.name === this.state.opinion.restauranteOpinion) return rest.userable_id });
             let filterRestaurantId = restaurant_id.filter(id => id !== undefined);
-            console.log(this.state.restaurantes);
-            console.log(filterRestaurantId[0]);
+
             this.props.nomModal ? (
                 axios.put('http://127.0.0.1:8000/api/client/' + this.props.idCliente + '/opinion/' + this.props.idOpinion,
                     {
@@ -118,7 +116,6 @@ export class CrearOpinion extends Component {
                 ).then(() => {
                     this.showAllOK();
                 }).catch(error => {
-                    console.log(error);
                     if (error.response && error.response.status === 400) {
                         this.setState({ errors: JSON.parse(error.response.data) });
                     }

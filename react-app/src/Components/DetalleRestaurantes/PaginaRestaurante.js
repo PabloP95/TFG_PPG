@@ -23,6 +23,7 @@ export class PaginaRestaurante extends Component {
             latitud: '',
             longitud: '',
             tiposCocina: [],
+            numOpiniones: 0
         }
     }
 
@@ -47,6 +48,12 @@ export class PaginaRestaurante extends Component {
                 tiposCocina: res.data
             })
         });
+
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/numOpiniones').then((res) => {
+            this.setState({
+                numOpiniones: res.data[0].numOpiniones
+            })
+        })
     }
     render() {
         return (
@@ -58,7 +65,7 @@ export class PaginaRestaurante extends Component {
                             <Votos />
                         </Col>
                         <Col sm="6" md="4" xs="6">
-                            <p>x opiniones</p>
+                            <p>{this.state.numOpiniones} opiniones</p>
                         </Col>
                         <Col sm="12" md="4" xs="12">
                             <p className="text-center">€€ - €€€, Tipos de cocina:

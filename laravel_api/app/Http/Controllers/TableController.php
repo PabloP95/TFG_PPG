@@ -18,13 +18,18 @@ class TableController extends Controller
      */
     public function index($id)
     {
-        
-
         $tablesRestaurant = Restaurant::findOrFail($id)->tables()
         ->orderBy('numMesa', 'asc')
         ->get();
         return $tablesRestaurant;
+    }
 
+    public function indexNumComensales($idRestaurante, $nComensales){
+        $tablesRestaurant = Restaurant::findOrFail($idRestaurante)->tables()
+        ->where('numOcupantes', '=', $nComensales)
+        ->orderBy('numMesa', 'asc')
+        ->get();
+        return $tablesRestaurant;
     }
 
     /**

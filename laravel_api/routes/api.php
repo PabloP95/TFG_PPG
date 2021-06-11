@@ -40,6 +40,7 @@ Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
 Route::get('/tiposCocina/restaurant/{id}', [TiposCocinaController::class, 'indexTipoCocinaRestaurante']);
 Route::get('/horarios/restaurant/{id}', [HorarioController::class, 'index']);
 Route::get('/restaurant/{id}/mesas', [TableController::class, 'index']);
+Route::get('/restaurant/{id}/mesas/{nComensales}', [TableController::class, 'indexNumComensales']);
 Route::get('/tiposCocina', [TiposCocinaController::class, 'index']);
 Route::get('/restaurant/{id}/platos', [PlatoController::class, 'index']);
 Route::get('/restaurant/{id}/plato/{idPlato}', [PlatoController::class, 'show']);
@@ -47,6 +48,9 @@ Route::get('/restaurant/{id}/alergenosPlatos', [AlergenoController::class, 'aler
 Route::get('/alergenos', [AlergenoController::class, 'index']);
 Route::get('/plato/{id}/alergenos', [AlergenoController::class, 'indexPlato']);
 Route::get('/restaurant/{id}/opiniones', [OpinionController::class, 'indexOpinionesRestaurante']);
+Route::get('/restaurant/{id}/numOpiniones', [OpinionController::class, 'numOpinionesRestaurante']);
+Route::get('/restaurant/{id}/porcentajeNotas', [OpinionController::class, 'porcentajeVotos']);
+
 
 
 Route::group([

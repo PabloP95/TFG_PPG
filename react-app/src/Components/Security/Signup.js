@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react'
 import Swal from 'sweetalert2'
 import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { Redirect } from 'react-router-dom';
 import './securityStyles.css';
 
 class Signup extends Component {
@@ -67,7 +68,6 @@ class Signup extends Component {
                 if (res.data.access_token) {
                     localStorage.setItem("user", JSON.stringify(res.data));
                     if (this.state.signUpData.userable_type === "App\\Models\\Restaurant") {
-                        console.log("Hola :D");
                         this.signedUpRestaurant();
                     }
 
@@ -138,88 +138,100 @@ class Signup extends Component {
         return isValid;
     }
     render() {
-        return (
-            <div className="contenedor">
-                <div className="registration">
-                    <div className="registration-header">
-                        <h2>Dando de alta</h2>
-                    </div>
-                    <Form onSubmit={this.onSubmitHandler} className="formulario">
-                        <FormGroup>
-                            <Label for="email" hidden>Email</Label>
-                            <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="Correo electrónico" onChange={this.onChangeHandler} />
-                            <div className="text-danger">{this.state.errors.email}</div>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="password" hidden>Password</Label>
-                            <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }}
-                                type="password" name="password" id="password"
-                                placeholder="Contraseña" onChange={this.onChangeHandler} />
-                            <div className="text-danger">{this.state.errors.password}</div>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="confirmPassword" hidden>Confirm password</Label>
-                            <Input style={{ 'border': this.state.errors.confirmPassword ? '1px solid red' : '' }}
-                                type="password" name="confirmPassword" id="confirmPassword"
-                                placeholder="Repetir contraseña" onChange={this.onChangeHandler} />
-                            <div className="text-danger">{this.state.errors.confirmPassword}</div>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="name" hidden>Nombre</Label>
-                            {
-                                this.state.signUpData.userable_type === "App\\Models\\Client" ? (
-                                    <Input style={{ 'border': this.state.errors.name ? '1px solid red' : '' }}
-                                        type="text"
-                                        name="name"
-                                        id="name"
-                                        placeholder="Nombre usuario"
-                                        onChange={this.onChangeHandler}
-                                    />
-                                ) :
-                                    this.state.signUpData.userable_type === "App\\Models\\Restaurant" ?
-                                        (<Input style={{ 'border': this.state.errors.name ? '1px solid red' : '' }}
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            if (user.user.userable_type === 'App\\Models\\Client') {
+                return <Redirect to={'/user/' + user.user.name} />
+            }
+
+            if (user.user.userable_type === 'App\\Models\\Restaurant') {
+                return <Redirect to={'/restaurante/' + user.user.name} />
+            }
+        }
+        else {
+            return (
+                <div className="contenedor">
+                    <div className="registration">
+                        <div className="registration-header">
+                            <h2>Dando de alta</h2>
+                        </div>
+                        <Form onSubmit={this.onSubmitHandler} className="formulario">
+                            <FormGroup>
+                                <Label for="email" hidden>Email</Label>
+                                <Input style={{ 'border': this.state.errors.email ? '1px solid red' : '' }} type="email" name="email" id="email" placeholder="Correo electrónico" onChange={this.onChangeHandler} />
+                                <div className="text-danger">{this.state.errors.email}</div>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="password" hidden>Password</Label>
+                                <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }}
+                                    type="password" name="password" id="password"
+                                    placeholder="Contraseña" onChange={this.onChangeHandler} />
+                                <div className="text-danger">{this.state.errors.password}</div>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="confirmPassword" hidden>Confirm password</Label>
+                                <Input style={{ 'border': this.state.errors.confirmPassword ? '1px solid red' : '' }}
+                                    type="password" name="confirmPassword" id="confirmPassword"
+                                    placeholder="Repetir contraseña" onChange={this.onChangeHandler} />
+                                <div className="text-danger">{this.state.errors.confirmPassword}</div>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="name" hidden>Nombre</Label>
+                                {
+                                    this.state.signUpData.userable_type === "App\\Models\\Client" ? (
+                                        <Input style={{ 'border': this.state.errors.name ? '1px solid red' : '' }}
                                             type="text"
                                             name="name"
                                             id="name"
-                                            placeholder="Nombre restaurante"
+                                            placeholder="Nombre usuario"
                                             onChange={this.onChangeHandler}
                                         />
-                                        ) : (<Input
-                                            type="text"
-                                            name="name"
-                                            id="name"
-                                            placeholder="nombre"
-                                            onChange={this.onChangeHandler} />)
-                            }
-                            <div className="text-danger">{this.state.errors.name}</div>
+                                    ) :
+                                        this.state.signUpData.userable_type === "App\\Models\\Restaurant" ?
+                                            (<Input style={{ 'border': this.state.errors.name ? '1px solid red' : '' }}
+                                                type="text"
+                                                name="name"
+                                                id="name"
+                                                placeholder="Nombre restaurante"
+                                                onChange={this.onChangeHandler}
+                                            />
+                                            ) : (<Input
+                                                type="text"
+                                                name="name"
+                                                id="name"
+                                                placeholder="nombre"
+                                                onChange={this.onChangeHandler} />)
+                                }
+                                <div className="text-danger">{this.state.errors.name}</div>
 
 
-                        </FormGroup>
-                        <FormGroup tag="fieldset">
-                            <legend>Rol</legend>
-                            <FormGroup check>
-                                <Label check>
-                                    <Input type="radio" name="userable_type" value="App\Models\Client"
-                                        onChange={this.onChangeHandler} />
-                                    Usuario
-
-                                </Label>
                             </FormGroup>
-                            <FormGroup check>
-                                <Label check>
-                                    <Input type="radio" name="userable_type" value="App\Models\Restaurant"
-                                        onChange={this.onChangeHandler} />
-                                    Restaurante
-                                    <div className="text-danger">{this.state.errors.userable_type}</div>
-                                </Label>
-                            </FormGroup>
-                        </FormGroup>
+                            <FormGroup tag="fieldset">
+                                <legend>Rol</legend>
+                                <FormGroup check>
+                                    <Label check>
+                                        <Input type="radio" name="userable_type" value="App\Models\Client"
+                                            onChange={this.onChangeHandler} />
+                                        Usuario
 
-                        <input type="submit" className="btn btn-secondary" value="Registrarse" />
-                    </Form>
+                                    </Label>
+                                </FormGroup>
+                                <FormGroup check>
+                                    <Label check>
+                                        <Input type="radio" name="userable_type" value="App\Models\Restaurant"
+                                            onChange={this.onChangeHandler} />
+                                        Restaurante
+                                        <div className="text-danger">{this.state.errors.userable_type}</div>
+                                    </Label>
+                                </FormGroup>
+                            </FormGroup>
+
+                            <input type="submit" className="btn btn-secondary" value="Registrarse" />
+                        </Form>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }
 

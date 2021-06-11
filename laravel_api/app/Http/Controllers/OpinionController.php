@@ -53,6 +53,34 @@ class OpinionController extends Controller
         
     }
 
+    public function numOpinionesRestaurante($idRestaurant){
+        $restaurant = Restaurant::findOrFail($idRestaurant);
+        return DB::select("SELECT count(*) as numOpiniones
+                            FROM opinions, clients, users
+                            WHERE opinions.restaurant_id = $idRestaurant
+                            AND
+                            opinions.client_id = clients.id
+                            AND
+                            users.userable_id = clients.id
+                            AND
+                            users.userable_type like '%Client'
+        ");
+    }
+
+    public function porcentajeVotos($idRestaurant){
+        $restaurant = Restaurant::findOrFail($idRestaurant);
+        return DB::select("SELECT ((SUM(nota) * 100) / (COUNT(*) * 5)) as porcentaje
+                            FROM opinions, clients, users
+                            WHERE opinions.restaurant_id = $idRestaurant
+                            AND
+                            opinions.client_id = clients.id
+                            AND
+                            users.userable_id = clients.id
+                            AND
+                            users.userable_type like '%Client'
+        ");
+    }
+
     /**
      * Store a newly created resource in storage.
      *

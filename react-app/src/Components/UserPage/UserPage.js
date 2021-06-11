@@ -9,9 +9,15 @@ import UserInicio from './UserInicio'
 export class UserPage extends Component {
     render() {
         let user = JSON.parse(localStorage.getItem('user'));
+        let arr = window.location.href.split('/');
         if (user === null) {
+            window.location = '/login'
+        }
+
+        else if (user.user.name !== arr[4] || user.user.userable_type !== 'App\\Models\\Client') {
             window.location = '/'
         }
+
         else {
             return (
                 <div className="container">

@@ -28,33 +28,38 @@ export class Horarios extends Component {
 
     componentDidMount() {
         let user = JSON.parse(localStorage.getItem('user'));
-        axios.get('http://127.0.0.1:8000/api/horarios/restaurant/' + user.user.userable_id).then(
-            res => {
-                this.setState({
-                    horarios: res.data,
-                    restaurantID: user.user.userable_id
+        if (user) {
+            axios.get('http://127.0.0.1:8000/api/horarios/restaurant/' + user.user.userable_id).then(
+                res => {
+                    this.setState({
+                        horarios: res.data,
+                        restaurantID: user.user.userable_id
+                    })
+                }
+            );
+            if (this.state.dia !== '') {
+                axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/horario/' + this.state.dia, {
+                    headers: authHeader()
+                }).then(res => {
+                    this.setState({
+                        horaAperturaP1: res.data[0].horarioAperturaP1 !== null ? res.data[0].horarioAperturaP1 : '',
+                        horaAperturaP2: res.data[0].horarioAperturaP2 !== null ? res.data[0].horarioAperturaP2 : '',
+                        horaCierreP1: res.data[0].horarioCierreP1 !== null ? res.data[0].horarioCierreP1 : '',
+                        horaCierreP2: res.data[0].horarioCierreP2 !== null ? res.data[0].horarioCierreP2 : '',
+                    })
                 })
             }
-        );
-        if (this.state.dia !== '') {
-            axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/horario/' + this.state.dia, {
-                headers: authHeader()
-            }).then(res => {
+            else {
                 this.setState({
-                    horaAperturaP1: res.data[0].horarioAperturaP1 !== null ? res.data[0].horarioAperturaP1 : '',
-                    horaAperturaP2: res.data[0].horarioAperturaP2 !== null ? res.data[0].horarioAperturaP2 : '',
-                    horaCierreP1: res.data[0].horarioCierreP1 !== null ? res.data[0].horarioCierreP1 : '',
-                    horaCierreP2: res.data[0].horarioCierreP2 !== null ? res.data[0].horarioCierreP2 : '',
+                    horaAperturaP1: '',
+                    horaAperturaP2: '',
+                    horaCierreP1: '',
+                    horaCierreP2: '',
                 })
-            })
+            }
         }
         else {
-            this.setState({
-                horaAperturaP1: '',
-                horaAperturaP2: '',
-                horaCierreP1: '',
-                horaCierreP2: '',
-            })
+            window.location = '/login'
         }
     }
 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Row, Col, Button } from 'reactstrap';
 import Swal from 'sweetalert2';
-
 import { ImCross } from 'react-icons/im';
-import CrearOpinion from './CrearOpinion';
 import axios from 'axios'
+
+import Logout from '../Security/Logout';
+import CrearOpinion from './CrearOpinion';
 import authHeader from '../Security/auth/auth-header'
 import './botonesStyle.css'
 export class OpinionesUser extends Component {
@@ -27,13 +28,15 @@ export class OpinionesUser extends Component {
                 opiniones: res.data,
                 idCliente: user.user.userable_id
             })
+        }).catch(error => {
+            if (error.response && error.response.status === 401) {
+                { Logout() };
+                window.location = '/login'
+            }
         })
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('prev = ' + prevState.numeroConsultas);
-        console.log('now = ' + this.state.numeroConsultas);
-
         if (prevState.numeroConsultas !== this.state.numeroConsultas) {
             axios.get('http://127.0.0.1:8000/api/client/' + this.state.idCliente + '/opiniones',
                 { headers: authHeader() }

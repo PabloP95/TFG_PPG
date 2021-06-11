@@ -1,0 +1,82 @@
+.mainbox {
+    background-color: currentColor;
+    margin: auto;
+    height: 600px;
+    width: 100%;
+    position: relative;
+}
+
+.err {
+    color: #996515;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 11rem;
+    position:absolute;
+    left: 34%;
+    top: 20%;
+}
+
+.far {
+    position: absolute;
+    font-size: 8.5rem;
+    left: 42%;
+    top: 32%;
+    color: #996515;
+}
+
+.icon-spin {
+    -webkit-animation: icon-spin 2s infinite linear;
+    animation: icon-spin 2s infinite linear;
+}
+
+@-webkit-keyframes icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+.err2 {
+    color: #996515;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 11rem;
+    position:absolute;
+    left: 52%;
+    top: 20%;
+}
+
+.msg {
+    text-align: center;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 1.6rem;
+    position:absolute;
+    left: 24%;
+    top: 62%;
+    width: 50%;
+    color: #eab461;
+}
+
+.notFoundA {
+    text-decoration: none;
+    color: #996515;
+}
+
+.notFoundA:hover {
+    color: #ca9e5c;
+    text-decoration: underline;
+}

@@ -7,16 +7,15 @@ export class UserInicio extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            nickname: ''
+            nickname: '',
         }
     }
-
     componentDidMount = () => {
         axios.get('http://127.0.0.1:8000/api/auth/userProfile', {
             headers: authHeader()
         }).then(res => {
             this.setState({
-                nickname: res.data.name
+                nickname: res.data.name,
             });
         }).catch(error => {
             if (error.response && error.response.status === 401) {
@@ -55,7 +54,7 @@ export class UserInicio extends Component {
                     </Col>
                 </Row>
             </div>
-        )
+        );
     }
 }
 

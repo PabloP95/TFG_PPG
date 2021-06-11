@@ -16,6 +16,7 @@ import DetallePlato from './Components/DetalleRestaurantes/MenuRestaurante/Detal
 import UserPage from './Components/UserPage/UserPage';
 import RestaurantPage from './Components/RestaurantPage/RestaurantPage';
 import RealizarReserva from './Components/DetalleRestaurantes/RealizarReserva';
+import NotFound from './Components/NotFound';
 
 function App() {
   return (
@@ -24,19 +25,20 @@ function App() {
       <Router>
         <ScrollToTop />
         <Switch>
-          <Route path="/login" component={Login}></Route>
-          <Route path="/signup" component={SignUp}></Route>
-          <Route path="/paginaprueba" component={PaginaPrueba}></Route>
-          <Route path="/aviso-legal" component={AvisoLegal}></Route>
-          <Route path="/politica-privacidad" component={PoliticaPrivacidad}></Route>
-          <Route path="/restaurantes/restaurante/:id/menu/detalle-plato" component={DetallePlato}></Route>
-          <Route path="/restaurantes/restaurante/:id/menu" component={Menu}></Route>
-          <Route path="/restaurantes/restaurante/:id/reserva" component={RealizarReserva}></Route>
-          <Route path="/restaurantes/restaurante/:id" component={PaginaRestaurante}></Route>
-          <Route path="/restaurantes" component={Restaurantes}></Route>
-          <Route path="/user/:nickname" component={UserPage}></Route>
-          <Route path="/restaurante/:nomRestaurante" component={RestaurantPage}></Route>
-          <Route path="/" component={Home}></Route>
+          <Route exact path="/login" component={Login}></Route>
+          <Route exact path="/signup" component={SignUp}></Route>
+          <Route exact path="/paginaprueba" component={PaginaPrueba}></Route>
+          <Route exact path="/aviso-legal" component={AvisoLegal}></Route>
+          <Route exact path="/politica-privacidad" component={PoliticaPrivacidad}></Route>
+          <Route exact path="/restaurantes/restaurante/:id/menu/detalle-plato" component={DetallePlato}></Route>
+          <Route exact path="/restaurantes/restaurante/:id/menu" component={Menu}></Route>
+          <Route exact path="/restaurantes/restaurante/:id/reserva" component={RealizarReserva}></Route>
+          <Route exact path="/restaurantes/restaurante/:id" component={PaginaRestaurante}></Route>
+          <Route exact path="/restaurantes" component={Restaurantes}></Route>
+          <Route exact path="/user/:nickname" component={UserPage}></Route>
+          <Route exact path="/restaurante/:nomRestaurante" component={RestaurantPage}></Route>
+          <Route exact path="/" component={Home}></Route>
+          <Route component={NotFound}></Route>
         </Switch>
       </Router>
 

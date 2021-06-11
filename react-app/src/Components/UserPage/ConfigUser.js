@@ -27,18 +27,20 @@ export class ConfigUser extends Component {
 
     componentDidMount = () => {
         let user = JSON.parse(localStorage.getItem('user'));
-        this.setState({
-            idUser: user.user.id,
-            nickname: user.user.name,
-            emailUser: user.user.email,
-            userableId: user.user.userable_id,
-        })
-        axios.get('http://127.0.0.1:8000/api/client/' + user.user.userable_id)
-            .then(res => {
-                this.setState({
-                    nameSurname: res.data.nombreCompleto
+        if (user !== null) {
+            this.setState({
+                idUser: user.user.id,
+                nickname: user.user.name,
+                emailUser: user.user.email,
+                userableId: user.user.userable_id,
+            })
+            axios.get('http://127.0.0.1:8000/api/client/' + user.user.userable_id)
+                .then(res => {
+                    this.setState({
+                        nameSurname: res.data.nombreCompleto
+                    });
                 });
-            });
+        }
     }
     handleChange = (e) => {
         this.setState({
@@ -191,81 +193,87 @@ export class ConfigUser extends Component {
         });
     }
     render() {
-        return (
-            <div>
-                <Row className="p-4">
-                    <Col md="12" className="bg-dark text-light rounded text-center">
-                        <h5>
-                            Configuración básica
-                        </h5>
-                    </Col>
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (user.user.userable_type === 'App\\Models\\Restaurant') {
+            window.location = '/'
+        }
+        else {
+            return (
+                <div>
+                    <Row className="p-4">
+                        <Col md="12" className="bg-dark text-light rounded text-center">
+                            <h5>
+                                Configuración básica
+                            </h5>
+                        </Col>
 
-                    <Col md={{ size: 6, offset: 3 }} className="pt-4">
-                        <Form onSubmit={this.handleSubmit}>
-                            <FormGroup>
-                                <Label for="emailUser">
-                                    Correo electrónico
-                                </Label>
-                                <Input type="email" name="emailUser" id="emailUser" style={{ 'border': this.state.errorsConfig.email ? '1px solid red' : '' }}
-                                    value={this.state.emailUser} onChange={this.handleChange} />
-                                <div className="text-danger">
-                                    {this.state.errorsConfig.email}
-                                </div>
-                            </FormGroup>
+                        <Col md={{ size: 6, offset: 3 }} className="pt-4">
+                            <Form onSubmit={this.handleSubmit}>
+                                <FormGroup>
+                                    <Label for="emailUser">
+                                        Correo electrónico
+                                    </Label>
+                                    <Input type="email" name="emailUser" id="emailUser" style={{ 'border': this.state.errorsConfig.email ? '1px solid red' : '' }}
+                                        value={this.state.emailUser} onChange={this.handleChange} />
+                                    <div className="text-danger">
+                                        {this.state.errorsConfig.email}
+                                    </div>
+                                </FormGroup>
 
-                            <FormGroup>
-                                <Label for="nameSurname">
-                                    Nombre y apellidos
-                                </Label>
-                                <Input type="text" name="nameSurname" id="nameSurname" style={{ 'border': this.state.errorsConfig.errorName ? '1px solid red' : '' }}
-                                    value={this.state.nameSurname} onChange={this.handleChange} />
-                                <div className="text-danger">
-                                    {this.state.errorsConfig.errorName}
-                                </div>
-                            </FormGroup>
+                                <FormGroup>
+                                    <Label for="nameSurname">
+                                        Nombre y apellidos
+                                    </Label>
+                                    <Input type="text" name="nameSurname" id="nameSurname" style={{ 'border': this.state.errorsConfig.errorName ? '1px solid red' : '' }}
+                                        value={this.state.nameSurname} onChange={this.handleChange} />
+                                    <div className="text-danger">
+                                        {this.state.errorsConfig.errorName}
+                                    </div>
+                                </FormGroup>
 
-                            <FormGroup>
-                                <Label for="nickname">
-                                    Nombre de usuario/nickname
-                                </Label>
-                                <Input style={{ 'border': this.state.errorsConfig.name ? '1px solid red' : '' }}
-                                    type="text" name="nickname" id="nickname"
-                                    value={this.state.nickname} onChange={this.handleChange} />
-                                <div className="text-danger">{this.state.errorsConfig.name}</div>
-                            </FormGroup>
+                                <FormGroup>
+                                    <Label for="nickname">
+                                        Nombre de usuario/nickname
+                                    </Label>
+                                    <Input style={{ 'border': this.state.errorsConfig.name ? '1px solid red' : '' }}
+                                        type="text" name="nickname" id="nickname"
+                                        value={this.state.nickname} onChange={this.handleChange} />
+                                    <div className="text-danger">{this.state.errorsConfig.name}</div>
+                                </FormGroup>
 
-                            <FormGroup>
-                                <Label for="newPassword">
-                                    Nueva contraseña
-                                </Label>
-                                <Input type="password" name="newPassword" id="newPassword" style={{ 'border': this.state.errorsConfig.errorPassword ? '1px solid red' : '' }}
-                                    value={this.state.newPassword} onChange={this.handleChange} />
+                                <FormGroup>
+                                    <Label for="newPassword">
+                                        Nueva contraseña
+                                    </Label>
+                                    <Input type="password" name="newPassword" id="newPassword" style={{ 'border': this.state.errorsConfig.errorPassword ? '1px solid red' : '' }}
+                                        value={this.state.newPassword} onChange={this.handleChange} />
 
-                            </FormGroup>
+                                </FormGroup>
 
-                            <FormGroup>
-                                <Label for="repeatNewPassword">
-                                    Confirmar contraseña
-                                </Label>
-                                <Input type="password" name="repeatNewPassword" id="repeatNewPassword" style={{ 'border': this.state.errorsConfig.errorPassword ? '1px solid red' : '' }}
-                                    value={this.state.repeatNewPassword} onChange={this.handleChange} />
-                                <div className="text-danger">
-                                    {this.state.errorsConfig.errorPassword}
-                                </div>
-                            </FormGroup>
-                            <Row>
-                                <Col md="6" sm="6" xs="6">
-                                    <Button color="primary" className="mb-2 text-center">Guardar cambios</Button>
-                                </Col>
-                                <Col md="6" sm="6" xs="6">
-                                    <Button color="danger" onClick={this.checkProfileDelete} className="mb-2 text-center">Eliminar cuenta</Button>
-                                </Col>
-                            </Row>
-                        </Form>
-                    </Col>
-                </Row>
-            </div>
-        )
+                                <FormGroup>
+                                    <Label for="repeatNewPassword">
+                                        Confirmar contraseña
+                                    </Label>
+                                    <Input type="password" name="repeatNewPassword" id="repeatNewPassword" style={{ 'border': this.state.errorsConfig.errorPassword ? '1px solid red' : '' }}
+                                        value={this.state.repeatNewPassword} onChange={this.handleChange} />
+                                    <div className="text-danger">
+                                        {this.state.errorsConfig.errorPassword}
+                                    </div>
+                                </FormGroup>
+                                <Row>
+                                    <Col md="6" sm="6" xs="6">
+                                        <Button color="primary" className="mb-2 text-center">Guardar cambios</Button>
+                                    </Col>
+                                    <Col md="6" sm="6" xs="6">
+                                        <Button color="danger" onClick={this.checkProfileDelete} className="mb-2 text-center">Eliminar cuenta</Button>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Col>
+                    </Row>
+                </div>
+            )
+        }
     }
 }
 

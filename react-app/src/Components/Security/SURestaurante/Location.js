@@ -53,6 +53,8 @@ export class Location extends Component {
                     { headers: authHeader() }
                 ).then(() => {
                     this.setState({
+                        lat: res.results[0].geometry.lat,
+                        lng: res.results[0].geometry.lng,
                         submittingLoad: false,
                     }, () => {
                         if (this.props.onChange) {
@@ -60,20 +62,22 @@ export class Location extends Component {
                         }
                     });
                     this.toggle();
-                });
-                this.setState({
-                    lat: res.results[0].geometry.lat,
-                    lng: res.results[0].geometry.lng
+                }).catch(err => {
+                    if (err.response && err.response.status === 400) {
+                        this.setState({
+                            errorsLocation: JSON.parse(err.response.data),
+                            submittingLoad: false,
+                        })
+                    }
                 })
             }).catch(err => {
                 this.setState({
-                    submittingLoad: false
-                })
-                this.toggle();
-            });
+                    submittingLoad: false,
+
+                });
+            })
         }
     }
-
     checkLocation = () => {
         let allOK = true;
         let errorsLocation = {};
