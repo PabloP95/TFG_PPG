@@ -23,6 +23,8 @@ class OpinionController extends Controller
                             WHERE 
                             opinions.client_id = $idCliente
                             AND
+                            opinions.restaurant_id = restaurants.id
+                            AND
                             users.userable_id = restaurants.id
                             AND
                             users.userable_type like '%Restaurant'
@@ -40,7 +42,9 @@ class OpinionController extends Controller
         $restaurant = Restaurant::findOrFail($idRestaurant);
         return DB::select("SELECT opinions.id, nota, comentario, users.name, opinions.updated_at
                             FROM opinions, clients, users
-                            WHERE opinions.restaurant_id = 2
+                            WHERE opinions.restaurant_id = $idRestaurant
+                            AND
+                            opinions.client_id = clients.id
                             AND
                             users.userable_id = clients.id
                             AND
@@ -62,7 +66,7 @@ class OpinionController extends Controller
         $validator = Validator::make($request->all(), [
             'nota' => 'required|integer|numeric|min:0|max:5',
             'comentario' => 'required|nullable|string',
-            'client_id' => 'required|integer|numeric|exists:clients,id|unique:opinions,client_id,'.$idClient,
+            'client_id' => 'required|integer|numeric|exists:clients,id|unique_custom:opinions,client_id,restaurant_id,'.$idRestaurant,
             'restaurant_id' => 'required|integer|numeric|exists:restaurants,id'
         ]);
 

@@ -26,21 +26,21 @@ export class RestOpiniones extends Component {
                             Opiniones
                         </h5>
                     </Col>
-                    <Row className="p-4 border rounded mt-3">
-                        {this.state.opiniones.map((opinion) => (
-                            <Col key={opinion.id} md="12" className="text-justify">
+                    {this.state.opiniones.map((opinion) => (
+                        <Row key={opinion.id} className="p-4 mt-3">
+                            <Col md="12" className="text-justify">
                                 <p>Nota: {opinion.nota} estrellas/5</p>
                                 <p>Opinión: {opinion.comentario}</p>
-                                <p>Fecha opinión:{
+                                <p>Fecha opinión: {
                                     ' ' + new Date(opinion.updated_at).getDate() + '/' +
                                     [new Date(opinion.updated_at).getMonth() + 1] + '/' +
                                     new Date(opinion.updated_at).getFullYear()
                                 }</p>
                             </Col>
-                        ))}
-                    </Row>
+                        </Row>
+                    ))}
                 </Row>
-            </div>
+            </div >
         )
     }
 }

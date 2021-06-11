@@ -55,7 +55,9 @@ class RestaurantController extends Controller
     {
         $restaurant = DB::select("SELECT email, name, numTelefono, latitud, longitud, direccionPostal
         FROM users, restaurants
-        WHERE userable_id = $id
+        WHERE userable_id = restaurants.id
+        AND
+        restaurants.id = $id
         AND
         users.userable_type like '%Restaurant'
         ");
