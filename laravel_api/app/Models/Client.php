@@ -26,4 +26,8 @@ class Client extends Model
     public function opiniones(){
         return $this->hasMany('App\Models\Opinion');
     }
+
+    public function reservas(){
+        return $this->hasMany('App\Models\Reserva');
+    }
 }

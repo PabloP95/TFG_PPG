@@ -57,7 +57,7 @@ export class DetallesCard extends Component {
                             <br />
 
                             <Link className="btn btn-primary btn-lg" to={{
-                                pathname: "/restaurantes/restaurante/1/reserva",
+                                pathname: "/restaurantes/restaurante/" + this.props.idRestaurante + "/reserva",
                                 state: {
                                     idRestaurante: this.props.idRestaurante,
                                     nomRestaurante: this.props.nomRestaurante

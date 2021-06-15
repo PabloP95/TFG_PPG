@@ -32,6 +32,14 @@ class AppServiceProvider extends ServiceProvider
 
             return DB::table($table)->where($field, $value)->where($field2, $field2Value)->count() == 0;
         });
+
+        Validator::extend('unique_custom_three_parameters', function ($attribute, $value, $parameters)
+        {
+            // Get the parameters passed to the rule
+            list($table, $field, $field2, $field2Value, $field3, $field3Value) = $parameters;
+
+            return DB::table($table)->where($field, $value)->where($field2, $field2Value)->where($field3, $field3Value)->count() == 0;
+        });
         Schema::defaultStringLength(191);
     }
 }

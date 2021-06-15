@@ -179,7 +179,7 @@ export class FiltroOpiniones extends Component {
                                 style={{ 'border': this.state.errors.errorNota ? '1px solid red' : '' }}
                                 value={this.state.qualification}
                                 id="qualification" name="qualification" onChange={this.onChangeHandler}>
-                                <option hidden>Seleccione la nota</option>
+                                <option hidden={true}>Seleccione la nota</option>
                                 <option value="0">0 Estrellas</option>
                                 <option value="1">1 Estrella</option>
                                 <option value="2">2 Estrellas</option>
@@ -193,7 +193,7 @@ export class FiltroOpiniones extends Component {
                         <FormGroup>
                             <Label for="fecha">Por intervalo de fecha</Label>
                             <Input type="select" value={this.state.fecha} id="fecha" name="fecha" onChange={this.onChangeHandler}>
-                                <option hidden="true">Seleccione el rango de fecha</option>
+                                <option hidden={true}>Seleccione el rango de fecha</option>
                                 <option value="0">Hoy</option>
                                 <option value="1">Ayer</option>
                                 <option value="2">Hace una semana</option>

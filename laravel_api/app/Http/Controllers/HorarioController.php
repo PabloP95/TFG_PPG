@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Horario;
 use App\Models\Restaurant;
 use Validator;
+use Carbon\Carbon;
 class HorarioController extends Controller
 {
     /**
@@ -19,9 +20,6 @@ class HorarioController extends Controller
         return $horariosRestaurant;
     }
 
-    public function horarioDia($id, $dia){
-        return Restaurant::findOrFail($id)->horarios()->where('dia', '=', $dia)->get();
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -65,6 +63,34 @@ class HorarioController extends Controller
     public function show($id, $dia)
     {
         return Restaurant::findOrFail($id)->horarios()->where('dia', '=', $dia)->get();
+    }
+
+    public function horarioReserva($id, $dia){
+        $horarioReserva = Restaurant::findOrFail($id)->horarios()->where('dia', '=', $dia)->get();
+        $arr = array();
+        if($horarioReserva[0]->horarioAperturaP1 === null){
+            array_push($arr, ' ');
+            return $arr;
+        }
+        else{
+            $hAperturaP1 = Carbon::createFromTimeString($horarioReserva[0]->horarioAperturaP1)->format('H:i:s');
+            $hAperturaP2 = Carbon::createFromTimeString($horarioReserva[0]->horarioAperturaP2)->format('H:i:s');
+            $hCierreP1 = Carbon::createFromTimeString($horarioReserva[0]->horarioCierreP1)->format('H:i:s');
+            $hCierreP2 = Carbon::createFromTimeString($horarioReserva[0]->horarioCierreP2)->format('H:i:s');
+            
+            while(Carbon::parse($hAperturaP1)->lte(Carbon::parse($hCierreP1))){
+                array_push($arr, $hAperturaP1);
+                $hAperturaP1 = Carbon::parse($hAperturaP1)->addMinutes(20)->format('H:i:s');
+            }
+            array_pop($arr); //Fuera la hora de cierre
+    
+            while(Carbon::parse($hAperturaP2)->lte(Carbon::parse($hCierreP2))){
+                array_push($arr, $hAperturaP2);
+                $hAperturaP2 = Carbon::parse($hAperturaP2)->addMinutes(30)->format('H:i:s');
+            }
+            array_pop($arr); //Fuera la hora de cierre
+            return $arr;
+        }
     }
 
     /**
