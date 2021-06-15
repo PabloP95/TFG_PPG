@@ -19,13 +19,20 @@ export class OpinionesRestaurante extends Component {
             })
         })
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.opiniones !== this.props.opiniones || prevProps.filtrado !== this.props.filtrado) {
+            this.setState({
+                opiniones: this.props.opiniones
+            });
+        }
+    }
     render() {
         return (
             <Col md="8" sm="12" className="order-2 order-md-6">
                 <h5 className="text-left p-3">Opiniones</h5>
                 {this.state.opiniones.length !== 0 ? (
                     this.state.opiniones.map((opinion) => (
-
                         <Row key={opinion.id}>
                             <Col md="4">
                                 <figure className="figure">
@@ -45,7 +52,13 @@ export class OpinionesRestaurante extends Component {
                             </Col>
                         </Row>
                     ))
-                ) : (<h5>Ningún usuario ha realizado una opinión de este restaurante</h5>)}
+                ) : this.props.filtrado ? (
+                    <h5>Aún no existen opiniones que concuerden con el filtro realizado.
+                        <br />Pruebe filtrar con otros valores o intentelo más tarde
+                    </h5>) : (
+                    <h5>Ningún usuario ha realizado una opinión de este restaurante
+                    </h5>)
+                }
             </Col>
         )
     }

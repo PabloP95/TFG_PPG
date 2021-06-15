@@ -19,6 +19,10 @@ class HorarioController extends Controller
         return $horariosRestaurant;
     }
 
+    public function horarioDia($id, $dia){
+        return Restaurant::findOrFail($id)->horarios()->where('dia', '=', $dia)->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
