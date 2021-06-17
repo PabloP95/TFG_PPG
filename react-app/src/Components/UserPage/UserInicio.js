@@ -8,6 +8,7 @@ export class UserInicio extends Component {
         super(props);
         this.state = {
             nickname: '',
+            restaurantes: [],
         }
     }
     componentDidMount = () => {
@@ -22,6 +23,12 @@ export class UserInicio extends Component {
                 { Logout() };
                 window.location = '/login'
             }
+        });
+
+        axios.get('http://127.0.0.1:8000/api/restaurants').then(res => {
+            this.setState({
+                restaurantes: res.data
+            })
         })
 
     }
@@ -31,27 +38,21 @@ export class UserInicio extends Component {
                 <h3>Bienvenido {this.state.nickname}</h3>
                 <h3>Ha visitado los siguientes restaurantes</h3>
                 <Row className="p-4">
-                    <Col sm="6" md="4" xs="6">
-                        <a href="/restaurantes/restaurante/1">
-                            <figure className="figure ml-3 mt-2 mr-2">
-                                <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
-                                <figcaption className="figure-caption text-center">Restaurante A<br />Descripción</figcaption>
-                            </figure>
-                        </a>
-                    </Col>
-                    <Col sm="6" md="4" xs="6">
-                        <figure className="figure ml-3 mt-2 mr-2">
-                            <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 2" />
-                            <figcaption className="figure-caption text-center">Restaurante B<br />Descripción</figcaption>
-                        </figure>
-                    </Col>
+                    {this.state.restaurantes.length > 0 ? (
+                        this.state.restaurantes.map(restaurante => (
+                            <Col sm="6" md="4" xs="6" key={restaurante.userable_id}>
+                                <a href={"/restaurantes/restaurante/" + restaurante.userable_id}>
+                                    <figure className="figure ml-3 mt-2 mr-2">
+                                        <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
+                                        <figcaption className="figure-caption text-center">Restaurante {restaurante.name}<br />Descripción</figcaption>
+                                    </figure>
+                                </a>
+                            </Col>
 
-                    <Col sm="6" md="4" xs="6">
-                        <figure className="figure ml-3 mt-2 mr-2">
-                            <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 3" />
-                            <figcaption className="figure-caption text-center">Restaurante C<br />Descripción</figcaption>
-                        </figure>
-                    </Col>
+                        ))
+                    ) : (<h5>Aún no ha visitado ningún restaurante</h5>)}
+
+
                 </Row>
             </div>
         );

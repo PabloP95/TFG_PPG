@@ -20,22 +20,20 @@ export class ConfigUploadImages extends Component {
 
     }
     render() {
-
         return (
             <div className="p-2">
-
                 <Form>
                     <FormGroup>
                         <Label for="imgRestaurante">Imagen principal</Label>
                         <Input id="imgRestaurante" name="imgRestaurante" type="file" accept="image/*" onChange={this.handleChange} />
-                        <img src={this.state.imgRestaurante} alt="Imagen primera" />
+                        <img src={this.state.imgRestaurante} alt="Imagen primera" width="250" />
 
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="img2">Imagen segunda</Label>
                         <Input id="img2" name="img2" type="file" onChange={this.handleChange} accept="image/*" />
-                        <img src={this.state.img2} alt="Imagen segunda" />
+                        <img src={this.state.img2} alt="Imagen segunda" width="250" />
 
                     </FormGroup>
                 </Form>

@@ -3,7 +3,9 @@ import BusquedaRestaurantes from './BusquedaRestaurantes';
 import RestaurantesMejorPuntuados from './RestaurantesMejorPuntuados';
 
 export class Restaurantes extends Component {
+
     render() {
+
         return (
             <div className="jumbotron jumbotron-fluid">
                 <div className="container">
@@ -13,7 +15,6 @@ export class Restaurantes extends Component {
                 <div className="container p-3 text-justify">
                     <BusquedaRestaurantes />
                     <br /><br />
-                    <h5 className="poppins-font">Restaurantes mejor puntuados</h5>
                     <RestaurantesMejorPuntuados />
                 </div>
             </div>

@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { FaSpinner } from 'react-icons/fa'
 import axios from 'axios';
 import Swal from "sweetalert2";
+import '../../react-leaflet.css'
 export class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            submittingLoad: false,
             loginInfo: {
                 email: "",
                 password: ""
@@ -17,6 +20,9 @@ export class Login extends Component {
         }
     }
     handleError() {
+        this.setState({
+            submittingLoad: false,
+        })
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -32,6 +38,9 @@ export class Login extends Component {
             title: 'Bienvenido',
             timer: 2000,
         }).then(() => {
+            this.setState({
+                submittingLoad: false
+            });
             window.location = '/user/' + user.user.name
         });
 
@@ -44,6 +53,9 @@ export class Login extends Component {
             title: 'Bienvenido',
             timer: 2000,
         }).then(() => {
+            this.setState({
+                submittingLoad: false
+            });
             window.location = '/restaurante/' + user.user.name
         });
     }
@@ -51,6 +63,9 @@ export class Login extends Component {
     onSubmitHandler = (e) => {
         e.preventDefault();
         if (this.validate()) {
+            this.setState({
+                submittingLoad: true
+            });
             axios.post("http://localhost:8000/api/auth/login", {
                 email: this.state.loginInfo.email,
                 password: this.state.loginInfo.password
@@ -152,7 +167,10 @@ export class Login extends Component {
                                 <Input style={{ 'border': this.state.errors.password ? '1px solid red' : '' }} type="password" name="password" id="password" placeholder="Contraseña" onChange={this.onChangeHandler} />
                                 <div className="text-danger">{this.state.errors.password}</div>
                             </FormGroup>
-                            <Button style={{ 'textAlign': 'center' }}>Login</Button>
+                            {this.state.submittingLoad ? (
+                                <Button disabled={true} style={{ 'textAlign': 'center' }}><FaSpinner className="icon-spin" /> Accediendo a su página</Button>
+
+                            ) : (<Button style={{ 'textAlign': 'center' }}>Login</Button>)}
                             <div className="mt-2">
                                 <p><a href="#" style={{ textDecoration: 'none' }}>¿Ha olvidado la contraseña?</a></p>
                                 <p><a href="/signup" style={{ textDecoration: 'none' }}>Registrese ahora</a></p>

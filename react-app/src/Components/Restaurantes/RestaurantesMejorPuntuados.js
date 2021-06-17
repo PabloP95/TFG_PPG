@@ -7,7 +7,8 @@ export class RestaurantesMejorPuntuados extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            restaurantesMejorPuntuados: []
+            restaurantesMejorPuntuados: [],
+
         };
     }
 
@@ -22,25 +23,84 @@ export class RestaurantesMejorPuntuados extends Component {
     }
 
     render() {
-        console.log(this.state.restaurantesMejorPuntuados);
+        let restBusquedaNavbar = JSON.parse(localStorage.getItem('busquedaNavBar'));
+        let resBusqueda = JSON.parse(localStorage.getItem('resBusqueda'));
         return (
             <div>
-                <p>Prueba de muestra de RestaurantesMejorPuntuados</p>
-                <Row className="pt-2">
-                    {this.state.restaurantesMejorPuntuados.map(restaurante => (
-                        <Col sm="6" md="4" xs="6" key={restaurante.userable_id}>
-                            <Link to={{
-                                pathname: "/restaurantes/restaurante/" + restaurante.userable_id
-                            }}>
-                                <figure className="figure ml-3 mt-2 pr-1">
-                                    <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
-                                    <figcaption className="figure-caption text-center">{restaurante.name}<br />Descripción</figcaption>
-                                </figure>
-                            </Link>
-                        </Col>
-                    ))}
-                </Row>
-            </div >
+                {restBusquedaNavbar !== null ? (
+                    restBusquedaNavbar.length > 0 ?
+                        (
+                            <section>
+                                <h5>Resultados de la búsqueda</h5>
+                                <Row className="pt-2">
+                                    {restBusquedaNavbar.map(restaurante => (
+                                        <Col sm="6" md="4" xs="6" key={restaurante.userable_id}>
+                                            <Link to={{
+                                                pathname: "/restaurantes/restaurante/" + restaurante.userable_id
+                                            }}>
+                                                <figure className="figure ml-3 mt-2 pr-1">
+                                                    <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
+                                                    <figcaption className="figure-caption text-center">{restaurante.name}<br />Descripción</figcaption>
+                                                </figure>
+                                            </Link>
+                                        </Col>
+                                    ))}
+                                </Row>
+                            </section>
+                        ) : (<section>
+                            <h5>Resultados de la búsqueda</h5>
+                            <p>No existen resultados para la búsqueda que se ha realizado</p>
+                        </section>)
+
+                ) : (
+                    resBusqueda !== null ? (
+                        resBusqueda.length > 0 ?
+                            (
+                                <section>
+                                    <h5>Resultados de la búsqueda</h5>
+                                    <Row className="pt-2">
+                                        {resBusqueda.map(restaurante => (
+                                            <Col sm="6" md="4" xs="6" key={restaurante.userable_id}>
+                                                <Link to={{
+                                                    pathname: "/restaurantes/restaurante/" + restaurante.userable_id
+                                                }}>
+                                                    <figure className="figure ml-3 mt-2 pr-1">
+                                                        <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
+                                                        <figcaption className="figure-caption text-center">{restaurante.name}<br />Descripción</figcaption>
+                                                    </figure>
+                                                </Link>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </section>
+                            ) : (
+                                <section>
+                                    <h5>Resultados de la búsqueda</h5>
+                                    <p>No existen resultados para la búsqueda que se ha realizado</p>
+                                </section>
+                            )) :
+
+                        (
+                            <section>
+                                <h5>Restaurantes mejor puntuados</h5>
+                                <Row className="pt-2">
+                                    {this.state.restaurantesMejorPuntuados.map(restaurante => (
+                                        <Col sm="6" md="4" xs="6" key={restaurante.userable_id}>
+                                            <Link to={{
+                                                pathname: "/restaurantes/restaurante/" + restaurante.userable_id
+                                            }}>
+                                                <figure className="figure ml-3 mt-2 pr-1">
+                                                    <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
+                                                    <figcaption className="figure-caption text-center">{restaurante.name}<br />Descripción</figcaption>
+                                                </figure>
+                                            </Link>
+                                        </Col>
+                                    ))}
+                                </Row>
+                            </section>))
+                }
+
+            </div>
         )
     }
 }

@@ -1,18 +1,45 @@
 import React, { Component } from 'react';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Input, Button, Row, Col } from 'reactstrap';
 import { BsSearch } from 'react-icons/bs';
+import { ImCross } from 'react-icons/im';
 import axios from 'axios';
+import { Multiselect } from 'multiselect-react-dropdown';
 export class BusquedaRestaurantes extends Component {
     constructor(props) {
         super(props);
         this.state = {
             nombreRestaurante: '',
-            selectEstablecimiento: '',
-            selectPrecio: '',
             selectTipoCocina: '',
+            resBusqueda: [],
+            tiposCocina: [],
+
+            tiposCocinaSeleccionados: [],
             errors: {
                 nombreRestaurante: ''
             }
+        }
+    }
+
+    componentDidMount() {
+        axios.get('http://127.0.0.1:8000/api/tiposCocina').then(res => { this.setState({ tiposCocina: res.data }) })
+    }
+
+    onSelect = (selectedList, selectedItem) => {
+        this.setState({ tiposCocinaSeleccionados: [...this.state.tiposCocinaSeleccionados, selectedItem] });
+    }
+
+    onRemove = (selectedList, removedItem) => {
+        let arr = [...this.state.tiposCocinaSeleccionados];
+
+        if (arr.indexOf(removedItem) === 0) {
+            this.setState({
+                tiposCocinaSeleccionados: arr.slice(0, 0).concat(arr.slice(1, arr.length + 1))
+            });
+        }
+        if (arr.indexOf(removedItem) !== 0) {
+            this.setState({
+                tiposCocinaSeleccionados: arr.slice(0, arr.indexOf(removedItem)).concat(arr.slice(arr.indexOf(removedItem) + 1, arr.length + 1))
+            })
         }
     }
 
@@ -29,7 +56,7 @@ export class BusquedaRestaurantes extends Component {
         /* Tampoco puede tener números*/
         let errors = {};
         let isValid = true;
-        if (typeof this.state.nombreRestaurante !== 'undefined') {
+        if (this.state.nombreRestaurante !== '') {
             let pattern = new RegExp(/^[a-zA-Z]+( [a-zA-Z]+)*$/);
             let patternMySql = new RegExp(/select/i);
             if (!pattern.test(this.state.nombreRestaurante)) {
@@ -49,65 +76,74 @@ export class BusquedaRestaurantes extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
-            console.log(this.state.nombreRestaurante);
-            console.log(this.state.selectEstablecimiento);
-            console.log(this.state.selectPrecio);
-            console.log(this.state.selectTipoCocina);
-            this.setState({
-                nombreRestaurante: '',
-                selectEstablecimiento: '',
-                selectPrecio: '',
-                selectTipoCocina: '',
-                errors: {
-                    nombreRestaurante: ''
+            let arrID = this.state.tiposCocinaSeleccionados.map((arr) => { return arr.id });
+            let stringArrID = arrID.join(',');
+            let nomRestaurante = this.state.nombreRestaurante;
+            let nom = '';
+            if (this.state.tiposCocinaSeleccionados.length === 0) {
+                stringArrID = '0';
+            }
+            if (nomRestaurante === '') {
+                nom = '0'
+            }
+            console.log(stringArrID);
+            console.log(nomRestaurante);
+            axios.get('http://localhost:8000/api/restaurants/search/' + nom + '/' + stringArrID).then(
+                res => {
+                    console.log(res.data);
+                    this.setState({
+                        resBusqueda: res.data
+                    })
+                    localStorage.setItem('resBusqueda', JSON.stringify(res.data));
+                    window.location = '/restaurantes'
                 }
-            });
+            );
         }
     }
-
+    deleteSearch = () => {
+        localStorage.removeItem('resBusqueda');
+        window.location = '/restaurantes'
+    }
     render() {
+        let resBusqueda = JSON.parse(localStorage.getItem('resBusqueda'));
         return (
             <div>
-                <div className="rounded border d-flex justify-content-center p-2">
-                    <Form inline onSubmit={this.handleSubmit}>
-                        <div className="text-danger pr-3">
-                            {this.state.errors.nombreRestaurante}
-                        </div>
-                        <FormGroup className="mb-2 mr-md-2 mb-md-0 mr-sm-2">
-                            <Label for="nomRestaurante"></Label>
-                            <Input style={{
-                                'border': this.state.errors.nombreRestaurante ? '1px solid red' : '',
-                            }}
-                                type="text" value={this.state.nombreRestaurante} name="nombreRestaurante"
-                                id="nomRestaurante" placeholder='Nombre' onChange={this.handleChange} />
+                <div className="p-2">
+                    <h5>Búsqueda de restaurantes</h5>
+                    <Form onSubmit={this.handleSubmit}>
+                        <Row>
+                            <Col md={4}>
+                                <FormGroup >
+                                    <Label for="nomRestaurante"></Label>
+                                    <Input style={{
+                                        'border': this.state.errors.nombreRestaurante ? '1px solid red' : '',
+                                    }}
+                                        type="text" value={this.state.nombreRestaurante} name="nombreRestaurante"
+                                        id="nomRestaurante" placeholder='Nombre' onChange={this.handleChange} />
 
-                        </FormGroup>
-                        <FormGroup className="mb-2 mr-md-2 mb-md-0 mr-sm-2">
-                            <Label for="tipoEstablecimiento"></Label>
-                            <Input type="select" value={this.state.valueTipoEstablecimiento} name="selectEstablecimiento" onChange={this.handleChange} placeholder="Tipo establecimiento">
-                                <option>Restaurante</option>
-                                <option>Bar</option>
-                                <option>Freidor</option>
-                            </Input>
-                        </FormGroup>
-                        <FormGroup className="mb-2 mr-md-2 mb-md-0 ml-sm-3 mr-sm-3 ml-xs-3 mr-xs-3">
-                            <Label for="precioEstimado"></Label>
-                            <Input type="select" value={this.state.valuePrecio} onChange={this.handleChange} name="selectPrecio" placeholder="Precio estimado">
-                                <option>€ - €€</option>
-                                <option>€€ - €€€</option>
-                                <option>€€€ - €€€€</option>
-                                <option>€€€€ - €€€€€</option>
-                            </Input>
-                        </FormGroup>
-                        <FormGroup className="mb-2 mr-md-2 mb-md-0 mr-sm-3 ml-sm-5 mr-xs-3 ml-xs-5">
-                            <Label for="estiloCocina"></Label>
-                            <Input type="select" value={this.state.valueTipoCocina} onChange={this.handleChange} name="selectTipoCocina" placeholder="Estilo cocina">
-                                <option>Italiano</option>
-                                <option>Español</option>
-                                <option>Japones</option>
-                            </Input>
-                        </FormGroup>
-                        <Button className="rounded mb-2 mr-md-2 mb-md-0 ml-sm-5 ml-xs-5"><BsSearch /></Button>
+                                </FormGroup>
+                                <div className="text-danger pr-3">
+                                    {this.state.errors.nombreRestaurante}
+                                </div>
+                            </Col>
+                            <Col md={4}>
+                                <FormGroup >
+                                    <Label for="estiloCocina"></Label>
+                                    <Multiselect options={this.state.tiposCocina}
+                                        displayValue="tipoCocina"
+                                        onSelect={this.onSelect} onRemove={this.onRemove}
+                                        hidePlaceholder={true} placeholder="Elija los tipos de cocina" />
+                                </FormGroup>
+                            </Col>
+                            <Col md={2}>
+                                <Button block className="rounded mt-4"><BsSearch /></Button>
+                            </Col>
+                            {resBusqueda ? (
+                                <Col md={2}>
+                                    <Button color="danger" block className="rounded mt-4" onClick={this.deleteSearch}>Eliminar búsqueda</Button>
+                                </Col>
+                            ) : ('')}
+                        </Row>
                     </Form >
                 </div >
             </div >

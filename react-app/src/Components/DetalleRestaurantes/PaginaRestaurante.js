@@ -14,6 +14,8 @@ export class PaginaRestaurante extends Component {
     constructor(props) {
         super(props);
         let arr = window.location.href.split('/');
+        localStorage.removeItem('busquedaNavBar');
+        localStorage.removeItem('resBusqueda');
         this.state = {
             idRestaurante: arr[5],
             nomRestaurante: '',
@@ -100,14 +102,14 @@ export class PaginaRestaurante extends Component {
                     <Row>
                         <Col md="6" sm="12" xs="12">
                             <figure className="figure ml-2 mt-2">
-                                <img src="https://via.placeholder.com/150.png?text=Img1Restaurante"
+                                <img src="https://via.placeholder.com/350x200.png?text=Img1Restaurante"
                                     className="figure-img img-fluid rounded" alt="Imagen 1" />
                             </figure>
 
                         </Col>
                         <Col md="6" sm="12" xs="12">
                             <figure className="figure ml-2 mt-2">
-                                <img src="https://via.placeholder.com/150.png?text=Img2Restaurante"
+                                <img src="https://via.placeholder.com/350x200.png?text=Img2Restaurante"
                                     className="figure-img img-fluid rounded" alt="Imagen 2" />
                             </figure>
                         </Col>

@@ -38,10 +38,14 @@ Route::get('unauthorized', function() {
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/restaurants', [RestaurantController::class, 'index']);
 Route::get('/restaurant/{id}', [RestaurantController::class, 'show']);
+Route::get('/restaurants/search/{nombre}', [RestaurantController::class, 'searchNavBar']);
+Route::get('/restaurants/search/{nombre}/{tiposCocina}', [RestaurantController::class, 'search']);
 Route::get('/tiposCocina/restaurant/{id}', [TiposCocinaController::class, 'indexTipoCocinaRestaurante']);
 Route::get('/horarios/restaurant/{id}', [HorarioController::class, 'index']);
 Route::get('/restaurant/{id}/horario/{dia}', [HorarioController::class, 'show']);
 Route::get('/restaurant/{id}/horarioReserva/{dia}', [HorarioController::class, 'horarioReserva']);
+
+
 
 Route::get('/restaurant/{id}/mesas', [TableController::class, 'index']);
 Route::get('/restaurant/{id}/mesas/{nComensales}', [TableController::class, 'indexNumComensales']);

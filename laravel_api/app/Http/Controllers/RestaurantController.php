@@ -10,7 +10,7 @@ class RestaurantController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index', 'show']]);
+        $this->middleware('auth:api', ['except' => ['index', 'show', 'searchNavBar', 'search']]);
     }
     /**
      * Display a listing of the resource.
@@ -19,11 +19,21 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        $restaurantes = DB::select("SELECT userable_id, email, name, numTelefono
+        /* $restaurantes = DB::select("SELECT userable_id, email, name, numTelefono
         FROM users, restaurants
         WHERE users.userable_id = restaurants.id
         AND
+        users.userable_type like '%Restaurant'"); 
+        */
+        $restaurantes = DB::select("SELECT userable_id, email, name, numTelefono,((SUM(nota) * 100) / (COUNT(*) * 5)) as porcentaje
+        FROM users, restaurants,opinions
+        WHERE users.userable_id = restaurants.id
+        AND
+        opinions.restaurant_id = restaurants.id
+        AND
         users.userable_type like '%Restaurant'
+        GROUP BY userable_id, email, name, numTelefono
+        ORDER BY porcentaje DESC, name DESC
         "
         );
         return $restaurantes;
@@ -97,5 +107,55 @@ class RestaurantController extends Controller
         $restaurant = Restaurant::findOrFail($id);
         $restaurant->delete();
         return $restaurant;
+    }
+
+    public function searchNavBar($nombre){
+        return DB::select("SELECT userable_id, email, name, numTelefono
+        FROM users, restaurants
+        WHERE users.userable_id = restaurants.id
+        AND
+        users.name like '%$nombre%'
+        AND
+        users.userable_type like '%Restaurant' 
+        ");
+    }
+
+    public function search($nombre, $tiposCocina){
+        if($nombre !== '0' && $tiposCocina === '0'){
+            return DB::select("SELECT userable_id, email, name, numTelefono
+            FROM users, restaurants
+            WHERE users.userable_id = restaurants.id
+            AND
+            users.name like '%$nombre%'
+            AND
+            users.userable_type like '%Restaurant' 
+            ");
+        }
+        else if($nombre === '0' && $tiposCocina !== '0'){
+            return DB::select("SELECT distinct(userable_id), email, name, numTelefono
+            FROM users, restaurants, restaurant_tipos_cocina
+            WHERE users.userable_id = restaurants.id
+            AND
+            restaurant_tipos_cocina.tipos_cocina_id in ($tiposCocina)
+            AND
+            restaurants.id = restaurant_tipos_cocina.restaurant_id
+            AND
+            users.userable_type like '%Restaurant' 
+            ");
+        }
+        else if($nombre !== '0' && $tiposCocina !== '0'){
+            return DB::select("SELECT distinct(userable_id), email, name, numTelefono
+            FROM users, restaurants, restaurant_tipos_cocina
+            WHERE users.userable_id = restaurants.id
+            AND
+            users.name like '%$nombre%'
+            AND
+            restaurant_tipos_cocina.tipos_cocina_id in ($tiposCocina)
+            AND
+            restaurants.id = restaurant_tipos_cocina.restaurant_id
+            AND
+            users.userable_type like '%Restaurant' 
+            ");
+        }
     }
 }

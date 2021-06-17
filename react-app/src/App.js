@@ -34,7 +34,7 @@ function App() {
           <Route exact path="/restaurantes/restaurante/:id/menu" component={Menu}></Route>
           <Route exact path="/restaurantes/restaurante/:id/reserva" component={RealizarReserva}></Route>
           <Route exact path="/restaurantes/restaurante/:id" component={PaginaRestaurante}></Route>
-          <Route exact path="/restaurantes" component={Restaurantes}></Route>
+          <Route exact path="/restaurantes" render={(props) => <Restaurantes {...props} />} />
           <Route exact path="/user/:nickname" component={UserPage}></Route>
           <Route exact path="/restaurante/:nomRestaurante" component={RestaurantPage}></Route>
           <Route exact path="/" component={Home}></Route>

@@ -1,14 +1,17 @@
 import axios from 'axios';
 import React, { Component } from 'react'
 import Swal from 'sweetalert2'
-import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { FaSpinner } from 'react-icons/fa'
+import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { Redirect } from 'react-router-dom';
 import './securityStyles.css';
+import '../../react-leaflet.css'
 
 class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            submittingLoad: false,
             users: [],
             signUpData: {
                 email: "",
@@ -40,9 +43,13 @@ class Signup extends Component {
             icon: 'success',
             title: 'Bienvenido',
             timer: 3000,
-        }).then(
+        }).then(() => {
+            this.setState({
+                submittingLoad: false
+            });
             window.location = '/user/' + user.user.name
-        );
+
+        });
     }
 
     signedUpRestaurant() {
@@ -51,13 +58,20 @@ class Signup extends Component {
             icon: 'success',
             title: 'Bienvenido',
             timer: 3000,
-        }).then(
+        }).then(() => {
+            this.setState({
+                submittingLoad: false
+            });
             window.location = '/restaurante/' + user.user.name
+        }
         );
     }
     onSubmitHandler = (e) => {
         e.preventDefault();
         if (this.validate()) {
+            this.setState({
+                submittingLoad: true
+            });
             axios.post('http://127.0.0.1:8000/api/auth/register', {
                 email: this.state.signUpData.email,
                 password: this.state.signUpData.password,
@@ -78,7 +92,10 @@ class Signup extends Component {
             }).catch(error => {
                 if (error.response) {
                     if (error.response.status === 400) {
-                        this.setState({ errors: JSON.parse(error.response.data) });
+                        this.setState({
+                            errors: JSON.parse(error.response.data),
+                            submittingLoad: false
+                        });
                     }
                 }
             })
@@ -138,6 +155,7 @@ class Signup extends Component {
         return isValid;
     }
     render() {
+        console.log(this.state.submittingLoad)
         let user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             if (user.user.userable_type === 'App\\Models\\Client') {
@@ -225,8 +243,11 @@ class Signup extends Component {
                                     </Label>
                                 </FormGroup>
                             </FormGroup>
-
-                            <input type="submit" className="btn btn-secondary" value="Registrarse" />
+                            {this.state.submittingLoad ? (
+                                <Button disabled={true} style={{ 'textAlign': 'center' }}><FaSpinner className="icon-spin" /> Creando y accediendo a su página</Button>
+                            ) : (
+                                <Button style={{ 'textAlign': 'center' }}>Registrarse</Button>
+                            )}
                         </Form>
                     </div>
                 </div>

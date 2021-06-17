@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { Form, FormGroup, Input, Button, NavItem } from 'reactstrap'
 import { FaSearch } from 'react-icons/fa'
+import { Redirect } from 'react-router-dom'
+import axios from 'axios'
 export class SearchBar extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             textSearch: '',
+            restauranteBusquedaNavBar: [],
             errors: {
                 textSearch: ''
             }
@@ -23,9 +25,23 @@ export class SearchBar extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
-            console.log(this.state.textSearch);
+            axios.get('http://localhost:8000/api/restaurants/search/' + this.state.textSearch).then(res => {
+                this.setState({
+                    restauranteBusquedaNavBar: res.data
+                });
+                localStorage.setItem('busquedaNavBar', JSON.stringify(res.data));
+                window.location = '/restaurantes'
+            }).catch(error => {
+                if (error.response && error.response.status === 422) {
+                    localStorage.removeItem('busquedaNavBar');
+                    window.location = '/restaurantes'
+                }
+            })
         }
     }
+
+
+
 
     validate() {
         let errors = {};
@@ -64,6 +80,6 @@ export class SearchBar extends Component {
             </NavItem>
         )
     }
-}
 
-export default SearchBar
+}
+export default SearchBar;

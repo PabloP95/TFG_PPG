@@ -77,8 +77,7 @@ export class ReservasUser extends Component {
                 </Row>
                 {this.state.reservas.length > 0 ? (
                     this.state.reservas.map((reserva) => (
-
-                        <Row className="p-5 border rounded">
+                        <Row className="p-5 border rounded" key={reserva.restaurant_id}>
                             <Col md={{ size: 3 }} sm="3" >
                                 <a href={"/restaurantes/restaurante/" + reserva.restaurant_id}>
                                     <figure className="figure mt-2">

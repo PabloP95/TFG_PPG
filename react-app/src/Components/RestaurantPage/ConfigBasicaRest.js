@@ -13,6 +13,7 @@ export class ConfigBasicaRest extends Component {
             emailRest: '',
             phoneRest: '',
             newPassword: '',
+            idRestaurante: '',
             repeatNewPassword: '',
             errors: {
                 name: '',
@@ -27,7 +28,8 @@ export class ConfigBasicaRest extends Component {
         this.setState({
             idUser: user.user.id,
             nameRest: user.user.name,
-            emailRest: user.user.email
+            emailRest: user.user.email,
+            idRestaurante: user.user.userable_id
         });
         axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id)
             .then(res => {
@@ -184,7 +186,7 @@ export class ConfigBasicaRest extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.idUser, {
+                axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante, {
                     headers: authHeader()
                 }).then(() => {
                     axios.delete('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
