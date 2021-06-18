@@ -27,7 +27,7 @@ export class Postres extends Component {
                                 }
                             }} style={{ 'color': 'black' }}>
                                 <figure className="figure">
-                                    <img src="https://via.placeholder.com/200x150.png?text=FileteSalmonPlancha" alt={postre.nombre} />
+                                    <img src={"https://via.placeholder.com/200x150.png?text=" + postre.nombre} alt={postre.nombre} />
                                     <figcaption>
                                         <Row>
                                             <Col md="12">{postre.nombre}</Col>

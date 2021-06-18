@@ -5,6 +5,7 @@ import { Multiselect } from 'multiselect-react-dropdown'
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import authHeader from '../../Security/auth/auth-header';
+//import ImageUploader from "react-images-upload";
 export class CrearPlato extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +17,7 @@ export class CrearPlato extends Component {
                 tipoPlato: this.props.tipoPlato ? this.props.tipoPlato : 'Entrantes',
                 vegano: this.props.vegano ? this.props.vegano : '0',
                 precioPlato: this.props.precioPlato ? this.props.precioPlato : '',
-                imgPlato: ''
+
             },
             numeroConsultas: this.props.numeroConsultas,
             alergenosPlato: [],
@@ -88,7 +89,11 @@ export class CrearPlato extends Component {
         }).then((result) => {
             if (result.isConfirmed) {
 
-                this.setState({ numeroConsultas: 1 + this.state.numeroConsultas });
+                this.setState({
+                    numeroConsultas: 1 + this.state.numeroConsultas,
+                    infoPlato: {},
+                    alergenosPlato: []
+                });
                 if (this.props.onChange) {
                     this.props.onChange(this.state.numeroConsultas);
                 }
@@ -107,8 +112,9 @@ export class CrearPlato extends Component {
                             nombre: this.state.infoPlato.nomPlato,
                             descripcion: this.state.infoPlato.descPlato,
                             tipo_plato: this.state.infoPlato.tipoPlato,
-                            vegano: this.state.infoPlato.vegano === 'si' ? 1 : 0,
-                            precio: this.state.infoPlato.precioPlato
+                            vegano: this.state.infoPlato.vegano,
+                            precio: this.state.infoPlato.precioPlato,
+
                         },
                         { headers: authHeader() }).then(() => {
 
@@ -140,17 +146,17 @@ export class CrearPlato extends Component {
                             nombre: this.state.infoPlato.nomPlato,
                             descripcion: this.state.infoPlato.descPlato,
                             tipo_plato: this.state.infoPlato.tipoPlato,
-                            vegano: this.state.infoPlato.vegano === 'si' ? 1 : 0,
+                            vegano: this.state.infoPlato.vegano,
                             precio: this.state.infoPlato.precioPlato,
                             restaurant_id: user.user.userable_id,
+
                         },
                         {
                             headers: authHeader()
                         }
                     ).then((res) => {
-                        console.log(res.data.id);
+
                         let arrID = this.state.alergenosPlato.map((arr) => { return arr.id });
-                        console.log(arrID);
                         axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + res.data.id + '/alergenos',
                             {
                                 alergenosSelected: arrID
@@ -161,7 +167,6 @@ export class CrearPlato extends Component {
                         this.showAllOK();
                     }).catch(error => {
                         if (error.response && error.response.status === 400) {
-                            console.log(JSON.parse(error.response.data))
                             this.setState({ errors: JSON.parse(error.response.data) });
                         }
                     })
@@ -204,6 +209,13 @@ export class CrearPlato extends Component {
         this.setState({ errors });
         return allOK;
     }
+    /*  onDrop = (pictureFiles, pictureDataURLs) => {
+         const { infoPlato } = this.state;
+         infoPlato['imgPlato'] = pictureFiles[0]
+         this.setState({
+             infoPlato
+         });
+     } */
     render() {
         return (
             <>
@@ -292,13 +304,19 @@ export class CrearPlato extends Component {
                                 <div className="text-danger">{this.state.errors.precioPlato}</div>
                             </FormGroup>
 
-
-
-                            <FormGroup>
-                                <Label for="imgPlato">Imagen del plato</Label>
-                                <Input id="imgPlato" name="imgPlato" type="file" accept="image/*" onChange={this.handleChangeFile} />
-                                <img src={this.state.infoPlato.imgPlato} alt="Imagen del plato" />
-                            </FormGroup>
+                            {/* <FormGroup>
+                                <ImageUploader
+                                    withIcon={false}
+                                    withPreview={true}
+                                    singleImage={true}
+                                    label=""
+                                    buttonText="Subir imagen plato"
+                                    onChange={this.onDrop}
+                                    imgExtension={[".jpg", ".gif", ".png", ".gif", ".svg"]}
+                                    maxFileSize={1048576}
+                                    fileSizeError=" file size is too big"
+                                />
+                            </FormGroup> */}
                             <Button color="success" block>{this.props.nomModal ? this.props.nomModal : 'Crear plato'}</Button>
                         </Form>
                     </ModalBody>

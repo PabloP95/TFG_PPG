@@ -27,7 +27,7 @@ export class Bebidas extends Component {
                                 }
                             }} style={{ 'color': 'black' }}>
                                 <figure className="figure">
-                                    <img src="https://via.placeholder.com/200x150.png?text=FileteSalmonPlancha" alt={bebida.nombre} />
+                                    <img src={"https://via.placeholder.com/200x150.png?text=" + bebida.nombre} alt={bebida.nombre} />
                                     <figcaption>
                                         <Row>
                                             <Col md="12">{bebida.nombre}</Col>

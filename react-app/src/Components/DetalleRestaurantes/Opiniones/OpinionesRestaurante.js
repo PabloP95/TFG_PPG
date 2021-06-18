@@ -6,7 +6,6 @@ export class OpinionesRestaurante extends Component {
     constructor(props) {
         super(props);
         let arr = window.location.href.split('/');
-        console.log(arr);
         this.state = {
             opiniones: [],
             idRestaurante: arr[5]

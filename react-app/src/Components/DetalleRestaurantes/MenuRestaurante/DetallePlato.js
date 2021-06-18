@@ -25,7 +25,13 @@ export class DetallePlato extends Component {
             moneda = '€';
             dinero = 1;
         }
-        let precio = this.props.location.state.precio;
+        let precio = '';
+        if (this.props.location.state === undefined) {
+            window.location = '/404'
+        }
+        else {
+            precio = this.props.location.state.precio;
+        }
 
         return (
             <div className="p-4">

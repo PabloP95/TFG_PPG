@@ -18,7 +18,11 @@ export class Votos extends Component {
             this.setState({
                 porcentaje: res.data[0].porcentaje
             });
-        });
+        }).catch(error => {
+            if (error.response && error.response.status === 422) {
+                window.location = '/404'
+            }
+        })
     }
     render() {
         return (

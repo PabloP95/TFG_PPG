@@ -16,6 +16,7 @@ class Plato extends Model
         'tipo_plato',
         'vegano',
         'precio',
+        'imgPath',
         'restaurant_id'
     ];
 

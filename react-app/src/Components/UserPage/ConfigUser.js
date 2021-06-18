@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import axios from 'axios';
 import authHeader from '../Security/auth/auth-header';
 import Logout from '../Security/Logout';
-
+//import ImageUploader from 'react-images-upload'
 export class ConfigUser extends Component {
     constructor(props) {
         super(props);
@@ -16,6 +16,7 @@ export class ConfigUser extends Component {
             newPassword: '',
             repeatNewPassword: '',
             nickname: '',
+            //imgPerfil: [],
             errorsConfig: {
                 email: '',
                 name: '',
@@ -63,6 +64,7 @@ export class ConfigUser extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
+
             axios.put('http://127.0.0.1:8000/api/user/' + this.state.idUser, {
                 name: this.state.nickname,
                 email: this.state.emailUser,
@@ -192,7 +194,15 @@ export class ConfigUser extends Component {
             }
         });
     }
+
+    /* onDrop = (pictureFiles, pictureDataURLs) => {
+        this.setState({
+            imgPerfil: pictureFiles
+        });
+    } */
+
     render() {
+        console.log(this.state.imgPerfil[0]);
         let user = JSON.parse(localStorage.getItem('user'));
         if (user.user.userable_type === 'App\\Models\\Restaurant') {
             window.location = '/'
@@ -260,6 +270,19 @@ export class ConfigUser extends Component {
                                         {this.state.errorsConfig.errorPassword}
                                     </div>
                                 </FormGroup>
+
+                                {/* <ImageUploader
+                                    withIcon={false}
+                                    withPreview={true}
+                                    singleImage={true}
+                                    label=""
+                                    buttonText="Subir imagen de perfil"
+                                    onChange={this.onDrop}
+                                    imgExtension={[".jpg", ".png", ".svg"]}
+                                    fileTypeError="no es soportado. Solo archivos de extensión jpg, png y svg."
+                                    maxFileSize={1048576}
+                                    fileSizeError=", el archivo es demasiado grande."
+                                /> */}
                                 <Row>
                                     <Col md="6" sm="6" xs="6">
                                         <Button color="primary" className="mb-2 text-center">Guardar cambios</Button>

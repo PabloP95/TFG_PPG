@@ -23,6 +23,11 @@ export class UserInicio extends Component {
                 { Logout() };
                 window.location = '/login'
             }
+
+            if (error.response && error.response.status === 422) {
+                window.location = '/404'
+            }
+
         });
 
         axios.get('http://127.0.0.1:8000/api/restaurants').then(res => {

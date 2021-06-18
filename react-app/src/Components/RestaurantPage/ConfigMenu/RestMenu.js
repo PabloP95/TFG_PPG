@@ -34,7 +34,6 @@ export class RestMenu extends Component {
     }
 
     eventHandler = (data) => {
-        console.log(data);
         this.setState({ numeroConsultas: data });
 
 

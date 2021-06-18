@@ -3,6 +3,7 @@ import { Row, Col } from 'reactstrap'
 import axios from 'axios'
 import authHeader from '../Security/auth/auth-header';
 import './ConfigRestaurante/showTipoCocina.css'
+import Logout from '../Security/Logout';
 export class RestInicio extends Component {
     constructor(props) {
         super(props);
@@ -20,12 +21,18 @@ export class RestInicio extends Component {
 
         axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id)
             .then(res => {
+                console.log('res.data = ' + res.data);
                 this.setState({
                     nomRestaurante: res.data[0].name,
                     email: res.data[0].email,
                     telefono: res.data[0].numTelefono,
                     direccionActual: res.data[0].direccionPostal
                 });
+            }).catch(error => {
+                if (error.response && error.response.status === 422) {
+                    { Logout() }
+                    window.location = '/404'
+                }
             })
 
         axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
@@ -33,7 +40,11 @@ export class RestInicio extends Component {
                 this.setState({
                     tiposCocinaSelected: res.data
                 });
-            });
+            }).catch(error => {
+                if (error.response && error.response.status === 422) {
+                    window.location = '/404'
+                }
+            })
         axios.get('http://127.0.0.1:8000/api/horarios/restaurant/' + user.user.userable_id).then(
             res => {
                 this.setState({
@@ -41,7 +52,11 @@ export class RestInicio extends Component {
                     restaurantID: user.user.userable_id
                 })
             }
-        );
+        ).catch(error => {
+            if (error.response && error.response.status === 422) {
+                window.location = '/404'
+            }
+        })
 
     }
     render() {

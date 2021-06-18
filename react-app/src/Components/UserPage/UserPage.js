@@ -15,7 +15,7 @@ export class UserPage extends Component {
         }
 
         else if (user.user.name !== arr[4] || user.user.userable_type !== 'App\\Models\\Client') {
-            window.location = '/'
+            window.location = '/404'
         }
 
         else {

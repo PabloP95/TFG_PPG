@@ -4,6 +4,8 @@ import axios from 'axios';
 import authHeader from '../Security/auth/auth-header';
 import Swal from 'sweetalert2';
 import Logout from '../Security/Logout';
+
+//import ImageUploader from "react-images-upload";
 export class ConfigBasicaRest extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +17,7 @@ export class ConfigBasicaRest extends Component {
             newPassword: '',
             idRestaurante: '',
             repeatNewPassword: '',
+            //imgRestaurante: [],
             errors: {
                 name: '',
                 email: '',
@@ -34,8 +37,13 @@ export class ConfigBasicaRest extends Component {
         axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id)
             .then(res => {
                 this.setState({
-                    phoneRest: res.data.numTelefono
+                    phoneRest: res.data[0].numTelefono
                 });
+            }).catch(error => {
+                if (error.response && error.response.status === 422) {
+                    { Logout() }
+                    window.location = '/404'
+                }
             });
     }
     handleChange = (e) => {
@@ -174,6 +182,12 @@ export class ConfigBasicaRest extends Component {
 
     }
 
+    /* onDrop = (pictureFiles, pictureDataURLs) => {
+        this.setState({
+            imgRestaurante: pictureFiles
+        });
+    } */
+
     checkProfileDelete = () => {
         Swal.fire({
             icon: 'warning',
@@ -225,7 +239,6 @@ export class ConfigBasicaRest extends Component {
                             <div className="text-danger">{this.state.errors.email}</div>
                         </FormGroup>
 
-
                         <FormGroup>
                             <Label for="phoneRest">Teléfono de contacto</Label>
                             <Input style={{ 'border': this.state.errors.phoneRest ? '1px solid red' : '' }} type="text" name="phoneRest" id="phoneRest"
@@ -250,6 +263,20 @@ export class ConfigBasicaRest extends Component {
                                 {this.state.errors.errorPassword}
                             </div>
                         </FormGroup>
+                        <hr />
+                        {/* <ImageUploader
+                            withIcon={false}
+                            withPreview={true}
+                            singleImage={true}
+                            label=""
+                            buttonText="Subir imagen del restaurante"
+                            onChange={this.onDrop}
+                            imgExtension={[".jpg", ".png", ".svg"]}
+                            fileTypeError="no es soportado. Solo archivos de extensión jpg, png y svg."
+                            maxFileSize={1048576}
+                            fileSizeError=", el archivo es demasiado grande."
+                        /> */}
+                        <hr />
                         <Row>
                             <Col md="6" sm="6" xs="6">
                                 <Button color="primary" className="mb-2 text-center">Guardar cambios</Button>

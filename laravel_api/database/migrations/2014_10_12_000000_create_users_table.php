@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('name')->unique(); //name = nickname para usuario o nombre_restaurante para restaurante
             $table->integer('userable_id');
             $table->string('userable_type');
+            $table->string('imgPath')->default('');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -37,11 +37,10 @@ function App() {
           <Route exact path="/restaurantes" render={(props) => <Restaurantes {...props} />} />
           <Route exact path="/user/:nickname" component={UserPage}></Route>
           <Route exact path="/restaurante/:nomRestaurante" component={RestaurantPage}></Route>
+          <Route path="/404" component={NotFound}></Route>
           <Route exact path="/" component={Home}></Route>
-          <Route component={NotFound}></Route>
         </Switch>
       </Router>
-
       <Footer />
     </div>
   );

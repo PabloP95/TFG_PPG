@@ -23,6 +23,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'userable_type',
         'userable_id',
+        'imgPath'
     ];
 
     public function userable(){

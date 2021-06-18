@@ -1,8 +1,7 @@
 import React from 'react';
-import { Row, Col, Button } from 'reactstrap'
+import { Row, Col } from 'reactstrap'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { UserInicio } from './UserPage/UserInicio'
 const Home = () => {
     return (
         <div >
@@ -36,14 +35,14 @@ const Home = () => {
             <div className="container pt-5">
                 <Row>
                     <Col lg={4}>
-                        <img src="img/user.png" className="rounded-circle" width="140" height="140" />
+                        <img src="img/user.png" className="rounded-circle" alt="Imagen de usuario" width="140" height="140" />
                         <h2>Usuarios</h2>
                         <p>Todos los usuarios podrán visualizar los datos de los restaurantes, entre los que están la ubicación, los tipos de cocina y el horario, ver lo que opinan los usuarios del restaurante y buscar restaurantes.</p>
 
                     </Col>
 
                     <Col lg={4} className="pt-2">
-                        <img src="img/registeredUser.png" width="140" height="140" className="rounded-circle" />
+                        <img src="img/registeredUser.png" width="140" height="140" alt="Imagen de usuario registrado" className="rounded-circle" />
                         <h2>Usuarios registrados</h2>
                         <p>
                             Una vez que se haya dado de alta, podrá modificar sus datos, realizar reservas en un restaurante, realizar una opinión sobre los restaurantes a los que haya ido, entre otras cosas.
@@ -52,7 +51,7 @@ const Home = () => {
                     </Col>
 
                     <Col lg={4}>
-                        <img src="img/restaurant.png" className="rounded-circle" width="140" height="140" />
+                        <img src="img/restaurant.png" className="rounded-circle" alt="Imagen de restaurante" width="140" height="140" />
                         <h2>Restaurantes</h2>
                         <p>
                             Una vez que se haya dado de alta, podrá modificar sus datos, modificar la carta e incluso obtener un feedback directo de los clientes a través de las opiniones que hayan realizado estos.</p>
@@ -66,7 +65,7 @@ const Home = () => {
                         <p className="lead">Si eres un restaurante, podrás colocar tu carta en tu usuario, de manera que los usuarios puedan consultar los platos que tengas en carta. Incluso podrás modificar la carta, cambiando el precio o borrando un plato que ya no se prepare, de manera fácil.</p>
                     </Col>
                     <Col md={5}>
-                        <img className="featurette-image img-fluid mx-auto" src="img/menu.png" alt="Menu del restaurante" width="500" height="500" />
+                        <img className="featurette-image img-fluid mx-auto" src="img/menu.png" alt="Imagen de una carta de restaurante" width="500" height="500" />
                     </Col>
                 </Row>
                 <hr className="featurette-divider" />
@@ -96,7 +95,6 @@ const Home = () => {
                         <img className="featurette-image img-fluid mx-auto" src="img/busqueda.png" alt="Búsqueda de restaurantes" />
                     </Col>
                 </Row>
-                <hr className="featurette-divider" />
             </div>
         </div>
 

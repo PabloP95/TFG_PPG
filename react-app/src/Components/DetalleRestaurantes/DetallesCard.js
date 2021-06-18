@@ -8,6 +8,7 @@ import 'leaflet/dist/leaflet.css';
 import '../../react-leaflet.css';
 import { MarkerIcon } from '../../react-leaflet-icon';
 import { Map, TileLayer, Marker } from 'react-leaflet'
+import axios from 'axios';
 
 const CustomMarker = props => {
     const initMarker = ref => {
@@ -18,6 +19,22 @@ const CustomMarker = props => {
     return <Marker ref={initMarker} {...props} />
 }
 export class DetallesCard extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            platoVegano: false
+        }
+    }
+
+    componentDidMount() {
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + this.props.idRestaurante + '/platosVeganos').then(res => {
+            if (res.data) {
+                this.setState({
+                    platoVegano: true
+                })
+            }
+        })
+    }
     render() {
         let currentPosition = { lat: this.props.lat, lng: this.props.lng };
         let user = JSON.parse(localStorage.getItem('user'));
@@ -39,13 +56,16 @@ export class DetallesCard extends Component {
                                         </li>
                                     ))}
                                 </ul>
-                                DIETAS ESPECIALES
-                                <br />
-                                Opciones vegetarianas
-                                <br /><br />
-                                COMIDAS
-                                <br />
-                                Comidas, cenas, ...
+                                {this.state.platoVegano ? (
+                                    <section>
+                                        DIETAS ESPECIALES
+                                        <br />
+                                        Opciones veganas
+                                        <br /><br />
+                                    </section>
+                                ) : ('')
+                                }
+
                             </CardText>
                         </Card>
                     </Col>

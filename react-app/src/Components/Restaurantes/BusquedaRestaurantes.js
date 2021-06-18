@@ -78,16 +78,15 @@ export class BusquedaRestaurantes extends Component {
         if (this.validate()) {
             let arrID = this.state.tiposCocinaSeleccionados.map((arr) => { return arr.id });
             let stringArrID = arrID.join(',');
-            let nomRestaurante = this.state.nombreRestaurante;
-            let nom = '';
+            let nom = this.state.nombreRestaurante;
             if (this.state.tiposCocinaSeleccionados.length === 0) {
                 stringArrID = '0';
             }
-            if (nomRestaurante === '') {
+            if (this.state.nombreRestaurante === '') {
                 nom = '0'
             }
             console.log(stringArrID);
-            console.log(nomRestaurante);
+            console.log(nom);
             axios.get('http://localhost:8000/api/restaurants/search/' + nom + '/' + stringArrID).then(
                 res => {
                     console.log(res.data);

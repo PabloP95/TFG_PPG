@@ -8,6 +8,7 @@ import Votos from './Votos';
 import VerHorario from './VerHorario';
 import DetallesCard from './DetallesCard';
 import Opiniones from './Opiniones/Opiniones';
+import NotFound from '../NotFound';
 import '../RestaurantPage/ConfigRestaurante/showTipoCocina.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 export class PaginaRestaurante extends Component {
@@ -43,18 +44,29 @@ export class PaginaRestaurante extends Component {
             if (error.response && error.response.status === 400) {
                 console.log('Error 400, el restaurante no existe');
             }
+            if (error.response && error.response.status === 422) {
+                window.location = '/404'
+            }
         })
 
         axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + this.state.idRestaurante).then((res) => {
             this.setState({
                 tiposCocina: res.data
             })
-        });
+        }).catch(error => {
+            if (error.response && error.response.status === 422) {
+                window.location = '/404'
+            }
+        })
 
         axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/numOpiniones').then((res) => {
             this.setState({
                 numOpiniones: res.data[0].numOpiniones
             })
+        }).catch(error => {
+            if (error.response && error.response.status === 422) {
+                window.location = '/404'
+            }
         })
     }
     render() {

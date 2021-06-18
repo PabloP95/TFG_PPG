@@ -6,6 +6,9 @@ import authHeader from '../Security/auth/auth-header';
 export class RealizarReserva extends Component {
     constructor(props) {
         super(props);
+        if (this.props.location.state === undefined) {
+            window.location = '/404'
+        }
         this.state = {
             idRestaurante: this.props.location.state.idRestaurante,
             mesaReserva: this.props.location.state.mesaReserva ? this.props.location.state.mesaReserva : '',

@@ -19,23 +19,13 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        /* $restaurantes = DB::select("SELECT userable_id, email, name, numTelefono
+        $restaurantes = DB::select("SELECT userable_id, users.name
         FROM users, restaurants
         WHERE users.userable_id = restaurants.id
         AND
-        users.userable_type like '%Restaurant'"); 
-        */
-        $restaurantes = DB::select("SELECT userable_id, email, name, numTelefono,((SUM(nota) * 100) / (COUNT(*) * 5)) as porcentaje
-        FROM users, restaurants,opinions
-        WHERE users.userable_id = restaurants.id
-        AND
-        opinions.restaurant_id = restaurants.id
-        AND
         users.userable_type like '%Restaurant'
-        GROUP BY userable_id, email, name, numTelefono
-        ORDER BY porcentaje DESC, name DESC
-        "
-        );
+        ORDER BY name DESC
+        "); 
         return $restaurantes;
     }
 

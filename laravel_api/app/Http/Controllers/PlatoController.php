@@ -7,6 +7,7 @@ use App\Models\Plato;
 use App\Models\Restaurant;
 use App\Models\Alergeno;
 use Validator;
+use DB;
 
 class PlatoController extends Controller
 {
@@ -19,6 +20,21 @@ class PlatoController extends Controller
     public function index($idRestaurante){
         $platosRestaurante = Restaurant::findOrFail($idRestaurante)->platos()->get();
         return $platosRestaurante;
+    }
+
+    public function hayVegano ($idRestaurante){
+        $platosVeganos = Restaurant::findOrFail($idRestaurante)->platos()->where('vegano', '=', 1)->get();
+        return $platosVeganos;
+    }
+
+    public function platosAlergenos($idRestaurante, $listaAlergenos){
+        $platosAlergenos = DB::select("SELECT platos.id, nombre, descripcion, tipo_plato, precio
+                FROM platos, restaurants
+                WHERE platos.restaurant_id = restaurants.id
+                AND
+                restaurants.id = 1
+                AND platos.id != ALL(SELECT plato_id from alergeno_plato where alergeno_id in ($listaAlergenos))");
+        return $platosAlergenos;
     }
     /**
      * Store a newly created resource in storage.

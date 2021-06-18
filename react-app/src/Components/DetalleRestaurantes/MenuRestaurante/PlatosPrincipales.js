@@ -30,7 +30,7 @@ export class PlatosPrincipales extends Component {
                             }}
                                 style={{ 'color': 'black' }}>
                                 <figure className="figure">
-                                    <img src="https://via.placeholder.com/200x150.png?text={principal.nombre}" alt={principal.nombre} />
+                                    <img src={"https://via.placeholder.com/200x150.png?text=" + principal.nombre} alt={principal.nombre} />
                                     <figcaption>
                                         <Row>
                                             <Col md="12">{principal.nombre}</Col>

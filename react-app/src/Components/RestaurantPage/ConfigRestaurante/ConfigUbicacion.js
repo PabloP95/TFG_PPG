@@ -23,7 +23,6 @@ export class ConfigUbicacion extends Component {
     }
 
     eventHandler = (data) => {
-        console.log(data);
         this.setState({ direccionActual: data })
     }
     render() {

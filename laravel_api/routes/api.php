@@ -44,7 +44,7 @@ Route::get('/tiposCocina/restaurant/{id}', [TiposCocinaController::class, 'index
 Route::get('/horarios/restaurant/{id}', [HorarioController::class, 'index']);
 Route::get('/restaurant/{id}/horario/{dia}', [HorarioController::class, 'show']);
 Route::get('/restaurant/{id}/horarioReserva/{dia}', [HorarioController::class, 'horarioReserva']);
-
+Route::get('/restaurant/{id}/platosVeganos', [PlatoController::class, 'hayVegano']);
 
 
 Route::get('/restaurant/{id}/mesas', [TableController::class, 'index']);
@@ -63,7 +63,7 @@ Route::get('/restaurant/{id}/opinionesFiltroFechas/{fecha1}/{fecha2}', [OpinionC
 Route::get('/restaurant/{id}/opinionesFiltroFechas/{fecha1}/{fecha2}/{nota}', [OpinionController::class, 'showOpinionRangoFechasConNota']);
 Route::get('/restaurant/{id}/opinionesFiltro/{nota}/{fecha}', [OpinionController::class, 'showOpinionesPorFechaYNota']);
 Route::get('/restaurant/{id}/porcentajeNotas', [OpinionController::class, 'porcentajeVotos']);
-
+Route::get('/restaurant/{id}/filtro/{alergenos}', [PlatoController::class, 'platosAlergenos']);
 
 
 Route::group([
