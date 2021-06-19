@@ -188,7 +188,7 @@ export class ConfigUser extends Component {
                     icon: 'success',
                     timer: 2000,
                 }).then(() => {
-                    { Logout() };
+                    Logout();
                     window.location = '/'
                 })
             }
@@ -202,7 +202,7 @@ export class ConfigUser extends Component {
     } */
 
     render() {
-        console.log(this.state.imgPerfil[0]);
+        //console.log(this.state.imgPerfil[0]);
         let user = JSON.parse(localStorage.getItem('user'));
         if (user.user.userable_type === 'App\\Models\\Restaurant') {
             window.location = '/'

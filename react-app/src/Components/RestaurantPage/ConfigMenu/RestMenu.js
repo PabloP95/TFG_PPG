@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { BsFillTrashFill } from 'react-icons/bs'
 import Swal from 'sweetalert2'
-import { Row, Col, Button, UncontrolledTooltip } from 'reactstrap'
+import { Row, Col, Button } from 'reactstrap'
 import CrearPlato from './CrearPlato'
 import AlergenosPlato from './AlergenosPlato'
 import './menuEstilos.css'
@@ -23,14 +23,15 @@ export class RestMenu extends Component {
 
     componentDidMount() {
         let user = JSON.parse(localStorage.getItem('user'));
-        axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/platos').then(res => (
+        axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/platos').then(res => {
+            let numConsultas = this.state.numeroConsultas;
             this.setState({
                 platos: res.data,
                 idRestaurante: user.user.userable_id,
                 nomRestaurante: user.user.name,
-                numeroConsultas: this.state.numeroConsultas++
+                numeroConsultas: numConsultas++
             })
-        ));
+        });
     }
 
     eventHandler = (data) => {
@@ -61,12 +62,13 @@ export class RestMenu extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
+                let numConsultas = this.state.numeroConsultas;
                 axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/plato/' + e.target.id,
                     {
                         headers: authHeader()
                     }).then(() => {
                         this.setState({
-                            numeroConsultas: this.state.numeroConsultas + 1
+                            numeroConsultas: numConsultas += 1
                         })
                         Swal.fire(
                             'Plato eliminado!',
@@ -118,7 +120,7 @@ export class RestMenu extends Component {
                                         {plato.descripcion}
                                     </td>
                                     <td>{plato.tipo_plato}</td>
-                                    <td>{plato.vegano == 0 ? 'No' : 'Si'}</td>
+                                    <td>{plato.vegano === '0' ? 'No' : 'Si'}</td>
                                     <AlergenosPlato idPlato={plato.id}
                                         onChange={this.eventHandler}
                                         numeroConsultas={this.state.numeroConsultas} />

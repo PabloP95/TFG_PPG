@@ -41,11 +41,9 @@ export class FiltroOpiniones extends Component {
 
         if (typeof this.state.fechaIni !== 'undefined') {
             let today = new Date();
-            let hoyDia = today.getDate();
-            let hoyMes = today.getMonth() + 1;
-            let hoyYear = today.getFullYear();
-            let arrFecha = this.state.fechaIni.split('-');
-            if (arrFecha[0] > hoyYear || arrFecha[1] > hoyMes || arrFecha[2] > hoyDia) {
+            let fechaIni = new Date(this.state.fechaIni);
+
+            if (fechaIni > today) {
                 allOK = false;
                 errors['errorFechaIni'] = "La fecha proporcionada no es válida";
             }
@@ -53,11 +51,8 @@ export class FiltroOpiniones extends Component {
 
         if (typeof this.state.fechaFin !== 'undefined') {
             let today = new Date();
-            let hoyDia = today.getDate();
-            let hoyMes = today.getMonth() + 1;
-            let hoyYear = today.getFullYear();
-            let arrFecha = this.state.fechaFin.split('-');
-            if (arrFecha[0] > hoyYear || arrFecha[1] > hoyMes || arrFecha[2] > hoyDia) {
+            let fechaFin = new Date(this.state.fechaFin);
+            if (fechaFin < today) {
                 allOK = false;
                 errors['errorFechaFin'] = "La fecha proporcionada no es válida";
             }
@@ -66,7 +61,6 @@ export class FiltroOpiniones extends Component {
         if (typeof this.state.fechaIni !== 'undefined' && typeof this.state.fechaFin !== 'undefined') {
             const inicio = new Date(this.state.fechaIni);
             const fin = new Date(this.state.fechaFin);
-
 
             if ((fin <= inicio)) {
                 allOK = false;

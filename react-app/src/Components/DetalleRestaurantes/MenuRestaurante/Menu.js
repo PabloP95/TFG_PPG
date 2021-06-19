@@ -33,7 +33,6 @@ export class Menu extends Component {
             })
         });
         axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante).then((res) => {
-            console.log('res.data = ' + res.data);
             this.setState({
                 nomRestaurante: res.data[0].name,
             })
@@ -136,11 +135,6 @@ export class Menu extends Component {
     }
 
     render() {
-
-        console.log('Opciones escogidas: ');
-        console.log("Vegano: " + this.state.veganaSI);
-        console.log("Alergenos seleccionados: " + this.state.alergenosSeleccionados);
-
         const lastCharOfURL = window.location.href.charAt(window.location.href.length - 1);
         return (
             <div>
@@ -166,10 +160,10 @@ export class Menu extends Component {
                                 <Row>
                                     {
                                         this.state.alergenos.map(alergeno => (
-                                            <Col md="6">
+                                            <Col md="6" key={alergeno.id}>
                                                 <FormGroup check className="move-left checkbox-inline">
                                                     <Input type="checkbox" name={alergeno.nomAlergeno} id={alergeno.id} onChange={this.handleChangeAlergenos} />
-                                                    <Label style={{ 'whiteSpace': 'nowrap' }} check for={alergeno.id}>{alergeno.nomAlergeno}</Label>
+                                                    <Label style={{ 'whiteSpace': 'nowrap' }} check>{alergeno.nomAlergeno}</Label>
                                                 </FormGroup>
                                             </Col>
                                         ))

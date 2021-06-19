@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Input, Button, Row, Col } from 'reactstrap';
 import { BsSearch } from 'react-icons/bs';
-import { ImCross } from 'react-icons/im';
 import axios from 'axios';
 import { Multiselect } from 'multiselect-react-dropdown';
 export class BusquedaRestaurantes extends Component {

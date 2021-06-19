@@ -29,9 +29,7 @@ export class RealizarReserva extends Component {
     componentDidMount() {
         if (this.state.diaReserva !== '') {
             const dia = new Date(this.state.diaReserva);
-            console.log(dia);
             const weekday = dia.getDay();
-            console.log('Numero dia de la semana = ' + weekday);
             const diaSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
             axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/horarioReserva/' + diaSemana[weekday]).then(res => {
                 this.setState({
@@ -52,9 +50,7 @@ export class RealizarReserva extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.diaReserva !== this.state.diaReserva) {
             const dia = new Date(this.state.diaReserva);
-            console.log(dia);
             const weekday = dia.getDay();
-            console.log('Numero dia de la semana = ' + weekday);
             const diaSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
             axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/horarioReserva/' + diaSemana[weekday]).then(res => {
                 this.setState({
@@ -91,16 +87,28 @@ export class RealizarReserva extends Component {
 
         else if (typeof this.state.diaReserva !== 'undefined') {
             let today = new Date();
-            let hoyMes = today.getMonth() + 1;
-            let hoyYear = today.getFullYear();
+            let diaReserva = new Date(this.state.diaReserva);
 
-            let arrFecha = this.state.diaReserva.split('-');
-            if (arrFecha[0] < hoyYear || arrFecha[1] < hoyMes) {
+            if (diaReserva < today) {
                 allOK = false;
                 errors['diaReserva'] = "La fecha proporcionada no es válida";
             }
         }
+        if (this.state.horaReserva && this.state.diaReseva) {
+            let today = new Date();
+            let diaReserva = new Date(this.state.diaReserva);
 
+            let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            let horaReserva = new Date();
+            horaReserva.setHours(this.state.horaReserva);
+            if (diaReserva === today) {
+                if (time > horaReserva) {
+                    allOK = false;
+                    errors['horaReserva'] = 'La hora proporcionada no es válida';
+                }
+            }
+
+        }
         if (!this.state.numComensales) {
             allOK = false;
             errors['numComensales'] = "Debe introducir el número de comensales";
@@ -129,46 +137,38 @@ export class RealizarReserva extends Component {
         e.preventDefault();
         if (this.validate()) {
             let user = JSON.parse(localStorage.getItem('user'));
-            const dia = new Date(this.state.diaReserva);
-            const weekday = dia.getDay();
-            const diaSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-            console.log(diaSemana[weekday]);
-            {
-                this.props.location.state.idReserva !== '' ? (
-                    axios.put('http://127.0.0.1:8000/api/client/reserva/' + this.props.location.state.idReserva,
-                        {
-                            restaurant_id: this.state.idRestaurante,
-                            table_id: this.state.mesaReserva,
-                            client_id: user.user.userable_id,
-                            diaReserva: this.state.diaReserva,
-                            horaReserva: this.state.horaReserva
-                        },
-                        {
-                            headers: authHeader()
-                        }).then(() => {
-                            this.reservaOK();
-                        })
-                ) : (
+            this.props.location.state.idReserva !== undefined ? (
+                axios.put('http://127.0.0.1:8000/api/client/reserva/' + this.props.location.state.idReserva,
+                    {
+                        restaurant_id: this.state.idRestaurante,
+                        table_id: this.state.mesaReserva,
+                        client_id: user.user.userable_id,
+                        diaReserva: this.state.diaReserva,
+                        horaReserva: this.state.horaReserva
+                    },
+                    {
+                        headers: authHeader()
+                    }).then(() => {
+                        this.reservaOK();
+                    })
+            ) : (
 
-                    axios.post('http://127.0.0.1:8000/api/client/' + user.user.userable_id + '/reserva',
-                        {
-                            restaurant_id: this.state.idRestaurante,
-                            table_id: this.state.mesaReserva,
-                            client_id: user.user.userable_id,
-                            diaReserva: this.state.diaReserva,
-                            horaReserva: this.state.horaReserva
-                        },
-                        {
-                            headers: authHeader()
-                        }).then(() => {
-                            this.reservaOK();
-                        })
-                )
-            }
+                axios.post('http://127.0.0.1:8000/api/client/' + user.user.userable_id + '/reserva',
+                    {
+                        restaurant_id: this.state.idRestaurante,
+                        table_id: this.state.mesaReserva,
+                        client_id: user.user.userable_id,
+                        diaReserva: this.state.diaReserva,
+                        horaReserva: this.state.horaReserva
+                    },
+                    {
+                        headers: authHeader()
+                    }).then(() => {
+                        this.reservaOK();
+                    })
+            )
         }
     }
-
-
     render() {
         return (
             <div className="container-fluid">
@@ -193,6 +193,7 @@ export class RealizarReserva extends Component {
                             <Col md="6">
                                 <FormGroup>
                                     <Label for="horaReserva">Seleccione una hora</Label>
+                                    <div className="text-danger">{this.state.errors.horaReserva}</div>
                                     {this.state.horarios.length === 1 ? (
                                         <Input type="select" name="horaReserva" id="horaReserva" value={this.state.horaReserva}
                                             style={{ 'border': this.state.errors.horaReserva ? '1px solid red' : '' }}
@@ -207,9 +208,10 @@ export class RealizarReserva extends Component {
                                         >
                                             <option hidden={true}>Elija una hora para realizar la reserva</option>
                                             {this.state.horarios.map(horario => (
-                                                <option key={horario.id}>{horario}</option>
+                                                <option key={horario}>{horario}</option>
                                             ))}
                                         </Input>
+
                                     )}
                                 </FormGroup>
                             </Col>

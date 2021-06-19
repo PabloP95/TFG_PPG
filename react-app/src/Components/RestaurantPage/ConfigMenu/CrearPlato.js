@@ -40,9 +40,10 @@ export class CrearPlato extends Component {
         if (this.props.idPlato !== undefined) {
             axios.get('http://127.0.0.1:8000/api/plato/' + this.props.idPlato + '/alergenos').then(
                 res => {
+                    let numConsultas = this.state.numeroConsultas;
                     this.setState({
                         alergenosPlato: res.data,
-                        numeroConsultas: this.state.numeroConsultas++
+                        numeroConsultas: numConsultas++
                     })
                 }
             )
@@ -105,75 +106,74 @@ export class CrearPlato extends Component {
         e.preventDefault();
         if (this.validate()) {
             let user = JSON.parse(localStorage.getItem('user'));
-            {
-                this.props.nomModal ? (
-                    axios.put('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.props.idPlato,
-                        {
-                            nombre: this.state.infoPlato.nomPlato,
-                            descripcion: this.state.infoPlato.descPlato,
-                            tipo_plato: this.state.infoPlato.tipoPlato,
-                            vegano: this.state.infoPlato.vegano,
-                            precio: this.state.infoPlato.precioPlato,
+            this.props.nomModal ? (
+                axios.put('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.props.idPlato,
+                    {
+                        nombre: this.state.infoPlato.nomPlato,
+                        descripcion: this.state.infoPlato.descPlato,
+                        tipo_plato: this.state.infoPlato.tipoPlato,
+                        vegano: this.state.infoPlato.vegano,
+                        precio: this.state.infoPlato.precioPlato,
 
-                        },
-                        { headers: authHeader() }).then(() => {
-
-                            let arrID = this.state.alergenosPlato.map((arr) => { return arr.id });
-                            axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.props.idPlato + '/alergenos',
-                                {
-                                    alergenosSelected: arrID
-                                },
-                                {
-                                    headers: authHeader()
-                                }).then(() => {
-                                    this.setState({
-                                        alergenos: this.state.alergenosPlato
-                                    })
-                                })
-
-
-                            this.showAllOK();
-                        }).catch(error => {
-                            if (error.response) {
-                                if (error.response.status === 400) {
-                                    this.setState({ errors: JSON.parse(error.response.data) })
-                                }
-                            }
-                        })
-                ) : (
-                    axios.post('http://127.0.0.1:8000/api/plato/restaurant/' + user.user.userable_id,
-                        {
-                            nombre: this.state.infoPlato.nomPlato,
-                            descripcion: this.state.infoPlato.descPlato,
-                            tipo_plato: this.state.infoPlato.tipoPlato,
-                            vegano: this.state.infoPlato.vegano,
-                            precio: this.state.infoPlato.precioPlato,
-                            restaurant_id: user.user.userable_id,
-
-                        },
-                        {
-                            headers: authHeader()
-                        }
-                    ).then((res) => {
+                    },
+                    { headers: authHeader() }).then(() => {
 
                         let arrID = this.state.alergenosPlato.map((arr) => { return arr.id });
-                        axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + res.data.id + '/alergenos',
+                        axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + this.props.idPlato + '/alergenos',
                             {
                                 alergenosSelected: arrID
                             },
                             {
                                 headers: authHeader()
+                            }).then(() => {
+                                this.setState({
+                                    alergenos: this.state.alergenosPlato
+                                })
                             })
+
+
                         this.showAllOK();
                     }).catch(error => {
-                        if (error.response && error.response.status === 400) {
-                            this.setState({ errors: JSON.parse(error.response.data) });
+                        if (error.response) {
+                            if (error.response.status === 400) {
+                                this.setState({ errors: JSON.parse(error.response.data) })
+                            }
                         }
                     })
-                )
-            }
+            ) : (
+                axios.post('http://127.0.0.1:8000/api/plato/restaurant/' + user.user.userable_id,
+                    {
+                        nombre: this.state.infoPlato.nomPlato,
+                        descripcion: this.state.infoPlato.descPlato,
+                        tipo_plato: this.state.infoPlato.tipoPlato,
+                        vegano: this.state.infoPlato.vegano,
+                        precio: this.state.infoPlato.precioPlato,
+                        restaurant_id: user.user.userable_id,
+
+                    },
+                    {
+                        headers: authHeader()
+                    }
+                ).then((res) => {
+
+                    let arrID = this.state.alergenosPlato.map((arr) => { return arr.id });
+                    axios.post('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/plato/' + res.data.id + '/alergenos',
+                        {
+                            alergenosSelected: arrID
+                        },
+                        {
+                            headers: authHeader()
+                        })
+                    this.showAllOK();
+                }).catch(error => {
+                    if (error.response && error.response.status === 400) {
+                        this.setState({ errors: JSON.parse(error.response.data) });
+                    }
+                })
+            )
         }
     }
+
     handleChangeFile = (e) => {
         const { infoPlato } = this.state;
         infoPlato[e.target.name] = URL.createObjectURL(e.target.files[0]);

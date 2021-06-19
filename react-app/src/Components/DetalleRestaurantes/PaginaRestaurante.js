@@ -8,7 +8,7 @@ import Votos from './Votos';
 import VerHorario from './VerHorario';
 import DetallesCard from './DetallesCard';
 import Opiniones from './Opiniones/Opiniones';
-import NotFound from '../NotFound';
+
 import '../RestaurantPage/ConfigRestaurante/showTipoCocina.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 export class PaginaRestaurante extends Component {
@@ -31,15 +31,18 @@ export class PaginaRestaurante extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante).then((res) => {
-            this.setState({
-                nomRestaurante: res.data[0].name,
-                numTelefono: res.data[0].numTelefono,
-                email: res.data[0].email,
-                dirActual: res.data[0].direccionPostal,
-                latitud: res.data[0].latitud,
-                longitud: res.data[0].longitud
-            })
+            if (this._isMounted) {
+                this.setState({
+                    nomRestaurante: res.data[0].name,
+                    numTelefono: res.data[0].numTelefono,
+                    email: res.data[0].email,
+                    dirActual: res.data[0].direccionPostal,
+                    latitud: res.data[0].latitud,
+                    longitud: res.data[0].longitud
+                })
+            }
         }).catch(error => {
             if (error.response && error.response.status === 400) {
                 console.log('Error 400, el restaurante no existe');
@@ -50,9 +53,11 @@ export class PaginaRestaurante extends Component {
         })
 
         axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + this.state.idRestaurante).then((res) => {
-            this.setState({
-                tiposCocina: res.data
-            })
+            if (this._isMounted) {
+                this.setState({
+                    tiposCocina: res.data
+                })
+            }
         }).catch(error => {
             if (error.response && error.response.status === 422) {
                 window.location = '/404'
@@ -60,14 +65,20 @@ export class PaginaRestaurante extends Component {
         })
 
         axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/numOpiniones').then((res) => {
-            this.setState({
-                numOpiniones: res.data[0].numOpiniones
-            })
+            if (this._isMounted) {
+                this.setState({
+                    numOpiniones: res.data[0].numOpiniones
+                })
+            }
         }).catch(error => {
             if (error.response && error.response.status === 422) {
                 window.location = '/404'
             }
         })
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
     render() {
         return (
@@ -82,7 +93,7 @@ export class PaginaRestaurante extends Component {
                             <p>{this.state.numOpiniones} opiniones</p>
                         </Col>
                         <Col sm="12" md="4" xs="12">
-                            <p className="text-center">€€ - €€€, Tipos de cocina:
+                            <span className="text-center">Tipos de cocina
                                 <ul className="pr-5">
                                     {this.state.tiposCocina.map((tipoCocina) => (
                                         <li className="showTypes" key={tipoCocina.id}>
@@ -90,7 +101,7 @@ export class PaginaRestaurante extends Component {
                                         </li>
                                     ))}
                                 </ul>
-                            </p>
+                            </span>
                         </Col>
                     </Row>
 

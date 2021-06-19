@@ -155,7 +155,6 @@ class Signup extends Component {
         return isValid;
     }
     render() {
-        console.log(this.state.submittingLoad)
         let user = JSON.parse(localStorage.getItem('user'));
         if (user) {
             if (user.user.userable_type === 'App\\Models\\Client') {

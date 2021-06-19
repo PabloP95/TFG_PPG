@@ -40,24 +40,41 @@ export class DetallePlato extends Component {
                         <h2 className="text-left"><a href="." className="text-left text-dark" style={{ 'textDecoration': 'none' }}><IoArrowBackCircle /> Volver a la carta</a></h2>
                     </Col>
                 </Row>
-                <figure className="figure">
-                    <img src={this.props.location.state.imgURL} alt="Imagen plato" />
-                    <figcaption>
+                <Row>
+                    <Col md="6">
+                        <figure className="figure">
+                            <img src={this.props.location.state.imgURL} alt="Imagen plato" />
+                            <figcaption>
+                                <Row>
+                                    <Col md="12">{this.props.location.state.nombrePlato}</Col>
+                                    <Col md="12">{< Trunc x={dinero * precio} posiciones={2} />} {moneda}</Col>
+                                </Row>
+                            </figcaption>
+                        </figure>
+                    </Col>
+
+                    <Col md="6">
                         <Row>
-                            <Col md="12">{this.props.location.state.nombrePlato}</Col>
-                            <Col md="12">{< Trunc x={dinero * precio} posiciones={2} />} {moneda}</Col>
+                            <Col md="12" sm="12" className="pt-3 pl-2">
+                                <h3>Descripción</h3>
+                                <Row>
+                                    <Col md="12" sm="12" className="pt-1">
+                                        {this.props.location.state.descripcion}
+                                    </Col>
+                                </Row>
+                            </Col>
                         </Row>
-                    </figcaption>
-                </figure>
-                <br />
+                    </Col>
+                </Row>
+
                 {/* Alergenos */}
-                <Row classname="p-3 pt-5">
+                <Row className="p-3 pt-3">
                     <Col md="12" sm="12">
                         <br />
                         <h5>Alérgenos</h5>
                     </Col>
                 </Row>
-                <Row className="p-3 mt-3 mr-3">
+                <Row className="p-3 mt-2">
                     {this.state.alergenosPlato.length !== 0 ? (
                         this.state.alergenosPlato.map(alergeno => (
                             <Col md="4" sm="4" xs="4" key={alergeno.id}>
@@ -69,18 +86,6 @@ export class DetallePlato extends Component {
                         ))
 
                     ) : <Col md="12" className="pl-5 pb-2"><p>Este plato no tiene alérgenos</p></Col>}
-                </Row>
-                <br />
-                <Row className="p-3 pt-3">
-
-                    <Col md="12" sm="12" className="pt-3 pl-2">
-                        <h4>Descripción</h4>
-                        <Row>
-                            <Col md="12" sm="12">
-                                {this.props.location.state.descripcion}
-                            </Col>
-                        </Row>
-                    </Col>
                 </Row>
             </div>
         )

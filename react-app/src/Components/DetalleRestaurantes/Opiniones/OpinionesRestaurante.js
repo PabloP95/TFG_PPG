@@ -13,19 +13,28 @@ export class OpinionesRestaurante extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/opiniones').then((res) => {
-            this.setState({
-                opiniones: res.data
-            })
+            if (this._isMounted) {
+                this.setState({
+                    opiniones: res.data
+                })
+            }
         })
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.opiniones !== this.props.opiniones || prevProps.filtrado !== this.props.filtrado) {
-            this.setState({
-                opiniones: this.props.opiniones
-            });
+        if (this._isMounted) {
+            if (prevProps.opiniones !== this.props.opiniones || prevProps.filtrado !== this.props.filtrado) {
+                this.setState({
+                    opiniones: this.props.opiniones
+                });
+            }
         }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
     render() {
         return (

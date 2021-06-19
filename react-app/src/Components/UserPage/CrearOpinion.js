@@ -78,6 +78,7 @@ export class CrearOpinion extends Component {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.setState({
+                    opinion: {},
                     numeroConsultas: this.props.numeroConsultas + 1
                 }, () => {
                     if (this.props.onChange) {
@@ -99,9 +100,6 @@ export class CrearOpinion extends Component {
         e.preventDefault();
 
         if (this.validate()) {
-            let restaurant_id = this.state.restaurantes.map((rest) => { if (rest.name === this.state.opinion.restauranteOpinion) return rest.userable_id });
-            let filterRestaurantId = restaurant_id.filter(id => id !== undefined);
-
             this.props.nomModal ? (
                 axios.put('http://127.0.0.1:8000/api/client/' + this.props.idCliente + '/opinion/' + this.props.idOpinion,
                     {
@@ -127,7 +125,7 @@ export class CrearOpinion extends Component {
                             nota: this.state.opinion.nota,
                             comentario: this.state.opinion.comentario,
                             client_id: this.props.idCliente,
-                            restaurant_id: filterRestaurantId[0]
+                            restaurant_id: this.state.opinion.restauranteOpinion
                         },
                         {
                             headers: authHeader()
@@ -140,9 +138,6 @@ export class CrearOpinion extends Component {
                         }
                     })
                 )
-        }
-        else {
-            console.log(this.state.errors);
         }
     }
 
@@ -162,7 +157,7 @@ export class CrearOpinion extends Component {
                     <ModalBody>
                         <Form onSubmit={this.handleSubmit}>
                             <FormGroup>
-                                <Label for="nota">Nota (max. 5)</Label>
+                                <Label for="nota">Nota* (max. 5) </Label>
                                 <Input type="number" style={{ 'border': this.state.errors.nota ? '1px solid red' : '' }}
                                     name="nota" id="nota" value={this.state.opinion.nota}
                                     onChange={this.handleChange} max="5" min="0" />
@@ -174,17 +169,17 @@ export class CrearOpinion extends Component {
                                     <Input type="select" style={{ 'border': this.state.errors.client_id ? '1px solid red' : '' }}
                                         name="restauranteOpinion" id="restauranteOpinion" value={this.state.opinion.restauranteOpinion}
                                         onChange={this.handleChange}>
-                                        <option></option>
+                                        <option hidden={true}>Seleccione un restaurante en el que haya estado</option>
                                         {this.state.restaurantes.map(restaurante => (
-                                            <option key={restaurante.id}>{restaurante.name}</option>
+                                            <option key={restaurante.userable_id} value={restaurante.userable_id}>{restaurante.name}</option>
                                         ))}
                                     </Input>
-
                                     <div className="text-danger">{this.state.errors.client_id}</div>
+                                    <div className="text-danger">{this.state.errors.restauranteOpinion}</div>
                                 </FormGroup>
                             )}
                             <FormGroup>
-                                <Label for="comentario">Opinión</Label>
+                                <Label for="comentario">Opinión (opcional)</Label>
                                 <Input type="textarea" name="comentario" id="comentario" value={this.state.opinion.comentario}
                                     onChange={this.handleChange} />
                             </FormGroup>

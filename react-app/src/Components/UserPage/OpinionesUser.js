@@ -23,14 +23,15 @@ export class OpinionesUser extends Component {
         axios.get('http://127.0.0.1:8000/api/client/' + user.user.userable_id + '/opiniones',
             { headers: authHeader() }
         ).then((res) => {
+            let numConsultas = this.state.numeroConsultas;
             this.setState({
-                numeroConsultas: this.state.numeroConsultas++,
+                numeroConsultas: numConsultas++,
                 opiniones: res.data,
                 idCliente: user.user.userable_id
             })
         }).catch(error => {
             if (error.response && error.response.status === 401) {
-                { Logout() };
+                Logout();
                 window.location = '/login'
             }
         })
@@ -59,6 +60,7 @@ export class OpinionesUser extends Component {
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
+                let numConsultas = this.state.numeroConsultas;
                 axios.delete('http://127.0.0.1:8000/api/client/' + this.state.idCliente + '/opinion/' + idOpinion.target.id,
                     {
                         headers: authHeader()
@@ -68,9 +70,10 @@ export class OpinionesUser extends Component {
                             title: 'Opinión eliminada',
                             text: 'Opinión eliminada con éxito.',
                             timer: 3000
-                        });
-                        this.setState({
-                            numeroConsultas: this.state.numeroConsultas++
+                        }).then(() => {
+                            this.setState({
+                                numeroConsultas: numConsultas += 1
+                            })
                         })
                     })
             }

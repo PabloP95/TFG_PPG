@@ -41,7 +41,7 @@ export class ConfigBasicaRest extends Component {
                 });
             }).catch(error => {
                 if (error.response && error.response.status === 422) {
-                    { Logout() }
+                    Logout();
                     window.location = '/404'
                 }
             });
@@ -88,7 +88,7 @@ export class ConfigBasicaRest extends Component {
                                 this.setState({ errors: JSON.parse(error.response.data) });
                             }
                             if (error.response.status === 401) {
-                                { Logout() };
+                                Logout();
                                 window.location = '/login'
                             }
                         }
@@ -99,9 +99,8 @@ export class ConfigBasicaRest extends Component {
                         if (error.response.status === 400) {
                             this.setState({ errors: JSON.parse(error.response.data) });
                         }
-
                         if (error.response.status === 401) {
-                            { Logout() };
+                            Logout();
                             window.location = '/login'
                         }
                     }
@@ -212,7 +211,7 @@ export class ConfigBasicaRest extends Component {
                             icon: 'success',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                { Logout() };
+                                Logout();
                                 window.location = '/'
                             }
                         })

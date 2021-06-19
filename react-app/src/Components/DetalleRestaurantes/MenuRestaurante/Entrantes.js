@@ -5,7 +5,6 @@ import Trunc from '../../functions/Trunc';
 export class Entrantes extends Component {
 
     render() {
-        console.log(this.props.entrantes);
         let moneda = localStorage.getItem('moneda');
         let dinero = localStorage.getItem('dinero');
         if (moneda === null && dinero === null) {

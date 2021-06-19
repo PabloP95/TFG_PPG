@@ -27,8 +27,9 @@ export class RestaurantesMejorPuntuados extends Component {
         let resBusqueda = JSON.parse(localStorage.getItem('resBusqueda'));
         return (
             <div>
+                {/*Se comprueba que exista resultados de la barra de búsqueda que esta en el header*/}
                 {restBusquedaNavbar !== null ? (
-                    restBusquedaNavbar.length > 0 ?
+                    restBusquedaNavbar.length > 0 ? {/* Si existe, devolvemos los resultados*/ }
                         (
                             <section>
                                 <h5>Resultados de la búsqueda</h5>
@@ -40,17 +41,19 @@ export class RestaurantesMejorPuntuados extends Component {
                                             }}>
                                                 <figure className="figure ml-3 mt-2 pr-1">
                                                     <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
-                                                    <figcaption className="figure-caption text-center">{restaurante.name}<br />Descripción</figcaption>
+                                                    <figcaption className="figure-caption text-center">{restaurante.name}</figcaption>
                                                 </figure>
                                             </Link>
                                         </Col>
                                     ))}
                                 </Row>
                             </section>
-                        ) : (<section>
+                        ) : (
+                        <section>
                             <h5>Resultados de la búsqueda</h5>
                             <p>No existen resultados para la búsqueda que se ha realizado</p>
-                        </section>)
+                        </section>
+                    )
 
                 ) : (
                     resBusqueda !== null ? (
@@ -66,7 +69,7 @@ export class RestaurantesMejorPuntuados extends Component {
                                                 }}>
                                                     <figure className="figure ml-3 mt-2 pr-1">
                                                         <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
-                                                        <figcaption className="figure-caption text-center">{restaurante.name}<br />Descripción</figcaption>
+                                                        <figcaption className="figure-caption text-center">{restaurante.name}</figcaption>
                                                     </figure>
                                                 </Link>
                                             </Col>
@@ -91,7 +94,7 @@ export class RestaurantesMejorPuntuados extends Component {
                                             }}>
                                                 <figure className="figure ml-3 mt-2 pr-1">
                                                     <img src="https://via.placeholder.com/150.png" className="figure-img img-fluid rounded" alt="Imagen restaurante 1" />
-                                                    <figcaption className="figure-caption text-center">{restaurante.name}<br />Descripción</figcaption>
+                                                    <figcaption className="figure-caption text-center">{restaurante.name}</figcaption>
                                                 </figure>
                                             </Link>
                                         </Col>

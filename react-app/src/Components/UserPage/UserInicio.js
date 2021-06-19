@@ -20,7 +20,7 @@ export class UserInicio extends Component {
             });
         }).catch(error => {
             if (error.response && error.response.status === 401) {
-                { Logout() };
+                Logout();
                 window.location = '/login'
             }
 

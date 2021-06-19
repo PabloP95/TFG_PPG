@@ -48,7 +48,6 @@ export default class Footer extends Component {
     }
     render() {
         let monedaActual = localStorage.getItem('moneda');
-        let idiomaActual = localStorage.getItem('idioma');
         return (
             <footer className="d-flex align-items-center footer" style={{ 'fontSize': '0.95rem' }}>
                 <Container>

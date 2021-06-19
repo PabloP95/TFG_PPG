@@ -12,7 +12,6 @@ export class PlatosPrincipales extends Component {
             moneda = '€';
             dinero = 1;
         }
-        console.log(this.props.pprincipales);
         return (
             <Col md="12" className="p-4">
                 <Row>

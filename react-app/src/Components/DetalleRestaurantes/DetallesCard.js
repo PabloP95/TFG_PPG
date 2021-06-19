@@ -28,7 +28,7 @@ export class DetallesCard extends Component {
 
     componentDidMount() {
         axios.get('http://127.0.0.1:8000/api/restaurant/' + this.props.idRestaurante + '/platosVeganos').then(res => {
-            if (res.data) {
+            if (res.data.length > 0) {
                 this.setState({
                     platoVegano: true
                 })
@@ -46,7 +46,7 @@ export class DetallesCard extends Component {
                         <Card body>
                             <CardTitle tag="h5"><strong>Detalles</strong></CardTitle>
                             <br />
-                            <CardText>
+                            <CardText tag="div">
                                 TIPOS COCINA
                                 <br />
                                 <ul className="pr-5">
@@ -57,12 +57,12 @@ export class DetallesCard extends Component {
                                     ))}
                                 </ul>
                                 {this.state.platoVegano ? (
-                                    <section>
+                                    <p>
                                         DIETAS ESPECIALES
                                         <br />
                                         Opciones veganas
                                         <br /><br />
-                                    </section>
+                                    </p>
                                 ) : ('')
                                 }
 

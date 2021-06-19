@@ -18,9 +18,10 @@ export class ConfigTipoCocina extends Component {
         let user = JSON.parse(localStorage.getItem('user'));
         axios.get('http://127.0.0.1:8000/api/tiposCocina/restaurant/' + user.user.userable_id,
             { headers: authHeader() }).then(res => {
+                let numConsultas = this.state.numConsultas;
                 this.setState({
                     tiposCocinaSelected: res.data,
-                    numConsultas: this.state.numConsultas++
+                    numConsultas: numConsultas++
                 });
             })
     }

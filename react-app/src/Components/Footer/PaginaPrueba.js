@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import authHeader from '../Security/auth/auth-header';
+
 import { Form, Input, Button, FormGroup, Label } from 'reactstrap'
 import { Map, TileLayer, Marker } from 'react-leaflet'
 import { FaSpinner } from 'react-icons/fa'
@@ -60,16 +59,6 @@ export class PaginaPrueba extends Component {
                 });
             });
     }
-    componentDidMount() {
-        /*axios.get('http://127.0.0.1:8000/api/auth/userProfile',
-            {
-                headers: authHeader()
-            }
-        ).then(res => {
-            this.setState({ user: res.data });
-        });
-*/
-    }
 
     handleChange = (e) => {
         this.setState({ query: e.target.value });
@@ -87,7 +76,6 @@ export class PaginaPrueba extends Component {
         return (
             <div>
                 <h1>Hola a todos</h1>
-                <h2>Esta es la página de este usuario:</h2>
                 <h3>El articulo vale 50 euros, que en dolares canadienses es: {<Trunc x={dinero * 50} posiciones={2} />} {moneda}</h3>
                 <hr />
                 <h3>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Form, FormGroup, Input, Button, NavItem } from 'reactstrap'
 import { FaSearch } from 'react-icons/fa'
-import { Redirect } from 'react-router-dom'
 import axios from 'axios'
 export class SearchBar extends Component {
     constructor(props) {

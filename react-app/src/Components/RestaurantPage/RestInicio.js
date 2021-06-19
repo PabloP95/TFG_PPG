@@ -21,7 +21,6 @@ export class RestInicio extends Component {
 
         axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id)
             .then(res => {
-                console.log('res.data = ' + res.data);
                 this.setState({
                     nomRestaurante: res.data[0].name,
                     email: res.data[0].email,
@@ -30,7 +29,7 @@ export class RestInicio extends Component {
                 });
             }).catch(error => {
                 if (error.response && error.response.status === 422) {
-                    { Logout() }
+                    Logout();
                     window.location = '/404'
                 }
             })

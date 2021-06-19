@@ -8,7 +8,6 @@ import authHeader from '../../Security/auth/auth-header';
 export class ConfigMesa extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props);
         this.state = {
             mesas: [],
             idRestaurante: '',
@@ -25,9 +24,10 @@ export class ConfigMesa extends Component {
         axios.get('http://127.0.0.1:8000/api/restaurant/' + user.user.userable_id + '/mesas', {
             headers: authHeader(),
         }).then(res => {
+            let numConsultas = this.state.numeroConsultas;
             this.setState({
                 mesas: res.data,
-                numeroConsultas: this.state.numeroConsultas++
+                numeroConsultas: numConsultas += 1
             });
         })
     }
@@ -59,12 +59,13 @@ export class ConfigMesa extends Component {
             cancelButtonText: 'No',
         }).then((result) => {
             if (result.isConfirmed) {
+                let numConsultas = this.state.numeroConsultas;
                 axios.delete('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/mesa/' + idMesa.target.id,
                     {
                         headers: authHeader(),
                     }).then(() => {
                         this.setState({
-                            numeroConsultas: this.state.numeroConsultas++
+                            numeroConsultas: numConsultas += 1
                         })
                     });
                 Swal.fire({

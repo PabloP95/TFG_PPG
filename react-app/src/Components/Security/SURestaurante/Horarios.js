@@ -229,9 +229,8 @@ export class Horarios extends Component {
                             <ModalHeader>{this.state.horarios.length === 0 ? 'Introduciendo horarios' : 'Modificando horarios'}</ModalHeader>
                             <ModalBody>
                                 <Form onSubmit={this.handleSubmit}>
-                                    <Label for="dia">Seleccione un día</Label>
                                     <Input type="select" name="dia" id="dia" value={this.state.dia} onChange={this.onChangeDay}>
-                                        <option></option>
+                                        <option hidden={true}>Escoja un día</option>
                                         <option>Lunes</option>
                                         <option>Martes</option>
                                         <option>Miércoles</option>
