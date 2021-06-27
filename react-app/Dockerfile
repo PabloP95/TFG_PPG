@@ -6,7 +6,7 @@ ENV NPM_CONFIG_LOGLEVEL warn
 
 # Install and configure `serve`.
 RUN npm install -g serve
-CMD serve -s build
+CMD serve -s -n build
 EXPOSE 5000
 
 # Install all dependencies of the current project.
@@ -18,4 +18,4 @@ RUN npm install
 COPY . .
 
 # Build for production.
-RUN npm run build --production
+RUN npm run build --production 
