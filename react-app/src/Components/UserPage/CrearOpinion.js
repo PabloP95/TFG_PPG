@@ -183,8 +183,8 @@ export class CrearOpinion extends Component {
                                 <Input type="textarea" name="comentario" id="comentario" value={this.state.opinion.comentario}
                                     onChange={this.handleChange} />
                             </FormGroup>
-
-                            <Button block color="success">Realizar opinión</Button>
+{this.props.nomModal ? (<Button block color="success">Modificar opinión</Button>) : (<Button block color="success">Realizar opinión</Button>)}
+                            
 
                         </Form>
                     </ModalBody>

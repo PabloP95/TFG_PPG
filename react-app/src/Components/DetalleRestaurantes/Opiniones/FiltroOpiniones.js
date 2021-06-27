@@ -109,7 +109,7 @@ export class FiltroOpiniones extends Component {
             }
 
             else if (this.state.qualification === '' && this.state.fecha !== '') {
-                axios.get('http://localhost:8000/api/restaurant/' + this.state.idRestaurante + '/opinionesFiltroFecha/' + this.state.fecha).then(res => {
+                axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/opinionesFiltroFecha/' + this.state.fecha).then(res => {
                     this.setState({
                         opiniones: res.data,
                         filtrado: true
@@ -148,7 +148,7 @@ export class FiltroOpiniones extends Component {
             }
 
             else if (this.state.fechaIni !== '' && this.state.fechaFin !== '' && this.state.qualification !== '' && this.state.fecha === '') {
-                axios.get('http://localhost:8000/api/restaurant/' + this.state.idRestaurante + '/opinionesFiltroFechas/' + this.state.fechaIni + '/' + this.state.fechaFin + '/' + this.state.qualification).then(res => {
+                axios.get('http://127.0.0.1:8000/api/restaurant/' + this.state.idRestaurante + '/opinionesFiltroFechas/' + this.state.fechaIni + '/' + this.state.fechaFin + '/' + this.state.qualification).then(res => {
                     this.setState({
                         opiniones: res.data,
                         filtrado: true

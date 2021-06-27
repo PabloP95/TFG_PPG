@@ -26,7 +26,7 @@ export class RestOpiniones extends Component {
                             Opiniones
                         </h5>
                     </Col>{
-                        this.state.opiniones.length === 0 ? (<section className="p-3 ml-5"><h4 className="text-center ml-5">Aún, los clientes no han realizado ninguna opinión.</h4></section>)
+                        this.state.opiniones.length === 0 ? (<section className="p-3 ml-5"><h4 className="text-center ml-5">Todavía los clientes no han realizado ninguna opinión.</h4></section>)
                             : this.state.opiniones.length > 0 ? (
                                 this.state.opiniones.map((opinion) => (
                                     <Row key={opinion.id} className="p-4 mt-3">

@@ -108,7 +108,6 @@ export class RestMenu extends Component {
                                 <th scope="col">Vegano</th>
                                 <th scope="col">Alérgenos</th>
                                 <th scope="col">Precio (€)</th>
-                                <th scope="col">Imagen plato</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>
@@ -125,7 +124,6 @@ export class RestMenu extends Component {
                                         onChange={this.eventHandler}
                                         numeroConsultas={this.state.numeroConsultas} />
                                     <td>{plato.precio}</td>
-                                    <td className="oneliner"></td>
                                     <td>
                                         <CrearPlato
                                             numeroConsultas={this.state.numeroConsultas + 1}

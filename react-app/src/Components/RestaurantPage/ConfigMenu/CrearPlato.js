@@ -14,7 +14,7 @@ export class CrearPlato extends Component {
             infoPlato: {
                 nomPlato: this.props.nomPlato ? this.props.nomPlato : '',
                 descPlato: this.props.descPlato ? this.props.descPlato : '',
-                tipoPlato: this.props.tipoPlato ? this.props.tipoPlato : 'Entrantes',
+                tipoPlato: this.props.tipoPlato ? this.props.tipoPlato : '',
                 vegano: this.props.vegano ? this.props.vegano : '0',
                 precioPlato: this.props.precioPlato ? this.props.precioPlato : '',
 
@@ -220,7 +220,7 @@ export class CrearPlato extends Component {
         return (
             <>
                 {this.props.nomModal ? (
-                    <Button color="info" onClick={this.toggleNewDish}><BsPencilSquare /></Button>
+                    <Button color="info" onClick={this.toggleNewDish} className="mb-1"><BsPencilSquare /></Button>
                 ) : (
                     <Col md={{ size: 4, offset: 8 }} className="mt-3 mr-0">
                         <Button color="info" onClick={this.toggleNewDish}>< BsPlusCircleFill size={20} className="pb-1" /> Crear plato</Button>
@@ -254,6 +254,7 @@ export class CrearPlato extends Component {
                                 <Input type="select" value={this.state.infoPlato.tipoPlato} id="tipoPlato" name="tipoPlato"
                                     onChange={this.handleChange}
                                 >
+                                    <option hidden={true}>Escoja el tipo de cocina</option>
                                     <option>Entrantes</option>
                                     <option>Platos principales</option>
                                     <option>Bebidas</option>

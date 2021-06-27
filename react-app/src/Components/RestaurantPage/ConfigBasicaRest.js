@@ -262,8 +262,10 @@ export class ConfigBasicaRest extends Component {
                                 {this.state.errors.errorPassword}
                             </div>
                         </FormGroup>
-                        <hr />
-                        {/* <ImageUploader
+                        
+                        {/*
+                        <hr /> 
+                        <ImageUploader
                             withIcon={false}
                             withPreview={true}
                             singleImage={true}
@@ -274,8 +276,10 @@ export class ConfigBasicaRest extends Component {
                             fileTypeError="no es soportado. Solo archivos de extensión jpg, png y svg."
                             maxFileSize={1048576}
                             fileSizeError=", el archivo es demasiado grande."
-                        /> */}
-                        <hr />
+                        /> 
+                            <hr />
+                        */}
+                        
                         <Row>
                             <Col md="6" sm="6" xs="6">
                                 <Button color="primary" className="mb-2 text-center">Guardar cambios</Button>

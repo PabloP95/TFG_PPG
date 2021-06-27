@@ -29,7 +29,7 @@ export class RestaurantesMejorPuntuados extends Component {
             <div>
                 {/*Se comprueba que exista resultados de la barra de búsqueda que esta en el header*/}
                 {restBusquedaNavbar !== null ? (
-                    restBusquedaNavbar.length > 0 ? {/* Si existe, devolvemos los resultados*/ }
+                    restBusquedaNavbar.length > 0 ? 
                         (
                             <section>
                                 <h5>Resultados de la búsqueda</h5>

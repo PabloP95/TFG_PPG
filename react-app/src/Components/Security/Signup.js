@@ -229,7 +229,7 @@ class Signup extends Component {
                                     <Label check>
                                         <Input type="radio" name="userable_type" value="App\Models\Client"
                                             onChange={this.onChangeHandler} />
-                                        Usuario
+                                        Cliente
 
                                     </Label>
                                 </FormGroup>

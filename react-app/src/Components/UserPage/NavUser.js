@@ -17,9 +17,7 @@ export class NavUser extends Component {
                     <li className="nav-item">
                         <a className="nav-link" id="pills-opiniones-tab" data-toggle="pill" href="#pills-opiniones" role="tab" aria-controls="pills-opiniones" aria-selected="false">Opiniones</a>
                     </li>
-                    <li className="nav-item">
-                        <a className="nav-link" id="pills-pedidos-tab" data-toggle="pill" href="#pills-pedidos" role="tab" aria-controls="pills-pedidos" aria-selected="false">Pedidos realizados</a>
-                    </li>
+
                 </ul>
             </div>
         )

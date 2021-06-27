@@ -3,7 +3,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
+  background-color: white;
 }
 
 .App {
@@ -53,6 +53,8 @@ fieldset {
 .jumbotron {
   background-color: transparent !important;
 }
+
+
 .roboto-font{
   font-family: 'Roboto',
   sans-serif;

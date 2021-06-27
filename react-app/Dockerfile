@@ -1,13 +1,21 @@
-FROM node:latest
+FROM node:14-alpine
 
-WORKDIR /app
+WORKDIR /app/frontend
+# Override the base log level (info).
+ENV NPM_CONFIG_LOGLEVEL warn
 
-ENV PATH /app/node_modules/.bin:$PATH
+# Install and configure `serve`.
+RUN npm install -g serve
+CMD serve -s build
+EXPOSE 5000
 
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install -g npm@latest
+# Install all dependencies of the current project.
+COPY package.json package.json
+
 RUN npm install
 
-COPY . ./
-CMD ["npm", "start"]
+# Copy all local files into the image.
+COPY . .
+
+# Build for production.
+RUN npm run build --production

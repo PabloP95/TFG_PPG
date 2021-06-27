@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+    frontend:
+        build:
+            context: ./react-app
+            dockerfile: Dockerfile
+        tty: true
+        ports:
+            - 3000:5000
+        depends_on: 
+            - backend
+        networks:
+            - app
+        
+    
+    backend:
+        build:
+            context: ./laravel_api
+            dockerfile: Dockerfile
+        environment:
+            DB_HOST: db
+            DB_DATABASE: tfg_api
+            DB_USERNAME: root
+        ports: 
+            - 8000:8000
+        volumes: 
+            - ./laravel_api:/app/laravel_api
+        depends_on:
+            - db
+        networks: 
+            - app
+    
+    db:
+        image: mysql:5.7
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+            MYSQL_DATABASE: tfg_api
+            MYSQL_USER: root
+        volumes: 
+            - ./db/tfg_api.sql:/docker-entrypoint-initdb.d/init.sql
+        networks: 
+            - app
+        ports:
+            - "3306:3306"
+        expose:
+            - "3306"
+networks: 
+    app:
+        driver: bridge

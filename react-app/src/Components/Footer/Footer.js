@@ -8,14 +8,13 @@ export default class Footer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 0,
+            value: -1,
             paises: [],
             moneda: [],
             cambiarMonedaVisible: false,
-            cambiarLenguajeVisible: false,
         };
     }
-    /*componentDidMount() {
+    componentDidMount() {
         axios.get('http://data.fixer.io/api/latest?access_key=a56c69f15f87d2bcf6c92b4c138a8a70&symbols=USD,AUD,CAD,MXN,EUR')
             .then(res => {
                 this.setState({
@@ -24,18 +23,12 @@ export default class Footer extends Component {
                 });
             });
         }
-        */
     toggleMoneda = () => {
         this.setState({
             cambiarMonedaVisible: !this.state.cambiarMonedaVisible
         });
     }
 
-    toggleIdioma = () => {
-        this.setState({
-            cambiarLenguajeVisible: !this.state.cambiarLenguajeVisible
-        });
-    }
 
     handleChangeMoneda = (e) => {
         this.setState({
@@ -60,7 +53,6 @@ export default class Footer extends Component {
                         <Col className="pt-2">
                             <strong><p>Acciones</p></strong>
                             <p><a href="/signup" style={{ textDecoration: 'none' }}>Unirse</a></p>
-                            <p><a href="/paginaprueba" style={{ textDecoration: 'none' }}>Página de pruebas</a></p>
                         </Col>
                         <Col className="pt-2">
                             <strong><p>Internacionalización</p></strong>
@@ -77,6 +69,7 @@ export default class Footer extends Component {
                                         <FormGroup>
                                             <Label for="selectMoneda">Cambiar moneda</Label>
                                             <Input type="select" value={this.state.value} name="selectMoneda" id="selectMoneda" onChange={this.handleChangeMoneda}>
+                                            <option hidden={true}>Seleccione la moneda</option>
                                                 {this.state.paises.map((pais) => <option key={this.state.paises.indexOf(pais)} value={this.state.paises.indexOf(pais)}>{pais}</option>)}
                                             </Input>
                                         </FormGroup>
@@ -85,31 +78,6 @@ export default class Footer extends Component {
                                 <ModalFooter>
                                     <Button color="primary" onClick={this.toggleMoneda}>Cambiar moneda</Button>
                                     <Button color="secondary" onClick={this.toggleMoneda}>Cerrar</Button>
-                                </ModalFooter>
-                            </Modal>
-                            <p
-                                style={{ 'cursor': 'pointer' }}
-                                className="text-primary"
-                                onClick={this.toggleIdioma}>Cambiar lenguaje
-                            </p>
-
-                            <Modal isOpen={this.state.cambiarLenguajeVisible} toggle={this.toggleIdioma}>
-                                <ModalHeader toggle={this.toggleIdioma}>Cambio de idioma</ModalHeader>
-                                <ModalBody>
-                                    <p>Idioma actual: Español castellano</p>
-                                    <Form>
-                                        <Label for="selectIdiomas">Idiomas disponibles</Label>
-                                        <Input type="select" name="selectIdiomas" id="selectIdiomas" onChange={this.changeIdiomas}>
-                                            <option>Inglés</option>
-                                            <option>Francés</option>
-                                            <option>Italiano</option>
-                                        </Input>
-
-                                    </Form>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="primary" onClick={this.toggleIdioma}>Cambiar idioma</Button>
-                                    <Button color="secondary" onClick={this.toggleIdioma}>Cerrar</Button>
                                 </ModalFooter>
                             </Modal>
                         </Col>

@@ -5,7 +5,6 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import ConfigMesa from './ConfigRestaurante/ConfigMesa';
 import ConfigTipoCocina from './ConfigRestaurante/ConfigTipoCocina';
 import ConfigUbicacion from './ConfigRestaurante/ConfigUbicacion';
-import ConfigUploadImages from './ConfigRestaurante/ConfigUploadImages';
 import ConfigHorarios from './ConfigRestaurante/ConfigHorarios';
 
 export class ConfigRestaurante extends Component {
@@ -36,9 +35,6 @@ export class ConfigRestaurante extends Component {
         this.setState({ ubicacionOpen: !this.state.ubicacionOpen });
     }
 
-    toggleUploadImages = () => {
-        this.setState({ subirImagenesOpen: !this.state.subirImagenesOpen });
-    }
 
 
     render() {
@@ -130,25 +126,7 @@ export class ConfigRestaurante extends Component {
                             </Col>
                         </Col>
 
-                        <Col md={{ size: 12 }} className="pt-3">
-                            <Button block color="dark" onClick={this.toggleUploadImages} className="text-left">
-                                <Row>
-                                    <Col md="6" sm="9" xs="9" style={{ 'fontSize': '20px' }} >
-                                        Imágenes
-                                    </Col>
-                                    <Col md="6" sm="3" xs="3" className="text-right">
-                                        {this.state.subirImagenesOpen ?
-                                            (<MdKeyboardArrowUp className="pt-1" size={25} />) :
-                                            (<MdKeyboardArrowDown className="pt-1" size={25} />)}
-                                    </Col>
-                                </Row>
-                            </Button>
-                            <Col md="12" className="pt-2">
-                                <Collapse isOpen={this.state.subirImagenesOpen}>
-                                    <ConfigUploadImages />
-                                </Collapse>
-                            </Col>
-                        </Col>
+                        
                     </Row>
                 </div>
             );

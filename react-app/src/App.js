@@ -5,7 +5,6 @@ import Footer from './Components/Footer/Footer';
 import SignUp from './Components/Security/Signup';
 import Login from './Components/Security/Login';
 import Home from './Components/Home';
-import PaginaPrueba from './Components/Footer/PaginaPrueba';
 import AvisoLegal from './Components/Footer/AvisoLegal';
 import PoliticaPrivacidad from './Components/Footer/PoliticaPrivacidad';
 import ScrollToTop from './Components/functions/ScrollToTop';
@@ -27,7 +26,6 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login}></Route>
           <Route exact path="/signup" component={SignUp}></Route>
-          <Route exact path="/paginaprueba" component={PaginaPrueba}></Route>
           <Route exact path="/aviso-legal" component={AvisoLegal}></Route>
           <Route exact path="/politica-privacidad" component={PoliticaPrivacidad}></Route>
           <Route exact path="/restaurantes/restaurante/:id/menu/detalle-plato" component={DetallePlato}></Route>

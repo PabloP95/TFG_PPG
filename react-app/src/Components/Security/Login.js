@@ -66,7 +66,7 @@ export class Login extends Component {
             this.setState({
                 submittingLoad: true
             });
-            axios.post("http://localhost:8000/api/auth/login", {
+            axios.post("http://127.0.0.1:8000/api/auth/login", {
                 email: this.state.loginInfo.email,
                 password: this.state.loginInfo.password
             }).then(res => {
@@ -172,7 +172,6 @@ export class Login extends Component {
 
                             ) : (<Button style={{ 'textAlign': 'center' }}>Login</Button>)}
                             <div className="mt-2">
-                                <p><a href="#" style={{ textDecoration: 'none' }}>¿Ha olvidado la contraseña?</a></p>
                                 <p><a href="/signup" style={{ textDecoration: 'none' }}>Registrese ahora</a></p>
                             </div>
                         </Form>
