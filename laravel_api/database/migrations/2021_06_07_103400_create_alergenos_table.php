@@ -32,7 +32,7 @@ class CreateAlergenosTable extends Migration
                 ['nomAlergeno' => 'Apio', 'img' => '../../../../img/alergenos/celery.png'],
                 ['nomAlergeno' => 'Mostaza', 'img' => '../../../../img/alergenos/mustard.png'],
                 ['nomAlergeno' => 'Granos de sesamo', 'img' => '../../../../img/alergenos/sesame.png'],
-                ['nomAlergeno' => 'Dióxido de azufre y sulfitos', 'img' => '../../../../img/alergenos/sulfide.png'],
+                ['nomAlergeno' => 'Sulfitos', 'img' => '../../../../img/alergenos/sulfide.png'],
                 ['nomAlergeno' => 'Moluscos', 'img' => '../../../../img/alergenos/mollusc.png'],
                 ['nomAlergeno' => 'Altramuces', 'img' => '../../../../img/alergenos/lupin.png'],
             ]
