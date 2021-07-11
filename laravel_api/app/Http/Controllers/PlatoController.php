@@ -32,7 +32,7 @@ class PlatoController extends Controller
                 FROM platos, restaurants
                 WHERE platos.restaurant_id = restaurants.id
                 AND
-                restaurants.id = 1
+                restaurants.id = $idRestaurante
                 AND platos.id != ALL(SELECT plato_id from alergeno_plato where alergeno_id in ($listaAlergenos))");
         return $platosAlergenos;
     }
