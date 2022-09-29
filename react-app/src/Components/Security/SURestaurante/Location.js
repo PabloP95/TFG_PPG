@@ -11,7 +11,7 @@ export class Location extends Component {
         this.state = {
             modal: false,
             query: '',
-            apikey: '9fe141db7f4a489fb7bdcc998923cbde',
+            apikey: '03526deb1ae747d3971eb5441bf0ca28',
             submittingLoad: false,
             currentLocation: { lat: 0, lng: 0 },
             zoom: 12,
