@@ -48,7 +48,7 @@ export default class Footer extends Component {
                     <Row>
                         <Col className="pt-2">
                             <strong><p>eRestaurant</p></strong>
-                            <p>&copy;2021</p>
+                            <p>&copy;2022</p>
                         </Col>
                         <Col className="pt-2">
                             <strong><p>Acciones</p></strong>
