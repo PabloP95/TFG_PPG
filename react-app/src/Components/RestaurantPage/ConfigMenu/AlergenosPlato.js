@@ -21,11 +21,7 @@ export class AlergenosPlato extends Component {
 
         });
     }
-
-
-
-
-
+    
     render() {
         return (
             <td className="oneliner">

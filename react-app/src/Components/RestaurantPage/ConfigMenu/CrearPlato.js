@@ -102,6 +102,7 @@ export class CrearPlato extends Component {
             }
         });
     }
+    
     handleSubmit = (e) => {
         e.preventDefault();
         if (this.validate()) {
