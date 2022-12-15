@@ -41,7 +41,7 @@ export class Login extends Component {
             this.setState({
                 submittingLoad: false
             });
-            window.location = '/user/' + user.user.name
+            window.location = '/user/' + user.user.name.replace(" ", "-");
         });
 
     }
@@ -56,7 +56,7 @@ export class Login extends Component {
             this.setState({
                 submittingLoad: false
             });
-            window.location = '/restaurante/' + user.user.name
+            window.location = '/restaurante/' + user.user.name.replace(" ", "-");
         });
     }
 

@@ -155,14 +155,15 @@ class Signup extends Component {
         return isValid;
     }
     render() {
-        let user = JSON.parse(localStorage.getItem('user'));
+        const user = JSON.parse(localStorage.getItem('user'));
         if (user) {
+            let name = user.user.name.replace(" ", "-");
             if (user.user.userable_type === 'App\\Models\\Client') {
-                return <Redirect to={'/user/' + user.user.name} />
+                return <Redirect to={'/user/' + name} />
             }
 
             if (user.user.userable_type === 'App\\Models\\Restaurant') {
-                return <Redirect to={'/restaurante/' + user.user.name} />
+                return <Redirect to={'/restaurante/' + name} />
             }
         }
         else {
